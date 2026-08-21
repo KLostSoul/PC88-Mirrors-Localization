@@ -1,0 +1,145 @@
+1 'CMD SAVE "B:NO71"
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'-----1015
+100 GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="デビッドが話す。":C2$="スシャ−ナが話す。"
+950 'GOTO 1860
+1000 GOSUB 9515:GOSUB 6100:GOSUB 9525:BM$="翌朝、デビッドは手紙の事が気になってか、目がはやく覚めてしまった。部屋のかたずけをすませてから、待ち合わせの喫茶アリスにタクシ−ででかけた。":GOSUB 5100
+1010 BM$="タクシ−の運転手が喫茶アリスを知っていたので、正午には２０分もはやく着いてしまった。":GOSUB 5100
+1015 COMMON FO:ISET X:GOSUB 6110:GOSUB 9010:GOSUB 6300:BM$="朝食を食べていなかったデビッドには、ランチをとるのに丁度いい時間だった。":GOSUB 5100:'----1540
+1020 BM$="食事を済ませたデビッドは、コ−ヒ−を飲みながら腕時計を見ると、１１時５５分になっている。デビッドは店内を見回したが、それらしき客はいなかった。":GOSUB 5100
+1030 GOSUB 9505:BM$="ビッグ・ベンの鐘が１２時を打った時、デビッドのテ−ブルに一人の男が近づいてきた。":GOSUB 5100
+1040 ISET X:GOSUB 6320:BM$="年齢は３０才前後で、しわのよった背広を着ているのを見てデビッドは、男の職業がまともではないと思った。":GOSUB 5100
+1050 GOSUB 1300
+1060 CM=2:CM$(1)=C1$:CM$(2)="コ−ナ−が話す。"
+1070 GOSUB 5400
+1150 IF CN=1 AND G2>4 THEN 1530
+1160 IF CN=2 AND G1>4 THEN G2=5:GOSUB 1520:GOTO 1070
+1170 IF CN=1 AND G2>3 THEN G1=5:GOSUB 1510:GOTO 1070
+1180 IF CN=2 AND G2>3 THEN GOSUB 1500:GOTO 1070
+1190 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1480:GOTO 1070
+1200 IF CN=1 AND G1>3 THEN GOSUB 1470:GOTO 1070
+1210 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1460:GOTO 1070
+1220 IF CN=2 AND G2>2 THEN GOSUB 1450:GOTO 1070
+1230 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1390:GOTO 1070
+1240 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1380:GOTO 1070
+1250 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1370:GOTO 1070
+1260 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1360:GOTO 1070
+1270 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1350:GOTO 1070
+1280 IF CN=1 THEN G1=1:GOSUB 1340:GOTO 1070
+1290 IF CN=2 THEN GOSUB 1330:GOTO 1070
+1300 BM$="男「お忙しい所を来て頂いて申しわけありません。私が手紙を書いたコ−ナ−です」":GOSUB 5100
+1310 BM$="コ−ナ−はデビッドに名刺を渡して、椅子に座った。":GOSUB 5100
+1320 BM$="名刺には名前がニック・コ−ナ−、職業が週刊・芸能フラッシュの記者と書かれている。":GOSUB 5100
+1330 BM$="コ−ナ−「私は探偵の真似事が好きで、芸能関係のルポライタ−をしています」":GOSUB 5100:RETURN
+1340 GOSUB 6300:BM$="デビッド「芸能フラッシュの記者がなぜ魔王の事を知っているんだ。いいかげんな事を記事にするんなら俺は帰るよ」":GOSUB 5100:RETURN
+1350 GOSUB 6320:BM$="コ−ナ−「待って下さい。貴方は、あの手紙を見てここに来たのでしょう。私はある人から魔王についての情報をもらいました。このまま記事にすればスク−プになるのですよ」":GOSUB 5100:RETURN
+1360 GOSUB 6300:BM$="デビッド「俺の夢がスク−プに・・・魔王については俺自身なにもわかってないのに、あんたは俺の夢をのぞいたとでも言うのか？」":GOSUB 5100:RETURN
+1370 GOSUB 6320:BM$="コ−ナ−「魔王が貴方の夢に・・・それは知りませんでした。情報があまりにもオカルト的で、記事にしていいものかと迷っていたのですが、やはり本当かも知れませんね」":GOSUB 5100:RETURN
+1380 GOSUB 6300:BM$="デビッド「あんたは俺の夢の事は知らなかった・・・その情報というのは何だ？・・・ぜひ聞かせてくれ。確かな情報だったら記事にしてもいいから話してくれ」":GOSUB 5100:RETURN
+1390 GOSUB 6320:BM$="コ−ナ−「私も信じられない話なので、記事にする前にデビッドさんと、この情報について話をしたかったのです」":GOSUB 5100
+1400 BM$="コ−ナ−「私はある方に呼ばれて取材したのですが、その方の名前は教える事ができません。でも、その方は嘘など言える立場の方ではないとだけ言っておきましょう」":GOSUB 5100
+1410 BM$="コ−ナ−「その方が言うには、魔王という悪魔がデビッドさんにとりついて、コンサ−トの観客に悪魔の心を植えつけようとしていると言うのです」":GOSUB 5100
+1420 BM$="コ−ナ−「悪魔の心を植えつけられた観客は必ず殺人を犯し、気が狂って死んでしまうと・・・今は貴方の意識が強いので魔王の力は少ししか出てないそうですが・・・」":GOSUB 5100
+1430 BM$="コ−ナ−「宇宙の果てからくる暗黒の星が地球に迫れば、デビッドさんの意識は魔王の意識に変えられ大事が起こるそうです。その暗黒の星が近づくのは、あと１２日と言っていました」":GOSUB 5100
+1440 BM$="コ−ナ−「その方は自分で発表したかったそうですが、デビッドさんがあまりにも有名になられたので、ファンの激怒を心配して私に頼んだのです」":GOSUB 5100
+1450 BM$="コ−ナ−「私が記事にして１２日が過ぎても、何も起こらなければ業界から追放されてしまうでしょう。しかし情報を流した方があまりにも社会的に地位のある方なので迷っているのです」":GOSUB 5100:RETURN
+1460 GOSUB 6300:BM$="デビッド「あんたは俺の眼の前でよくそんなデタラメな話ができるね。あきれかえって返す言葉もないよ。それが記事になるんだったら遠慮なく書いてくれ」":GOSUB 5100
+1470 BM$="デビッド「しかしあんたがホラ−映画のファンだとしても、お宅の編集長がそんな記事を載せるかな？　まともな記者なら、こんな話を俺にできるわけがないよ」":GOSUB 5100:RETURN
+1480 GOSUB 6320:BM$="コ−ナ−「私も貴方のファンでなかったらそう思ったでしょうが、あの方がデビッドさんを救いたかったら、記事の最後にこう書けとおっしゃったのです」":GOSUB 5100
+1490 BM$="コ−ナ−「マネ−ジャ−のスシャ−ナさんをデビッドさんから遠ざけろと。彼女は暗黒の魔導師で、デビッドさんを魔王に近づける魔女だと・・・」":GOSUB 5100
+1500 BM$="コ−ナ−「貴方達のもとのマネ−ジャ−のクレアは、スシャ−ナの魔導の力で交通事故で殺され、貴方に近づいたそうです。何か心あたりはありませんか？」":GOSUB 5100:RETURN
+1510 GOSUB 6300:BM$="デビッド「もうあんたと話し合う必要はない。俺が魔王でスシャ−ナが魔女、次はアランかアンドリュ−か？　それともマ−チンが悪魔だと言いたいのか！？」":GOSUB 5100:RETURN
+1520 GOSUB 6320:BM$="コ−ナ−「私はあの方に頼まれただけで、もう少し調べてから記事にするか考えてみます。その時はもう一度、私と会ってください」":GOSUB 5100:RETURN
+1530 GOSUB 6300:BM$="デビッド「あんたは俺に会う前に精神病院にでも行った方がいいようだ。あそこなら親身になって聞いてくれる。俺は忙しいから帰らせてもらうよ」":GOSUB 5100
+1540 COMMON FO:BM$="デビッドは、時間を無駄にした事に腹がたってしかたがなかった。スシャ−ナにこの話をしたら、きっと芸能フラッシュに怒鳴りこみに行くに違いないと思った。":GOSUB 5100
+1545 GOSUB 9020:'----3000
+1550 GOSUB 6150:BM$="デビッドがホテルの部屋に戻ると、スシャ−ナが部屋の中で待っていた。":GOSUB 5100
+1560 GOSUB 1700
+1570 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1580 GOSUB 5400
+1660 IF CN=1 AND G2>0 THEN 1730
+1670 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1720:GOTO 1580
+1680 IF CN=1 THEN G1=1:GOSUB 1710:GOTO 1580
+1690 IF CN=2 THEN GOSUB 1700:GOTO 1580
+1700 GOSUB 6310:BM$="スシャ−ナ「デビッド、どこに出掛けてたの？・・・部屋の片付けを手伝いに来たのだけど・・・引っ越しの準備は出来ていたのね」":GOSUB 5100:RETURN
+1710 GOSUB 6300:BM$="デビッド「はやく起きてしまったんで、食事に出ていたんだ。ここにいても仕方がないから、俺のアパ−トに行こうよ」":GOSUB 5100:RETURN
+1720 GOSUB 6310:BM$="スシャ−ナ「ながかったホテル暮らしも当分お別れね。デビッドのアパ−トに行くのは初めてだから、心臓がドキドキするわ」":GOSUB 5100:RETURN
+1730 GOSUB 6300:BM$="デビッド「俺の部屋を見たらドキドキも止まるよ。あまりに汚なすぎて心臓まひを起こすよ。荷物はこれだけだから俺一人で大丈夫だ。行こう」":GOSUB 5100
+1740 GOSUB 6120:BM$="デビッド達はフロントでチエックをすませて、タクシ−でデビッドのアパ−トに行った。":GOSUB 5100
+1750 GOSUB 6130:GOSUB 6310:BM$="スシャ−ナはデビッドの部屋に入ると、慌てて窓を開けながら悲鳴をあげた。台所の流しに汚れた食器が積まれ、居間のテ−ブルにはアルコ−ル類の空き瓶や、空き缶が山と積まれたままだった。":GOSUB 5100
+1760 GOSUB 6310:BM$="スシャ−ナ「やっと息が出来るようになったけど、どこから片付けていいのか・・・とりあえずデビッドが座れる所を掃除するわ」":GOSUB 5100
+1770 BM$="スシャ−ナは時々悲鳴をあげながら掃除をしているが、結構楽しんでいるようだ。部屋の掃除が終わるとスシャ−ナは夕食を作る為に、近くのス−パ−に一人で買い物に行った。":GOSUB 5100
+1780 GOSUB 6300:BM$="デビッドは芸能記者のコ−ナ−の話を思い出していた。":GOSUB 5100
+1790 BM$="・・・俺が夢で知った魔王の事を、なぜ俺以外に知っている奴がいるのか・・・それもとてつもない話になっている。いやがらせにしては度が過ぎるし、やはりスシャ−ナに話そう・・・":GOSUB 5100
+1800 BM$="デビッドはこんな馬鹿げた話を人に相談などできないが、スシャ−ナなら悪夢の話を知っているから、まじめに聞いてくれると思った。":GOSUB 5100
+1810 BM$="スシャ−ナが大きな袋を抱えて帰ってきた。デビッドが話を切り出そうとしたが、台所で歌を口ずさんで楽しそうに料理しているスシャ−ナを見てこの雰囲気を壊したくなかった。":GOSUB 5100
+3000 COMMON FO:GOSUB 5205:ISET X:CMD RUN "NO72"
+4999 '
+5000 GOSUB 5300
+5005 BN=&HF0C2:KN=BN:KX=0:FOR K1=1 TO LEN(BM$) STEP 2:K$=MID$(BM$,K1,2):CMD WIDTH KN,&H20,7:CMD KANJI K$:KN=KN+2:KX=KX+1
+5010 IF KX=38 THEN KX=0:BN=BN+&H50*11:KN=BN
+5020 FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$="▽":CMD WIDTH &HFB34,&H02,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 BN=&HF0D2:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H20,7:CMD KANJI CM$(I):BN=BN+&H50*13:NEXT
+5420 LINE(110,156+CN*13)-(512,166+CN*13),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,156+CN2*13)-(512,166+CN2*13),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 5000:NEXT:RETURN
+5510 FOR I=1 TO 3050:NEXT:RETURN
+5530 FOR L=1 TRON 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'ｸﾛｷﾐﾄﾞﾘ
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'ﾐﾄﾞﾘ
+6100 GOSUB 5205:CMD LOAD "ﾀｸｼｰ",&H00,&HC00E:GOSUB 5910:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾚｽﾄ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6120 GOSUB 5205:GOSUB 9535:CMD LOAD "ｱﾊﾟﾄ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6130 GOSUB 5205:CMD LOAD "Dﾍﾔ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6150 GOSUB 5205:CMD LOAD "Hﾍｯﾄ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6305 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davR",AR:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｺｰﾅ",AR:RETURN :ELSE RETURN
+9000 COMMON FM:COMMON P"11:56"TO"15:19":COMMON FI:RETURN
+9010 COMMON FM:COMMON P"25:42"TO"28:35":COMMON FI:RETURN:'ﾋﾟｱﾉ
+9020 COMMON FM:COMMON P"19:22"TO"21:41":COMMON FI:RETURN:'D/R
+9500 ISET X:CMD LOAD"Pｶﾈ":ISET L,&H3000,&H5FFF,0,&H00:RETURN
+9505 ISET X:ISET S,&H3000,1,&H50:ISET P,0,&H00,0,&H0A00:RETURN
+9510 ISET X:CMD LOAD"Pﾄﾘ":ISET L,&H3000,&H77B8,1,&H00:RETURN
+9515 ISET X:ISET S,&H4000,1,&HFF:ISET P,1,&H00,1,&H0FFE:GOSUB 5500:RETURN
+9520 ISET X:CMD LOAD"Pﾊﾞｽ":ISET L,&H3000,&H7FB0,2,&H00:RETURN
+9525 ISET X:ISET S,&H1000,1,&H60:ISET P,2,&H00,2,&H1000:RETURN
+9530 ISET X:CMD LOAD"Pｽﾀﾄ":ISET L,&H3000,&H5FD0,3,&H00:RETURN
+9535 ISET X:ISET S,&H2000,0,&H60:ISET P,3,&H00,3,&H0900:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                ":RETURN
+10000 BM$="ＤＡＴＡをＳＡＶＥしますか？　Ｙ／Ｎ":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="ドライブ１に、ＳＡＶＥ・ディスクを入れて下さい。":GOSUB 5100
+10049 CMD SET "A:"
+10050 CMD PEEK &HF3FE,TU:CMD PEEK &HF3FF,TI
+10060 IF TU=200 AND TI=201 THEN 10080
+10070 BM$="ドライブ１のディスクが違います。":GOSUB 5100:GOTO 10040
+10080 POKE &HE302,71:POKE &HE303,0:'SAVE NO
+10090 CMD WRITE &H00,&H00,&H01,&HE300
+10110 BM$="ＳＡＶＥしました。ドライブ１のディスクに、ＭＡＩＮディスクを入れて下さい。":GOSUB 5100
+10120 CMD SET "A:"
+10130 CMD PEEK &HF3FE,TU:CMD PEEK &HF3FF,TI
+10140 IF TU=100 AND TI=101 THEN RETURN
+10150 BM$="ドライブ１のディスクが違います。":GOSUB 5100:GOTO 10110

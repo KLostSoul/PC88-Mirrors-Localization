@@ -1,0 +1,145 @@
+1 'CMD SAVE "B:NO82"
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'------1270
+100 GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="デビッドが話す。":C2$="スシャ−ナが話す。":C3$="ランズが話す。"
+1000 GOSUB 6100:BM$="二人は城の中を調べるように見て回った。ランズ夫妻は食堂とスシャ−ナの部屋だけは掃除を済ませていたので、スシャ−ナは、さっそく食事の支度を始めた。":GOSUB 5100
+1010 GOSUB 1200
+1020 CM=2:CM$(1)=C1$:CM$(2)=C2$
+1030 GOSUB 5400
+1110 IF CN=2 AND G1>2 THEN 1320
+1120 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1310:GOTO 1030
+1130 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1300:GOTO 1030
+1140 IF CN=1 AND G1>1 THEN GOSUB 1290:GOTO 1030
+1150 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1260:GOTO 1030
+1160 IF CN=2 AND G2>0 THEN GOSUB 1250:GOTO 1030
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1220:GOTO 1030
+1180 IF CN=1 THEN G1=1:GOSUB 1210:GOTO 1030
+1190 IF CN=2 THEN GOSUB 1200:GOTO 1030
+1200 GOSUB 6310:BM$="スシャ−ナ「私達が予定よりはやく来たので、ランズさん達は掃除がまにあわなかったみたい。でも寝る部屋と食堂がきれいだから、しばらく住む事ができるわ」":GOSUB 5100:RETURN
+1210 GOSUB 6300:BM$="デビッド「北の王が現れなかったら、こうして休暇が楽しめたのに、どうしてこんな事になってしまったのか・・・」":GOSUB 5100:RETURN
+1220 GOSUB 6310:BM$="スシャ−ナ「さあ出来たわ。昨夜から食事の時間も切り詰めて走ったから、お腹がすいたでしょう」":GOSUB 5100
+1230 GOSUB 6300:BM$="デビッドは北の王に追われているような気がして、食事もとらずに車を走らせてきたのに食欲がなかった。でもスシャ−ナの料理を見ると急に食欲がわき、あさるように食べはじめる。":GOSUB 5100
+1240 BM$="食事が終わるとデビッドは眠くなってきたが、また悪夢を見るような気がして寝るのが怖くてがまんしていた。":GOSUB 5100
+1250 GOSUB 6310:BM$="スシャ−ナ「お腹が一杯になったら眠たくなったわ。デビッド、私の部屋で一緒に寝ない」":GOSUB 5100:RETURN
+1260 GOSUB 6300:BM$="デビッド「俺も眠たくて仕方がないのだが、悪夢に襲われそうで・・・スシャ−ナと一緒なら悪夢でうなされた時に起こしてもらえるから、少し寝るとするか」":GOSUB 5100
+1270 COMMON FO:GOSUB 6110:BM$="デビッドとスシャ−ナは部屋で寝る事にした。":GOSUB 5100
+1275 GOSUB 9010:'----1350
+1280 GOSUB 5615:BM$="どのくらいたったのか、デビッドはスシャ−ナに起こされた。":GOSUB 5100
+1285 GOSUB 5820:W1=0:GOSUB 6300
+1290 BM$="デビッド「うっ、何か起こったのか・・・」":GOSUB 5100:RETURN
+1300 GOSUB 6310:BM$="スシャ−ナ「ごめんなさい。デビッドがよく寝ていたので起こすのやめようと思ったの。でも一人にして、もし悪夢を見たら大変でしょう。だから・・・」":GOSUB 5100:RETURN
+1310 GOSUB 6300:BM$="デビッド「あれ、もう夜に・・・夢も見ないで熟睡していたんだ。なぜフロオス王が現れなかったのかな、こんなときにこそ現れて、どうすればいいのか教えてくれてもいい筈なのに」":GOSUB 5100:RETURN
+1320 GOSUB 6310:BM$="スシャ−ナ「私達が迷っているように、フロオス王も迷ってるのよ。下に降りてランズさんを待ちましょう」":GOSUB 5100
+1330 GOSUB 6100:BM$="スシャ−ナは火のともったロ−ソクを持って、デビッドと食堂に降りて行った。スシャ−ナは眠気を覚ますためにコ−ヒ−を入れている。":GOSUB 5100
+1340 BM$="デビッドの腕時計が午後１１時を越えたが、ランズは来なかった。城には電話が無いので、ただ待つしかない。":GOSUB 5100
+1350 COMMON FO:GOSUB 9515:BM$="１２時を越えた時、車のエンジンの音がして、門が開くのが見えた。ヘッドライトの明かりが食堂の窓から見える。":GOSUB 5100
+1360 GOSUB 9020:GOSUB 9525:BM$="車を門の外に置いたまま、ランズが走ってくる。スシャ−ナは慌ててドアをあけに行った。":GOSUB 5100:'----1790
+1370 ISET X:BM$="食堂にスシャ−ナとランズが入って来た。":GOSUB 5100
+1380 GOSUB 1600
+1390 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C3$
+1400 GOSUB 5400
+1500 IF CN=1 AND G2>3 THEN 1740
+1510 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1730:GOTO 1400
+1520 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1720:CM$(2)=C1$:GOTO 1400
+1530 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1710:CM$(1)=C3$:GOTO 1400
+1540 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1700:GOTO 1400
+1550 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1690:CM$(1)=C1$:GOTO 1400
+1560 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1680:CM$(2)=C2$:GOTO 1400
+1570 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1670:CM$(1)=C3$:GOTO 1400
+1580 IF CN=1 THEN G1=1:GOSUB 1660:CM$(2)=C1$:GOTO 1400
+1590 IF CN=2 THEN GOSUB 1650:GOTO 1400
+1600 GOSUB 6330:BM$="ランズ「グレッグが殺されました。北の王の呪文にやられたのに違いありません」":GOSUB 5100
+1610 BM$="ランズ「グレッグに電話を入れると、すぐに私の所に来ると言ったのに、いつまでたっても来ないので心配していました。しばらくしてグレッグから電話があったのですが」":GOSUB 5100
+1620 BM$="ランズ「グレッグはハワ−スに入る前から車に尾けられたと、レストランから電話をしていたのです。私が迎えに行くからそこから動かないように言ったのですが」":GOSUB 5100
+1630 BM$="ランズ「グレッグは危険だから迎えに来るなと言って電話を切りましたけれど、私は急いで車に乗って、そのレストランに迎えに行きました」":GOSUB 5100
+1640 BM$="ランズ「ハワ−ズに入った荒野の入口で、グレッグさんの死体と破壊された車を見たのです。近くには誰もいませんでしたが、この辺りで強盗が出た話はありませんから」":GOSUB 5100
+1650 BM$="ランズ「グレッグを殺したのは間違いなく北の一族です。スシャ−ナさん、デビッドさんを連れて逃げてください。相談をする時間などありません。イギリスから逃げるしかないのです」":GOSUB 5100:RETURN
+1660 GOSUB 6310:BM$="スシャ−ナ「逃げると言っても、パスポ−トは事務所に置いたままで国外に出られないわ」":GOSUB 5100:RETURN
+1670 GOSUB 6300:BM$="デビッド「ロンドンに戻ろう。車をフルスピ−ドで走らせれば、北の王も手だしは出来ないよ」":GOSUB 5100:RETURN
+1680 GOSUB 6330:BM$="ランズ「とんでもない。ロンドンと反対のスコットランドに行くのです。そこからパスポ−トを郵送してもらえば、船で国外に出られます」":GOSUB 5100:RETURN
+1690 GOSUB 6310:BM$="スシャ−ナ「デビッド、どうするの。北の王から逃げるの・・・」":GOSUB 5100:RETURN
+1700 GOSUB 6300:BM$="デビッド「スシャ−ナと一緒に暮らせるのなら地球の果てでも行くよ」":GOSUB 5100:RETURN
+1710 GOSUB 6310:BM$="スシャ−ナ「でも一度も戦わないで逃げるのは悔しいわ。私達の為に死んで行った暗黒の魔導師達になんてお詫びをしたらいいの」":GOSUB 5100:RETURN
+1720 GOSUB 6330:BM$="ランズ「私達、暗黒の魔導師達は受け継がれた血を守ために生まれてきたのです。私もこのハワ−ズで北の一族を足止めするために命をかけるつもりです。それが私達の定められた運命なのです」":GOSUB 5100:RETURN
+1730 GOSUB 6300:BM$="デビッド「俺達のために命を捨てる事はない。誰も死ぬ必要がないのに・・・ちくしょう！　北の王さえいなければ」":GOSUB 5100:RETURN
+1740 GOSUB 6330:BM$="ランズ「デビッドさん、逃げるのも運命です。無理に運命に逆らうと血が断たれフロオス王の魂は永遠にさまよい続けるでしょう」":GOSUB 5100
+1750 BM$="デビッドには運命などどうでもよかったが、デビッドの為に死んで行った魔導師の仇をうちたかった。しかしランズの泣きだしそうな顔を見て留まる事もできなかった。":GOSUB 5100
+1760 GOSUB 6310:BM$="スシャ−ナ「決めるのはデビッドよ。私達は貴方の指示に従うように生まれてきたのだから、デビッドが決断する運命はフロオス王が決めた運命なのよ」":GOSUB 5100
+1770 GOSUB 6300:BM$="デビッドはスシャ−ナの言葉を聞いて、決断する事が運命だと信じた。":GOSUB 5100
+1780 CM=2:CM$(1)="北の王を倒すために城に残る。":CM$(2)="魔王の血を守ために逃げる。"
+1790 COMMON FO:GOSUB 5400
+1800 IF CN=1 THEN 3060:'ﾀﾀｶｳ
+3000 ISET X:COMMON FO:GOSUB 5200:BM$="ＣＤ−ＲＯＭよりＤＡＴＡの読み込みを始めます。ＨＩＴ　ＡＮＹ　ＫＥＹ":GOSUB 5100
+3010 COMMON STOP:CMD SCREEN 1:BM$="　　　　　　　　ＣＤ−ＲＯＭよりＤＡＴＡを読み込み中":GOSUB 5000
+3020 COMMON COPY &H01,21581
+3040 CMD SET:CMD SCREEN 0:CMD RUN "NO83"
+3050 '--------- ﾀﾀｶｳ
+3060 ISET X:COMMON FO:GOSUB 5200:BM$="ＣＤ−ＲＯＭよりＤＡＴＡの読み込みを始めます。ＨＩＴ　ＡＮＹ　ＫＥＹ":GOSUB 5100
+3070 COMMON STOP:CMD SCREEN 1:BM$="　　　　　　　　ＣＤ−ＲＯＭよりＤＡＴＡを読み込み中":GOSUB 5000
+3080 COMMON COPY &H01,21781
+3090 CMD SET:CMD SCREEN 0:CMD RUN "NO84"
+3100 GOTO 3060
+4999 '
+5000 GOSUB 5300
+5005 BN=&HF0C2:KN=BN:KX=0:FOR K1=1 TO LEN(BM$) STEP 2:K$=MID$(BM$,K1,2):CMD WIDTH KN,&H20,7:CMD KANJI K$:KN=KN+2:KX=KX+1
+5010 IF KX=38 THEN KX=0:BN=BN+&H50*11:KN=BN
+5020 FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$="▽":CMD WIDTH &HFB34,&H02,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 BN=&HF0D2:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H20,7:CMD KANJI CM$(I):BN=BN+&H50*13:NEXT
+5420 LINE(110,156+CN*13)-(512,166+CN*13),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,156+CN2*13)-(512,166+CN2*13),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 3500:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'ｺｲｱｵ
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'ｸﾛｷﾐﾄﾞﾘ
+6100 GOSUB 5205:CMD LOAD "ｼﾛﾅｶ",&H00,&HC00E:GOSUB 5890:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:GOSUB 5890:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6330 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ﾗﾝｽﾞ",AL:RETURN :ELSE RETURN
+9000 COMMON FM:COMMON P"19:22"TO"21:41":COMMON FI:RETURN
+9010 COMMON FM:COMMON P"09:15"TO"11:55":COMMON FI:RETURN:'ｱｻ
+9020 COMMON FM:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'ﾎﾗｰ
+9500 ISET X:CMD LOAD"PBｵﾄ":ISET L,&H3000,&H47E8,0,&H00:RETURN
+9505 ISET X:ISET S,&H1000,1,&H90:ISET P,0,&H00,0,&H0400:RETURN
+9510 ISET X:CMD LOAD"Pﾌﾚｷ":ISET L,&H3000,&H47E8,1,&H00:RETURN
+9515 ISET X:ISET S,&H2300,0,&HFF:ISET P,1,&H00,1,&H0500:GOSUB 5500:GOSUB 9505:RETURN
+9520 ISET X:CMD LOAD"Pｱﾙｸ":ISET L,&H3000,&H5FFF,2,&H00:RETURN
+9525 ISET X:ISET S,&H2000,1,&HA0:ISET P,2,&H10,2,&H011F:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                ":RETURN
+10000 BM$="ＤＡＴＡをＳＡＶＥしますか？　Ｙ／Ｎ":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="ドライブ１に、ＳＡＶＥ・ディスクを入れて下さい。":GOSUB 5100
+10049 CMD SET "A:"
+10050 CMD PEEK &HF3FE,TU:CMD PEEK &HF3FF,TI
+10060 IF TU=200 AND TI=201 THEN 10080
+10070 BM$="ドライブ１のディスクが違います。":GOSUB 5100:GOTO 10040
+10080 POKE &HE302,82:POKE &HE303,0:'SAVE NO
+10090 CMD WRITE &H00,&H00,&H01,&HE300
+10110 BM$="ＳＡＶＥしました。ドライブ１のディスクに、ＭＡＩＮディスクを入れて下さい。":GOSUB 5100
+10120 CMD SET "A:"
+10130 CMD PEEK &HF3FE,TU:CMD PEEK &HF3FF,TI
+10140 IF TU=100 AND TI=101 THEN RETURN
+10150 BM$="ドライブ１のディスクが違います。":GOSUB 5100:GOTO 10110

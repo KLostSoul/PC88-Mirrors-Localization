@@ -1,0 +1,25 @@
+# Original game images and emulator bundles
+*.ccd
+*.img
+*.sub
+*.d88
+*.rom
+*.7z
+*.zip
+Mirrors PC-8801 MC English translation v1.0 (updated emu)/
+
+# Build and temporary output
+Temp/
+temp/
+build/
+dist/
+
+# Python build outputs and caches
+python_tools/__pycache__/
+python_mirrors_tools/__pycache__/
+python_mirrors_tools/Temp/
+python_mirrors_tools/Import/ASM/
+python_mirrors_tools/Import/Files/
+python_mirrors_tools/Import/Floppy/
+python_mirrors_tools/Import/ISO/
+python_mirrors_tools/Import/Data/*.raw
