@@ -1,0 +1,229 @@
+# Mirrors PC-8801 MC 영문 패치 소스 구조 맵
+
+분석 대상: `reference/mirrors_tools`
+
+이 문서는 영문 패치 소스에 포함된 Ruby 빌드 도구, 데이터 CSV, BASIC/ASM 소스와 현재 작업 폴더의 Python 포팅본을 대조해 작성한 정적 구조 분석표다. 에뮬레이터 실행 결과가 아니라 소스와 주소표를 기준으로 한 분석이다.
+
+## 1. 핵심 결론
+
+영문 패치는 문자열만 교체한 것이 아니다. 다음 네 층을 함께 수정하고, CD Track 2를 다시 구성한다.
+
+1. N88-BASIC 스크립트와 번역 문자열
+2. BASIC 확장 및 게임 루틴에 연결되는 Z80 ASM
+3. CD 내부의 커스텀 VWF 폰트·폭 테이블·그래픽 데이터
+4. CD에 묶여 있는 게임용 플로피 데이터와 저장 시스템
+
+원본 CD의 Track 2 데이터 트랙을 기준으로 작업하며, 최종적으로 수정된 BASIC/ASM/그래픽/플로피 데이터를 다시 Track 2에 삽입한다. CDDA 음악 트랙은 이 빌드 경로의 대상이 아니다.
+
+## 2. 디렉터리별 역할
+
+| 경로 | 역할 |
+|---|---|
+| `Data/` | CD 데이터 위치, 스크립트 목록, 디스크 배치, 그래픽 교체 목록, BASIC 패치, ASM 빌드 목록 |
+| `Export/` | 원본 Track 2에서 추출·디컴파일·디스어셈블한 결과 |
+| `Import/` | 패치 빌드에 넣을 BASIC/ASM/문자열/폰트 raw/그래픽 데이터 |
+| `GFX/` | 영문 커스텀 폰트와 교체 그래픽 PNG |
+| `Ghidra/` | `mir_main.gzf`, `mir_sub.gzf` 정적 분석 프로젝트 |
+| `Ruby/` | 추출·컴파일·폰트 변환·플로피 재패킹·CD 재구성 도구 |
+| `Tools/` | VASM Z80 어셈블러, BASIC/디스크 관련 외부 도구 |
+
+영문 소스 저장소는 완전한 원본 입력을 포함한 즉시 재현 가능한 빌드 트리는 아니다. 현재 소스에는 `Export/ISO/02 MIRR.iso`와 일부 `Export/Floppy`, `Export/Files`, `Import/Floppy`, `Import/Files`, `Import/ASM` 생성물이 없다. 이 입력·생성물은 원본 CD Track 2 추출 및 빌드 준비 과정에서 별도로 확보해야 한다.
+
+## 3. 빌드 진입점과 실행 순서
+
+진입점은 `Ruby/main.rb`다. 현재 파일의 `opMode`는 `"import"`로 고정되어 있다.
+
+```text
+main.rb
+  └─ DataImporter.new(true).importData
+       1. 원본 02 MIRR.iso를 메모리로 복사
+       2. FontGen으로 script/ui/menu 폰트와 폭 테이블 생성
+       3. GFX PNG를 게임 그래픽 데이터로 변환
+       4. ASM 소스 컴파일
+       5. intro BASIC 삽입
+       6. menu BASIC 삽입 및 디스크 선택표 갱신
+       7. 미사용 파일 삭제
+       8. 모든 시나리오 BASIC 컴파일·번역·패치
+       9. 수정 플로피를 작성하고 CD 내부 2HD 영역에 패킹
+      10. i_cddata.csv에 지정된 raw/ASM/폰트를 CD 데이터에 삽입
+      11. 수정된 02 MIRR.iso 작성
+```
+
+`export` 모드에서는 `DataExporter`가 원본 데이터 트랙을 읽고 BASIC을 디컴파일하며 ASM을 디스어셈블한다. `custom` 모드는 테스트용 코드가 남아 있지만 기본 실행 경로는 아니다.
+
+## 4. CD Track 2 데이터 구조
+
+`Data/e_cddata.csv`의 주소는 CloneCD `.img` 파일의 raw 오프셋이 아니라, 추출된 `02 MIRR.iso` 데이터 트랙 안의 2048바이트 데이터 오프셋이다.
+
+| 데이터 | Track 2 데이터 오프셋 | 크기 | 형식 | 로드 주소 |
+|---|---:|---:|---|---:|
+| `intro` | `0x2000` | `0x286` | BASIC | - |
+| `menu` | `0x8000` | `0x34C6` | BASIC | - |
+| `asminit1` | `0x1000` | `0x800` | ASM | `0xD100` |
+| `asminit2` | `0x1800` | `0x800` | ASM | `0xD800` |
+| `asmsub` | `0x2800` | `0x800` | ASM | `0x7B00` |
+| `asmbasic` | `0x3000` | `0x1000` | ASM | `0x9000` |
+| `asm3` | `0x4000` | `0x800` | ASM | `0xB310` |
+| `asmmain` | `0x4800` | `0x2800` | ASM | `0xA300` |
+| `asm5` | `0xA800` | `0x800` | ASM | `0x9D00` |
+| `snddat` | `0xF000` | `0x400` | raw | - |
+| `main` 플로피 | `0xF800` | `0x64000` | 2D 이미지 | - |
+| `disk01`~`disk12` | `0x73800`부터 | 각 `0x64000` | 플로피 이미지 | - |
+| `disk22`~`disk52` | CSV 지정 주소 | 각 `0x64000` | 플로피 이미지 | - |
+
+PC-8801 CD 절대 섹터 번호 변환은 `Const::CD_Sector_DataStart = 13350`, 데이터 섹터 크기는 `2048`이다. BASIC의 `COMMON COPY`로 CD 데이터를 읽을 때 `DataImporter#convertCDoffset_toAbsolute`가 다음 방식으로 변환한다.
+
+```text
+absolute_sector = data_offset / 0x800 + 13350
+```
+
+현재 작업 폴더의 CloneCD `.img`에 직접 쓰려면 2352바이트 raw 섹터의 16바이트 헤더를 고려한 별도 변환이 필요하다. 이 변환은 `python_tools/apply_test_font_image.py`에 구현되어 있다.
+
+## 5. 영문 패치가 삽입하는 CD 데이터
+
+`Data/i_cddata.csv`는 기존 데이터 트랙에 덮어쓸 패치 목록이다.
+
+| 데이터 | 오프셋 | 크기 | 의미 |
+|---|---:|---:|---|
+| `asmsub` | `0x2800` | `0x800` | 수정된 ASM |
+| `asmbasic` | `0x3000` | `0x1000` | BASIC 확장 핸들러 |
+| `asminit2` | `0x1800` | `0x800` | 초기화 훅 |
+| `asmmain` | `0x4800` | `0x2800` | 메인 ASM 수정 |
+| `vwf` | `0x10000` | `0x1000` | VWF 출력 엔진 |
+| `patch_copy` | `0x3980` | `0x380` | 추가 복사/패치 루틴 |
+| `script_bytes` | `0x11000` | `0xC00` | 스크립트 폰트 글리프 |
+| `script_widths` | `0x11F20` | `0x60` | 스크립트 폰트 폭 |
+| `ui_bytes` | `0x12000` | `0xC00` | UI 폰트 글리프 |
+| `ui_widths` | `0x12F20` | `0x60` | UI 폰트 폭 |
+| `menu_bytes` | `0x13000` | `0xC00` | 메뉴 폰트 글리프 |
+| `menu_widths` | `0x13F20` | `0x60` | 메뉴 폰트 폭 |
+| `snddat` | `0xF000` | `0x400` | 사운드 데이터 |
+
+`0xC00 = 96 × 16`이므로 현재 VWF 폰트 파일 하나는 8×16 글리프 96개로 구성된다. 폭 테이블은 96바이트다.
+
+## 6. VWF 출력 엔진 구조
+
+핵심 파일은 `Import/ASM_Source/vwf.asm`, `Ruby/FontGen.rb`, `Ruby/BasicCompiler.rb`다.
+
+### 6.1 폰트 뱅크
+
+`vwf.asm`은 `vFontNumber = 0x92DC` 값을 읽고 네 번 왼쪽 시프트해 폰트 뱅크의 0x1000 단위 기준 주소를 만든다.
+
+```text
+font_base = vFontNumber << 12
+right_margin_base = font_base + 0x0F00
+```
+
+현재 소스는 다음 세 폰트를 서로 다른 용도로 생성한다.
+
+| 생성 이름 | PNG | 용도 | CD 영역 |
+|---|---|---|---|
+| `script` | `b1-8x16_font.png` | 시나리오 대사 | `0x11000` |
+| `ui` | `rcopt2-8x16_font.png` | UI/선택지 | `0x12000` |
+| `menu` | `menu.png` | 메뉴 | `0x13000` |
+
+이 세 뱅크는 하나의 공유 288자 표가 아니다. 현재 엔진에서 활성 뱅크가 바뀌면 같은 문자 토큰이 다른 글리프로 해석될 수 있다.
+
+### 6.2 현재 문자 인덱싱
+
+`convertASCII_toCharAddr`는 다음 구조다.
+
+```text
+index = input_byte - 0x20
+glyph_address = font_base + index * 0x10
+```
+
+`0x20`부터 `0x7F`까지 96개 슬롯을 사용하고, 각 글리프는 16바이트다. `0x0D`는 줄바꿈으로 먼저 처리된다. 글리프를 `vKanjiBuffer`로 복사한 뒤 화면 버퍼에 비트 시프트해 가변 폭으로 합성한다.
+
+### 6.3 폭 처리
+
+`FontGen.rb`는 PNG의 8×16 셀을 읽는다.
+
+- 가로 8픽셀, 세로 16픽셀
+- PNG의 두 번째 행부터 6행을 읽음
+- 16열 × 6행 = 96글리프
+- 글리프 데이터 96 × 16바이트
+- 폭 테이블 96바이트
+- 첫 폭 값은 `0x02`로 강제
+
+따라서 현재 영문 엔진에서 한글화에 필요한 개조 지점은 화면 합성부 전체가 아니라 주로 다음이다.
+
+1. ASCII 기반 `convertASCII_toCharAddr`
+2. 한글 토큰의 1바이트/다중 바이트 디코더
+3. Python/Ruby BASIC 문자열 컴파일러
+4. 폰트 슬롯·뱅크 선택 정책
+5. 폭 계산 및 줄바꿈 코드
+
+## 7. BASIC·문자열 처리
+
+### 7.1 문자열 원천
+
+- `Export/Strings/stringsExport.csv`: 원문 추출 결과
+- `Import/Strings/stringsImport.csv`: 원문과 번역문을 연결하는 입력
+- `Data/patchBasic.csv`: 특정 BASIC 라인에 대한 직접 수정
+- `Export/BASIC/`: 디컴파일된 원본 BASIC
+- `Import/BASIC/`: 패치용 BASIC
+
+`BasicCompiler.rb`는 BASIC 토큰을 다시 바이너리로 만들고, 문자열을 번역 CSV의 `source_text`, `basic_line`과 대조해 교체한다. 현재 영문 경로의 줄 길이 계산은 `@widthData[l.ord - 0x20]`처럼 ASCII 인덱스를 직접 사용하므로 한글 토큰 체계를 적용할 때 반드시 수정해야 한다.
+
+### 7.2 VWF 호출 연결
+
+`DataImporter#basic_applyVWFHandler`가 각 공통 스크립트에 출력 루틴을 삽입한다.
+
+- `POKE &H92DC,1`: 스크립트 폰트 선택
+- `POKE &HB400,1`: 커스텀 출력 경로 사용
+- `CMD WIDTH`: 현재 문자열의 출력 주소·폭 설정
+- `CMD KANJI`: VWF ASM 루틴 호출
+- `ASC(K$)=92`: 백슬래시 기반 줄바꿈/특수 처리
+- UI 루틴에서는 `POKE &H92DC,2`로 UI 폰트 선택
+
+### 7.3 스크립트와 디스크 관계
+
+`Data/e_scripts.csv`는 시나리오 스크립트의 순서·분기·저장 허용 여부를 관리한다. `Data/i_disks.csv`는 스크립트를 논리 디스크, 서브 디스크, CD 내부 Track 2 위치와 연결한다. 따라서 한글 번역 시 문자열만 바꾸는 것이 아니라, 길이 증가로 인해 BASIC 분할·분기·CD 로딩에 영향을 주지 않는지 확인해야 한다.
+
+## 8. 플로피 이미지와 CD 패킹
+
+`FloppyMan.rb`는 원본 플로피의 디렉터리·섹터 맵을 읽고 파일 단위 교체를 수행한다.
+
+- 일반 2D 이미지: `400 × 0x400` 바이트
+- 패치용 2HD 이미지: `1200 × 0x400` 바이트
+- 수정 파일을 빈 섹터에 배치하고 디렉터리·섹터 맵 갱신
+- `DataImporter#createPackFloppyImages`가 여러 논리 디스크를 CD의 2HD 영역에 패킹
+- 패킹 영역에는 디스크 번호와 `0xC9` 매직 값이 기록됨
+
+`Data/i_gfx.csv`의 PNG 그래픽은 먼저 게임 파일 형식으로 변환된 뒤 해당 플로피 파일로 교체되고, 이후 CD 내부 플로피 영역에 다시 패킹된다.
+
+## 9. ASM 구성
+
+| 소스 | 역할 |
+|---|---|
+| `asmbasic.asm` | BASIC 확장 명령/핸들러 초기화 및 연결 |
+| `asminit2.asm` | 초기화 훅과 기존 루틴 연결 |
+| `asmmain.asm` | 메인 패치 명령 처리 |
+| `asmsub.asm` | 서브루틴/명령 디스패치 |
+| `vwf.asm` | VWF 글리프 주소 변환·폭 조회·화면 합성 |
+| `patch_copy.asm` | 추가 복사 루틴 패치 |
+
+`Data/asm.csv`는 실제로 컴파일할 ASM과 원본 크기 확인 여부를 지정한다. 원본 ASM 전체가 모두 소스화된 것은 아니며, 변경이 필요한 부분과 새 VWF 엔진 중심으로 관리된다. 나머지 게임 로직은 CD에 들어 있는 원본 바이너리와 BASIC에 남아 있다.
+
+## 10. 한글화에 직접 필요한 미확정 사항
+
+현재 구조 분석으로 확정된 것은 영문 패치의 데이터 흐름과 VWF 위치다. 다음은 별도로 설계·검증해야 한다.
+
+1. 한글 토큰의 바이트 형식
+2. 한글 토큰을 글리프 슬롯으로 변환하는 ASM 루틴
+3. 96글자 단위의 뱅크 운용 방식과 뱅크 전환 시점
+4. 한 뱅크에 넣을 음절·자모·기호 목록
+5. 한글 폭 테이블과 실제 줄바꿈 기준
+6. 한글 문자열을 BASIC 바이너리로 넣는 Python 컴파일러 규칙
+7. 번역문 길이 증가에 따른 스크립트 분할·여유 공간 문제
+8. 필요할 경우 원본 `kanji1.rom`, `kanji2.rom`에서 JIS 코드와 글리프를 추출하는 도구
+
+원문 폰트 ROM 테이블은 커스텀 한글 글리프를 출력하는 데 필수는 아니다. 그러나 일본어 코드·원문 글리프 비교 또는 일본어 혼용을 지원하려면 별도로 추출해야 한다.
+
+## 11. 현재 작업 상태와 분석의 한계
+
+- `가나다라` 테스트 이미지로 CD 내부 커스텀 글리프 삽입과 출력 경로는 확인됐다.
+- 이것은 기존 96슬롯 폰트 영역을 교체한 테스트이지, 한글 토큰 디코더가 완성됐다는 의미는 아니다.
+- 영문 소스의 전체 빌드를 아직 원본 `02 MIRR.iso`부터 재현한 상태는 아니다.
+- 이 문서는 소스·CSV·정적 ASM 분석표이며, 실행 추적이나 에뮬레이터 검증 결과를 포함하지 않는다.
