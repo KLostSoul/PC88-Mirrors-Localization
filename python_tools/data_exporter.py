@@ -4,9 +4,9 @@ import subprocess
 from .basic_decompiler import BasicDecompiler
 from .floppy import FloppyMan
 from .paths import (
-    DASM_EXE, EDATA_SCRIPTS, E_FOLDER_ASM, E_FOLDER_BASIC, E_FOLDER_DATA,
+    DASM_EXE, EDATA_SCRIPTS, E_FOLDER_ASM, E_FOLDER_BASIC,
     E_FOLDER_FILES, E_FOLDER_STRINGS, ECSV_CDDATA, ECSV_SCRIPTS,
-    ORIGINAL_ISO_DATATRACK,
+    EXPORT_PATH, ORIGINAL_ISO_DATATRACK,
 )
 from .util import b2n, csv_hash_array
 from .file_streamer import FileStreamer
@@ -31,7 +31,10 @@ class DataExporter:
     def extract_data(self):
         for entry in csv_hash_array(ECSV_CDDATA):
             raw = self.read_data(int(entry["offset"], 16), int(entry["size"], 16))
-            output = E_FOLDER_DATA / entry["path"] / f'{entry["filename"]}.raw'
+            # ``path`` is relative to Export/ in e_cddata.csv.  In particular,
+            # floppy entries must land in Export/Floppy so FloppyMan can open
+            # them during the following extraction stage.
+            output = EXPORT_PATH / entry["path"] / f'{entry["filename"]}.raw'
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_bytes(raw)
             if entry["type"] == "basic":

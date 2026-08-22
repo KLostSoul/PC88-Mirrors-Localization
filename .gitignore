@@ -23,3 +23,8 @@ python_mirrors_tools/Import/Files/
 python_mirrors_tools/Import/Floppy/
 python_mirrors_tools/Import/ISO/
 python_mirrors_tools/Import/Data/*.raw
+
+# Local data extracted from the original CD
+python_mirrors_tools/Export/ISO/02 MIRR.iso
+python_mirrors_tools/Export/Floppy/
+python_mirrors_tools/Export/Files/
