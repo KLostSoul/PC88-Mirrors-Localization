@@ -31,7 +31,7 @@
 
 ### 2.1 Python 포팅 정적 검증 상태
 
-`python_tools/`는 Ruby 도구의 실행 대체본이다. Ruby 소스는 원본 구조와 포팅 내용을 대조하는 참조 자료로 유지한다.
+`python_mirrors_tools/python_tools/`는 Ruby 도구의 실행 대체본이다. Ruby 소스는 원본 구조와 포팅 내용을 대조하는 참조 자료로 유지한다.
 
 - Ruby 핵심 구현 11개(`BasicCompiler`, `DataImporter`, `FloppyMan`, `FontGen` 등)에 Python 대응 구현이 있다.
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.
@@ -109,7 +109,7 @@ PC-8801 CD 절대 섹터 번호 변환은 `Const::CD_Sector_DataStart = 13350`, 
 absolute_sector = data_offset / 0x800 + 13350
 ```
 
-현재 작업 폴더의 CloneCD `.img`에 직접 쓰려면 2352바이트 raw 섹터의 16바이트 헤더를 고려한 별도 변환이 필요하다. 이 변환은 `python_tools/apply_test_font_image.py`에 구현되어 있다.
+현재 작업 폴더의 CloneCD `.img`에 직접 쓰려면 2352바이트 raw 섹터의 16바이트 헤더를 고려한 별도 변환이 필요하다. 이 변환은 `python_mirrors_tools/python_tools/apply_test_font_image.py`에 구현되어 있다.
 
 ## 5. 영문 패치가 삽입하는 CD 데이터
 

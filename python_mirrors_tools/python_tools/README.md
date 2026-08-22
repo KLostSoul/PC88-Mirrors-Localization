@@ -7,15 +7,15 @@ The source tree used by the Python tools is `python_mirrors_tools` by default.
 Set `MIRRORS_TOOLS_ROOT` to point at another copy when comparing builds.
 
 ```powershell
-python -m python_tools fonts
-python -m python_tools export
-python -m python_tools import
+python -m python_mirrors_tools.python_tools fonts
+python -m python_mirrors_tools.python_tools export
+python -m python_mirrors_tools.python_tools import
+```
 
 To compare artifacts from two builds:
 
 ```powershell
-python -m python_tools.verify .\ruby-output .\python-output Import\Data\script_bytes.raw
-```
+python -m python_mirrors_tools.python_tools.verify .\ruby-output .\python-output Import\Data\script_bytes.raw
 ```
 
 `fonts` only converts the three PNG atlases to RAW data. It does not read a CD

@@ -16,7 +16,7 @@ build/
 dist/
 
 # Python build outputs and caches
-python_tools/__pycache__/
+python_mirrors_tools/python_tools/__pycache__/
 python_mirrors_tools/__pycache__/
 python_mirrors_tools/Temp/
 python_mirrors_tools/Import/ASM/

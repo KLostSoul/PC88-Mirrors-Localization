@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 
-REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
+REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 # The Python port works in its own source tree.  This keeps the Ruby source
 # under reference/ untouched while allowing the tree to be pointed elsewhere
 # for comparisons through MIRRORS_TOOLS_ROOT.
