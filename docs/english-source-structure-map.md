@@ -37,9 +37,19 @@
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.
 - Python 모듈 15개는 정적 문법 검사를 통과했다.
 - 정적 대조에서 `DataExporter.extract_data()`의 출력 경로 오류를 발견·수정했다. Ruby 원본은 CSV의 `path`를 `Export/` 기준으로 해석하지만, 기존 Python 포팅은 이를 `Export/Data/` 기준으로 해석했다. 따라서 플로피가 잘못된 `Export/Data/Floppy/`에 기록될 문제를 `Export/Floppy/`로 수정했다.
-- 위 결과는 공통 파일·문법·일부 경로 로직의 정적 대조 결과이며, Ruby와 Python의 모든 생성물 바이트가 일치한다는 뜻은 아니다.
-- 2026-08-23 BASIC 출력 대조에서 차이가 확인됐다. Ruby `BasicCompiler.rb`는 `tokens[0..-2]`로 마지막 토큰을 항상 제외하지만, Python `basic_compiler.py`는 마지막 토큰이 빈 문자열일 때만 제외한다. 공백을 캡처하는 정규식과 `data_importer.py`의 후행 공백이 결합되어 Python 생성 메뉴 데이터에 불필요한 `0x20`이 남는다.
-- 그 결과 기준 영문 `menu.raw`는 11,140바이트, 현재 Python 한글 `menu.raw`는 11,245바이트다. 토큰 치환과 별개로 105바이트 차이가 생겼으므로, Python 포팅은 현재 Ruby와 바이트 단위 호환이 완료된 상태가 아니다.
+- 2026-08-23 Ruby 2.7.4 x64(`chunky_png` 1.4.0, `-EUTF-8`)를 기준으로 Python 빌드 결과를 파일·바이트 단위로 다시 대조했다. Ruby와 Python은 다음 생성물 집합에서 모두 일치했다.
+
+  | 비교 대상 | Python | Ruby | 동일 | 차이 | 누락 |
+  |---|---:|---:|---:|---:|---:|
+  | ASM | 12 | 12 | 12 | 0 | 0 |
+  | `Import/Data` | 8 | 8 | 8 | 0 | 0 |
+  | BASIC·이미지 생성 파일 | 130 | 130 | 130 | 0 | 0 |
+  | 플로피 RAW | 44 | 44 | 44 | 0 | 0 |
+  | `02 MIRR.iso` | 1 | 1 | 1 | 0 | 0 |
+
+- 직전 불일치의 실제 원인은 두 가지였다. `data_importer.py`가 Save 패치의 BASIC 줄 끝 콜론을 누락했고, `basic_compiler.py`가 Ruby가 단일 바이트로 보존하는 원시 제어 바이트를 UTF-8 2바이트로 인코딩했다. 각각 Ruby 소스와 동일하게 수정했다.
+- 최종 Python·Ruby `02 MIRR.iso`는 모두 40,550,400바이트이며 SHA-256은 `447d3f23d81897e040919b89b949814977effefe8ac89252dcf4f51553f411c2`로 동일하다. 이 값은 공개 영문 이미지에서 추출한 Track 2 기준 파일과도 일치한다.
+- 따라서 현재 영문 빌드 범위에서는 Python 포트가 Ruby 2.7.4 결과와 바이트 단위로 호환된다. 이 검증은 도구와 생성물의 정적·바이너리 검증이며 에뮬레이터 실행 결과를 포함하지 않는다.
 
 이 수정 뒤 원본 Track 2에서 정의된 플로피 44개를 `Export/Floppy/*.raw`에 추출했으며, 각 파일은 CSV의 원본 오프셋·크기 구간과 바이트 단위로 일치한다. 추출 Track 2와 플로피 RAW는 원본 게임 데이터이므로 Git ignore 대상이다.
 
@@ -109,7 +119,7 @@ PC-8801 CD 절대 섹터 번호 변환은 `Const::CD_Sector_DataStart = 13350`, 
 absolute_sector = data_offset / 0x800 + 13350
 ```
 
-현재 작업 폴더의 CloneCD `.img`에 직접 쓰려면 2352바이트 raw 섹터의 16바이트 헤더를 고려한 별도 변환이 필요하다. 이 변환은 `python_mirrors_tools/python_tools/apply_test_font_image.py`에 구현되어 있다.
+현재 작업 폴더의 CloneCD `.img`에 직접 쓰려면 2352바이트 raw 섹터의 16바이트 헤더를 고려한 별도 변환이 필요하다. 이 변환은 Ruby 원본 도구의 빌드 경로에 포함되지 않는다.
 
 ## 5. 영문 패치가 삽입하는 CD 데이터
 
@@ -358,9 +368,9 @@ menu BASIC의 그룹 선택
 ## 10. 분석 상태와 문서 경계
 
 - 원본 `Mirrors.img`에서 Track 2를 `Export/ISO/02 MIRR.iso`로 추출하고, Python `export`로 44개 2D 플로피 RAW를 생성해 원본 구간과 비교했다.
-- Ruby 포트 기준으로 Python 컴파일러·디컴파일러·이미지/플로피 패커의 차이를 수정한 뒤, 원본 데이터 트랙 `02 MIRR.iso`를 Python `export`로 다시 추출했다.
+- Ruby 포트 기준으로 Python 컴파일러·디컴파일러·이미지/플로피 패커의 차이를 수정한 뒤, 공개 영문 이미지에서 추출한 데이터 트랙 `02 MIRR.iso`를 Python `export`로 다시 처리했다.
 - 재추출 결과는 `python_mirrors_tools/Export/Floppy`의 44개 RAW이며, 각 파일은 409,600바이트다. 이 재추출 결과를 현재 Python 후속 작업의 플로피 입력 기준으로 사용한다.
-- Ruby가 제공한 기준 산출물과의 바이트 비교는 `Export/BASIC` 107개와 `Import/Data` 10개가 모두 일치했다. 이전에 수정 전 Python으로 추출한 플로피와 산출물은 기준에서 폐기한다.
-- 공개 영문 배포 이미지에서 추출한 전체 Track 2와 소스 묶음 기반 재빌드 결과는 별도 제작본 차이가 남아 있으므로, Ruby 기준 산출물과 구분해 기록한다.
+- Ruby 2.7.4 기준 재빌드와 Python 재빌드의 비교 결과는 ASM 12개, `Import/Data` 8개, BASIC·이미지 생성 파일 130개, 플로피 RAW 44개, `02 MIRR.iso` 1개 모두 동일했다. 전체 비교에서 차이·누락은 0개다.
+- 최종 `02 MIRR.iso`의 SHA-256은 양쪽 모두 `447d3f23d81897e040919b89b949814977effefe8ac89252dcf4f51553f411c2`이며, 공개 영문 이미지에서 추출한 Track 2 기준 파일과도 일치한다.
 - 이 문서는 영문 패치의 소스·CSV·바이너리 구조를 기록한 정적 분석표이며, 실행 추적이나 에뮬레이터 검증 결과를 포함하지 않는다.
 - 한글 토큰, 폰트 용량 계산, VWF 변경, 시험 이미지와 구현 계획은 `docs/korean-localization-design.md`에서 관리한다.

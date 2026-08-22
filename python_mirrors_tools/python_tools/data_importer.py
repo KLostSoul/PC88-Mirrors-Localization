@@ -1,313 +1,501 @@
 import ast
 import csv
+import math
 import subprocess
 
 from .basic_compiler import BasicCompiler
+from .defines import Const, Paths
 from .floppy import FloppyMan
 from .fontgen import FontGen
 from .img_encoder import ImgEncoder
-from .paths import (
-    ASM_EXE, ECSV_CDDATA, ECSV_SCRIPTS, E_FOLDER_BASIC, GFX_PATH,
-    ICSV_ASM, ICSV_CDDATA,
-    ICSV_DISKS, ICSV_GFX, I_FOLDER_BASIC, I_FOLDER_DATA, I_FOLDER_FILES, I_FOLDER_FLOPPY,
-    I_FOLDER_ISO, I_FOLDER_STRINGS, IASM_BIN, IASM_SOURCE, IMPORT_PATH,
-    ORIGINAL_ISO_DATATRACK, PATCHED_ISO_DATATRACK, Const,
-)
-from .util import csv_hash_array, n2b
-
-
-def read_tsv(path):
-    with path.open("r", encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle, delimiter="\t"))
-
-
-def integer(value):
-    return int(str(value), 16)
+from .util import Util
 
 
 class DataImporter:
-    def __init__(self, translate=True):
-        from .paths import IDATA_BASICPATCH, IDATA_SCRIPTS
+    def __init__(self, _translate=True):
+        self.initialize(_translate)
 
-        self.strings_data = read_tsv(IDATA_SCRIPTS)
-        for row in self.strings_data:
-            row["source_text"] = row["source_text"].replace("−", "－").replace("－", "−")
-        self.basic_patch = csv_hash_array(IDATA_BASICPATCH)
-        self.disk_data = csv_hash_array(ICSV_DISKS)
-        self.script_data = csv_hash_array(ECSV_SCRIPTS)
-        self.disk_mans = {}
-        self.enable_translation = translate
-        self.create_disk_mans()
+    def initialize(self, _translate=True):
+        with open(Paths.IData_Scripts, "r", encoding="utf-8-sig",
+                  newline="") as handle:
+            self.stringsData = list(csv.DictReader(handle, delimiter="\t"))
+        for string in self.stringsData:
+            string["source_text"] = (
+                string["source_text"]
+                .replace("−", "－")
+                .replace("－", "−")
+            )
 
-    def create_disk_mans(self):
-        for disk in self.disk_data:
-            if disk["disk"] not in self.disk_mans:
-                manager = FloppyMan()
-                manager.open(disk["disk"])
-                self.disk_mans[disk["disk"]] = manager
+        self.basicPatch = Util.CSV2hashArray(Paths.IData_BasicPatch)
+        self.diskData = Util.CSV2hashArray(Paths.ICSV_Disks)
+        self.scriptData = Util.CSV2hashArray(Paths.ECSV_Scripts)
+        self.diskMans = {}
+        self.enableTranslation = _translate
+        self.createDiskMans()
 
-    @staticmethod
-    def add_patch_line(patch, disk, script, line, code):
-        patch.append({"disk": disk, "script": script, "line": str(line), "patchedLine": code})
+    def createDiskMans(self):
+        for d in self.diskData:
+            if d["disk"] not in self.diskMans:
+                diskMan = FloppyMan()
+                diskMan.open(d["disk"])
+                self.diskMans[d["disk"]] = diskMan
 
-    @staticmethod
-    def convert_cd_offset_to_absolute(offset):
-        return offset // 0x800 + Const.CD_SECTOR_DATA_START
+    def basic_addPatchLine(self, _patch, _disk, _script, _line, _code):
+        _patch.append({
+            "disk": _disk,
+            "script": _script,
+            "line": str(_line),
+            "patchedLine": _code,
+        })
 
-    def apply_vwf_opening(self, patch, script_data):
-        disk, script = script_data["disk"], script_data["script"]
-        for line, code in [
-            (10010, 'CMD SCREEN 1:GOSUB 2400:BN=&HD007:BM$="This story is a work of fiction.":GOSUB 5100'),
-            (5100, 'CMD WIDTH BN,&H40,7:CMD KANJI BM$:BN=BN+&H0640:RETURN'),
-            (5120, 'GOSUB 2400:CMD WIDTH &HD504,&H60,7:CMD KANJI BM$'),
-            (5130, 'CMD WIDTH &HDF04,&H60,7:CMD KANJI BM2$:GOSUB 5110:RETURN'),
-            (5140, 'GOSUB 2400:CMD WIDTH &HD50A,&H60,6:CMD KANJI BM$'),
-            (5150, 'CMD WIDTH &HDC90,&H60,7:CMD KANJI BM2$'),
-            (5160, 'CMD WIDTH &HE417,&H60,7:CMD KANJI BM3$:GOSUB 5110:RETURN'),
-        ]:
-            self.add_patch_line(patch, disk, script, line, code)
+    def convertCDoffset_toAbsolute(self, _offset):
+        return _offset // 0x800 + Const.CD_Sector_DataStart
 
-    def apply_vwf(self, patch, script_data, line=5000):
-        disk, script = script_data["disk"], script_data["script"]
-        rows = [
-            (line + 1, f"POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB {line + 40}"),
-            (line + 5, f"FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB {line + 44}:GOTO {line + 20}:ELSE {line + 10}:"),
-            (line + 10, "CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:"),
-            (line + 20, f"GOSUB {line + 41}:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN"),
-            (line + 40, f"POKE &HB40B,(BN\\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN"),
-            (line + 41, "SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN"),
-            (line + 42, "IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN"),
-            (line + 43, "RETURN"),
-            (line + 44, f"BN=BN+&H50*14:GOSUB {line + 40}:POKE &HB401,0:RETURN"),
-            (line + 105, 'BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$'),
-            (line + 410, "POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1"),
-            (line + 420, "LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN"),
-            (line + 440, "LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR"),
-        ]
-        for row, code in rows:
-            self.add_patch_line(patch, disk, script, row, code)
+    def basic_applyVWFHandler_Opening(self, _patch, _scdata):
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10010,
+            'CMD SCREEN 1:GOSUB 2400:BN=&HD007:BM$="This story is a work of fiction.":GOSUB 5100',
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5100,
+            "CMD WIDTH BN,&H40,7:CMD KANJI BM$:BN=BN+&H0640:RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5120,
+            "GOSUB 2400:CMD WIDTH &HD504,&H60,7:CMD KANJI BM$",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5130,
+            "CMD WIDTH &HDF04,&H60,7:CMD KANJI BM2$:GOSUB 5110:RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5140,
+            "GOSUB 2400:CMD WIDTH &HD50A,&H60,6:CMD KANJI BM$",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5150,
+            "CMD WIDTH &HDC90,&H60,7:CMD KANJI BM2$",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 5160,
+            "CMD WIDTH &HE417,&H60,7:CMD KANJI BM3$:GOSUB 5110:RETURN",
+        )
 
-    def apply_save_patch(self, patch, script_data, disk_data):
-        disk, script = script_data["disk"], script_data["script"]
-        rows = [
-            (10000, 'BM$="Save game? (press Y or N)":GOSUB 5000'),
-            (10040, 'BM$="Select slot (1-9, ESC to exit):":GOSUB 5000'),
-            (10049, 'S$=INKEY$:IF S$="" THEN 10049'),
-            (10050, 'IF S$=CHR$(27) THEN RETURN'),
-            (10060, 'TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049'),
-            (10070, f'POKE &HE302,{disk_data["scriptN"]}:POKE &HE303,{disk_data["scribtSub"]}:'),
-            (10080, 'TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300'),
-            (10090, 'BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN'),
-            (10110, ""), (10120, ""), (10130, ""), (10140, ""), (10150, ""),
-        ]
-        for row, code in rows:
-            self.add_patch_line(patch, disk, script, row, code)
+    def basic_applyVWFHandler(self, _patch, _scdata, _line=5000):
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 1,
+            "POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB %d" %
+            (_line + 40),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 5,
+            "FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB %d:GOTO %d:ELSE %d:" %
+            (_line + 44, _line + 20, _line + 10),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 10,
+            "CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 20,
+            "GOSUB %d:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN" %
+            (_line + 41),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 40,
+            "POKE &HB40B,(BN\\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 41,
+            "SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 42,
+            "IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 43,
+            "RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 44,
+            "BN=BN+&H50*14:GOSUB %d:POKE &HB401,0:RETURN" % (_line + 40),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 105,
+            'BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$',
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 410,
+            "POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 420,
+            "LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 440,
+            "LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR",
+        )
 
-    def apply_cd_switch_patch(self, script_data, patch, disk_data):
-        load_data = ast.literal_eval(disk_data["loadLineNum"])
-        next_scripts = disk_data["nextScript"].split(",")
-        if load_data is None or len(load_data) != len(next_scripts):
-            raise ValueError(f"Wrong load data for {script_data['script']}")
-        for index, next_script in enumerate(next_scripts):
-            next_data = next(item for item in self.disk_data if item["script"] == next_script)
-            if next_data["diskNum"] != disk_data["diskNum"]:
-                lines = [
+    def basic_applySavePatch(self, _patch, _scdata, _diskData):
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10000,
+            'BM$="Save game? (press Y or N)":GOSUB 5000',
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10040,
+            'BM$="Select slot (1-9, ESC to exit):":GOSUB 5000',
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10049,
+            'S$=INKEY$:IF S$="" THEN 10049',
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10050,
+            "IF S$=CHR$(27) THEN RETURN",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10060,
+            "TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10070,
+            "POKE &HE302,%d:POKE &HE303,%d:" %
+            (int(_diskData["scriptN"]), int(_diskData["scribtSub"])),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10080,
+            "TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300",
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], 10090,
+            'BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN',
+        )
+        for line in [10110, 10120, 10130, 10140, 10150]:
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], line, ""
+            )
+
+    def _ruby_eval_load_lines(self, value):
+        return ast.literal_eval(value)
+
+    def basic_applyCDswitchPatch(self, _sc, _basicPatch, _diskData):
+        loadData = self._ruby_eval_load_lines(_diskData["loadLineNum"])
+        nextScript = _diskData["nextScript"].split(",")
+        if loadData is None or len(loadData) != len(nextScript):
+            raise ValueError("Wrong load data for %s" % _sc["script"])
+
+        for ind, nscr in enumerate(nextScript):
+            nscrData = next(
+                item for item in self.diskData if item["script"] == nscr
+            )
+            if nscrData["diskNum"] != _diskData["diskNum"]:
+                patchLines = [
                     'ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100',
                     'COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000',
-                    f'COMMON COPY &H01,{self.convert_cd_offset_to_absolute(integer(next_data["trackCD"]))}',
-                    f'POKE &H9089,{next_data["subDisk"]}:CMD SET:CMD SCREEN 0:CMD RUN"{next_data["script"]}"',
+                    "COMMON COPY &H01,%d" %
+                    self.convertCDoffset_toAbsolute(
+                        int(nscrData["trackCD"], 16)
+                    ),
+                    'POKE &H9089,%d:CMD SET:CMD SCREEN 0:CMD RUN"%s"' %
+                    (int(nscrData["subDisk"]), nscrData["script"]),
                 ]
-            elif next_data["subDisk"] != disk_data["subDisk"]:
-                lines = [
+                for lind, ldLine in enumerate(loadData[ind]):
+                    self.basic_addPatchLine(
+                        _basicPatch, _sc["disk"], _sc["script"],
+                        ldLine, patchLines[lind],
+                    )
+            elif nscrData["subDisk"] != _diskData["subDisk"]:
+                patchLines = [
                     "ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT",
-                    "COMMON STOP", "'",
-                    f'POKE &H9089,{next_data["subDisk"]}:CMD SET:CMD SCREEN 0:CMD RUN"{next_data["script"]}"',
+                    "COMMON STOP",
+                    "'",
+                    'POKE &H9089,%d:CMD SET:CMD SCREEN 0:CMD RUN"%s"' %
+                    (int(nscrData["subDisk"]), nscrData["script"]),
                 ]
-            else:
-                continue
-            for line, code in zip(load_data[index], lines):
-                self.add_patch_line(patch, script_data["disk"], script_data["script"], line, code)
+                for lind, ldLine in enumerate(loadData[ind]):
+                    self.basic_addPatchLine(
+                        _basicPatch, _sc["disk"], _sc["script"],
+                        ldLine, patchLines[lind],
+                    )
 
-    @staticmethod
-    def add_header(binary):
-        size = len(binary)
-        header = [0] + n2b(size, 2, little_endian=False) + [0, 0, (size + 0x3FF) // 0x400, 1]
-        print(f"Compiled size: {size}/12288 ({size * 100.0 / 12288:3.2f} %)")
-        if size > 12288:
+    def basic_addHeader(self, _basic):
+        binSize = len(_basic)
+        header = [0]
+        header += Util.n2b(binSize, 2, False)
+        header += [0, 0, math.ceil(binSize / Const.Disk_SectorSize), 1]
+        for x in header:
+            _basic.insert(0, x)
+        print("Compiled size: %d/12288 (%3.2f %%)" %
+              (binSize, binSize * 100.0 / 12288))
+        if binSize > 12288:
             print("WARNING: exceeding maximum size")
-        # Ruby adds each header byte with Array#unshift, reversing the header
-        # array in the resulting file.
-        for value in header:
-            binary.insert(0, value)
-        return binary
+        return _basic
 
-    def translate_basic_scripts(self):
-        for script in self.script_data:
-            strings = [row for row in self.strings_data if row.get("script_num") == script["script"]]
-            basic_patch = [row for row in self.basic_patch if row["script"] == script["script"]]
-            disk_data = next(row for row in self.disk_data if row["script"] == script["script"])
+    def translateBasicScripts(self):
+        for sc in self.scriptData:
+            strings = [
+                item for item in self.stringsData
+                if item["script_num"] == sc["script"]
+            ]
+            basicPatch = [
+                item for item in self.basicPatch
+                if item["script"] == sc["script"]
+            ]
+            diskData = next(
+                item for item in self.diskData
+                if item["script"] == sc["script"]
+            )
 
-            if self.enable_translation and script["script"] == "NO0":
-                self.apply_vwf(basic_patch, script, 9000)
-                self.apply_vwf_opening(basic_patch, script)
-            elif self.enable_translation and script["commonPatch"] == "true":
-                self.apply_vwf(basic_patch, script)
-            if script["allowSave"] == "true":
-                self.apply_save_patch(basic_patch, script, disk_data)
-            if disk_data["loadLineNum"] != "-1":
-                self.apply_cd_switch_patch(script, basic_patch, disk_data)
+            if self.enableTranslation and sc["script"] == "NO0":
+                self.basic_applyVWFHandler(basicPatch, sc, 9000)
+                self.basic_applyVWFHandler_Opening(basicPatch, sc)
+            elif self.enableTranslation and sc["commonPatch"] == "true":
+                self.basic_applyVWFHandler(basicPatch, sc)
 
-            output_dir = I_FOLDER_FILES / script["disk"]
-            output_dir.mkdir(parents=True, exist_ok=True)
-            compiler = BasicCompiler(strings, basic_patch, self.script_font[0])
-            print(f'Compiling BASIC script {script["script"]}')
-            compiler.open_file(E_FOLDER_BASIC / script["script"])
-            split_points = script.get("splitPoints")
-            if not split_points or split_points == "-1":
-                binary = self.add_header(compiler.compile_single(self.enable_translation, script["script"]))
-                (output_dir / script["script"]).write_bytes(bytes(binary))
+            if sc["allowSave"] == "true":
+                self.basic_applySavePatch(basicPatch, sc, diskData)
+            if diskData["loadLineNum"] != "-1":
+                self.basic_applyCDswitchPatch(sc, basicPatch, diskData)
+
+            outDir = Paths.IFolder_Files / sc["disk"]
+            outDir.mkdir(parents=True, exist_ok=True)
+            comp = BasicCompiler(strings, basicPatch, self.scriptFont[0])
+            print("Compiling BASIC script " + sc["script"])
+            comp.openFile(Paths.EFolder_Basic / sc["script"])
+
+            if sc.get("splitPoints") is None or sc["splitPoints"] == "-1":
+                bin_ = comp.compileSingle(
+                    self.enableTranslation, sc["script"]
+                )
+                self.basic_addHeader(bin_)
+                (outDir / sc["script"]).write_bytes(bytes(bin_))
             else:
-                parts = split_points.split(",")
-                binaries = compiler.split_and_compile(script["script"], parts, self.enable_translation)
-                for binary in binaries:
-                    self.add_header(binary)
-                self.disk_mans[script["disk"]].add_replace_file(parts[0], binaries[1])
-                (output_dir / script["script"]).write_bytes(bytes(binaries[0]))
-                (output_dir / parts[0]).write_bytes(bytes(binaries[1]))
+                splitArray = sc["splitPoints"].split(",")
+                bins = comp.splitAndCompile(
+                    sc["script"], splitArray, self.enableTranslation
+                )
+                if bins is None or len(bins) != 2:
+                    raise ValueError("Compile error for %s" % sc["script"])
+                print("Script is splitted into %s and %s" %
+                      (sc["script"], splitArray[0]))
+                self.basic_addHeader(bins[0])
+                self.basic_addHeader(bins[1])
+                self.diskMans[sc["disk"]].addReplaceFile(
+                    splitArray[0], bins[1]
+                )
+                (outDir / sc["script"]).write_bytes(bytes(bins[0]))
+                (outDir / splitArray[0]).write_bytes(bytes(bins[1]))
 
-    def create_pack_floppy_images(self):
-        for entry in self.disk_data:
-            if int(entry["diskNum"]) > 0:
-                binary = (I_FOLDER_FILES / entry["disk"] / entry["script"]).read_bytes()
-                self.disk_mans[entry["disk"]].add_replace_file(entry["script"], binary)
-        for disk, manager in self.disk_mans.items():
-            print(f"Writing disk {disk}")
-            manager.write_modified()
+    def createPackFloppyImages(self):
+        for d in self.diskData:
+            if int(d["diskNum"]) > 0:
+                basic = list(
+                    (Paths.IFolder_Files / d["disk"] / d["script"]).read_bytes()
+                )
+                self.diskMans[d["disk"]].addReplaceFile(d["script"], basic)
 
-        grouped = {}
-        for entry in self.disk_data:
-            grouped.setdefault(entry["disk2HD"], []).append(entry)
-        for _, group in sorted(grouped.items()):
-            by_disk = {}
-            for entry in group:
-                by_disk.setdefault(entry["disk"], []).append(entry)
-            disk_info = next(iter(by_disk.values()))[0]
-            track_cd = integer(disk_info["trackCD"])
-            self.cd_image[track_cd:track_cd + Const.DISK_2HD_IMG_SIZE] = b"\0" * Const.DISK_2HD_IMG_SIZE
-            self.cd_image[track_cd + 0x12C002] = int(disk_info["diskNum"])
-            self.cd_image[track_cd + 0x12C003] = 0xC9
-            print(f'Packing 2HD disk {disk_info["disk"]} at offset {track_cd:x}')
-            for disk_entries in by_disk.values():
-                index = int(disk_entries[0]["subDisk"])
-                disk_name = disk_entries[0]["disk"]
-                data = (I_FOLDER_FLOPPY / f"{disk_name}.raw").read_bytes()
-                offset = track_cd + Const.DISK_IMG_SIZE * index
-                self.cd_image[offset:offset + Const.DISK_IMG_SIZE] = data[:Const.DISK_IMG_SIZE]
+        for disk, man in self.diskMans.items():
+            print("Writing disk %s" % disk)
+            man.writeModified()
 
-    def compile_asm(self):
-        for asm in csv_hash_array(ICSV_ASM):
-            source = IASM_SOURCE / f'{asm["asmFile"]}.asm'
-            binary = IASM_BIN / f'{asm["asmFile"]}.raw'
-            listing = IASM_BIN / f'{asm["asmFile"]}.lst'
-            binary.parent.mkdir(parents=True, exist_ok=True)
-            print(f"Compiling ASM file {source}")
-            result = subprocess.run([
-                str(ASM_EXE), "-L", str(listing), "-Fbin", "-o", str(binary), str(source),
-            ], capture_output=True, text=True)
-            if result.stderr:
-                raise RuntimeError(f"ASM compilation error for {source}: {result.stderr}")
-            if asm["compileOnly"] == "true" and integer(asm["fileSize"]) > 0:
-                expected = integer(asm["fileSize"])
-                actual = binary.stat().st_size
-                if expected != actual:
-                    raise ValueError(f"Image size mismatch for {asm['asmFile']}! {expected}(orig) != {actual}(mod)")
+        groups = {}
+        for item in self.diskData:
+            groups.setdefault(item["disk2HD"], []).append(item)
+        for disk, group2HD in sorted(groups.items()):
+            toPackDisks = {}
+            for item in group2HD:
+                toPackDisks.setdefault(item["disk"], []).append(item)
+            diskInfo = next(iter(toPackDisks.values()))[0]
+            trackCD = int(diskInfo["trackCD"], 16)
+            for i in range(Const.Disk_2HD_ImgSize):
+                self.cdImage[trackCD + i] = 0
 
-    def import_intro_script(self):
-        strings = [row for row in self.strings_data if row.get("disk_num") == Const.INTRO]
-        patch = [row for row in self.basic_patch if row["disk"] == Const.INTRO]
-        compiler = BasicCompiler(strings, patch)
-        compiler.open_file(I_FOLDER_BASIC / f"{Const.INTRO}.bas")
-        binary = compiler.compile_single(True, f"{Const.INTRO}.bas")
-        entry = next(row for row in csv_hash_array(ECSV_CDDATA) if row["filename"] == Const.INTRO)
-        offset = integer(entry["offset"])
-        self.cd_image[offset:offset + len(binary)] = bytes(binary)
+            self.cdImage[trackCD + 0x12C002] = int(diskInfo["diskNum"])
+            self.cdImage[trackCD + 0x12C003] = 0xC9
+            print("Packing 2HD disk %s at offset %x" % (disk, trackCD))
 
-    def menu_insert_new_disk_data(self, data):
-        grouped = {}
-        for entry in self.disk_data:
-            grouped.setdefault(entry["disk2HD"], []).append(entry)
-        basic_line = 6010
-        on_f_line = ""
-        for _, group in sorted(grouped.items()):
-            info = group[0]
-            if int(info["diskNum"]) > 0:
-                self.add_patch_line(data, Const.MENU, Const.MENU, basic_line,
-                                    f'COMMON COPY &H1,{self.convert_cd_offset_to_absolute(integer(info["trackCD"]))}:RETURN ')
-                on_f_line += f"{basic_line},"
-                basic_line += 10
-        on_f_line = "ON C GOSUB " + on_f_line[:-1] + ":RETURN "
-        self.add_patch_line(data, Const.MENU, Const.MENU, 6000, on_f_line)
-        basic_line = 7000
-        for script in self.disk_data[1:]:
+            for diskName, diskEntries in toPackDisks.items():
+                ind = int(diskEntries[0]["subDisk"])
+                offset = trackCD + Const.Disk_ImgSize * ind
+                diskFile = list(
+                    (Paths.IFolder_Floppy /
+                     (diskName + ".raw")).read_bytes()
+                )
+                for i in range(Const.Disk_ImgSize):
+                    self.cdImage[offset + i] = diskFile[i]
+
+    def compileASM(self):
+        Paths.IASM_Bin.mkdir(parents=True, exist_ok=True)
+        self.asmData = Util.CSV2hashArray(Paths.ICSV_ASM)
+        for asm in self.asmData:
+            asmSource = Paths.IASM_Source / (asm["asmFile"] + ".asm")
+            asmBinary = Paths.IASM_Bin / (asm["asmFile"] + ".raw")
+            asmList = Paths.IASM_Bin / (asm["asmFile"] + ".lst")
+            print("Compiling ASM file %s" % asmSource)
+            cmdLine = (
+                '"%s" -L "%s" -Fbin -o "%s" "%s"' %
+                (Paths.ASM_Exe, asmList, asmBinary, asmSource)
+            )
+            print(cmdLine)
+            process = subprocess.Popen(
+                cmdLine,
+                shell=True,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            _stdout, errors = process.communicate()
+            if errors != "":
+                raise RuntimeError("ASM compilation error for " +
+                                   str(asmSource) + ": " + errors)
+            if asm["compileOnly"] == "true":
+                origSize = int(asm["fileSize"], 16)
+                if origSize > 0 and origSize != asmBinary.stat().st_size:
+                    raise RuntimeError(
+                        "Image size mismatch for %s! %d(orig) != %d(mod)" %
+                        (asm["asmFile"], origSize, asmBinary.stat().st_size)
+                    )
+
+    def importIntroScript(self):
+        introData = [
+            item for item in self.stringsData
+            if item["disk_num"] == Const.Const_Intro
+        ]
+        basicPatch = [
+            item for item in self.basicPatch
+            if item["disk"] == Const.Const_Intro
+        ]
+        comp = BasicCompiler(introData, basicPatch)
+        comp.openFile(Paths.IFolder_Basic / (Const.Const_Intro + ".bas"))
+        bin_ = comp.compileSingle(True, Const.Const_Intro + ".bas")
+        offset = int(next(
+            item for item in Util.CSV2hashArray(Paths.ECSV_CDData)
+            if item["filename"] == Const.Const_Intro
+        )["offset"], 16)
+        for i, x in enumerate(bin_):
+            self.cdImage[offset + i] = x
+
+    def menu_insertNewDiskData(self, _data):
+        groups = {}
+        for item in self.diskData:
+            groups.setdefault(item["disk2HD"], []).append(item)
+        basicLine = 6010
+        onFLine = ""
+        for _disk, group2HD in sorted(groups.items()):
+            diskInfo = group2HD[0]
+            if int(diskInfo["diskNum"]) > 0:
+                trackCD = int(diskInfo["trackCD"], 16)
+                self.basic_addPatchLine(
+                    _data, Const.Const_Menu, Const.Const_Menu, basicLine,
+                    "COMMON COPY &H1,%d:RETURN " %
+                    self.convertCDoffset_toAbsolute(trackCD),
+                )
+                onFLine += str(basicLine) + ","
+                basicLine += 10
+
+        onFLine = onFLine[:-1] + ":RETURN "
+        onFLine = "ON C GOSUB " + onFLine
+        self.basic_addPatchLine(
+            _data, Const.Const_Menu, Const.Const_Menu, 6000, onFLine
+        )
+
+        basicLine = 7000
+        for script in self.diskData[1:]:
             if script["scriptN"] != "-1":
-                self.add_patch_line(data, Const.MENU, Const.MENU, basic_line,
-                                    f'DATA {script["scriptN"]},{script["scribtSub"]}, {script["diskNum"]}, {script["subDisk"]}, {script["script"]} ')
-                basic_line += 5
+                self.basic_addPatchLine(
+                    _data, Const.Const_Menu, Const.Const_Menu, basicLine,
+                    "DATA %d,%d, %d, %d, %s " %
+                    (
+                        int(script["scriptN"]),
+                        int(script["scribtSub"]),
+                        int(script["diskNum"]),
+                        int(script["subDisk"]),
+                        script["script"],
+                    ),
+                )
+                basicLine += 5
 
-    def import_menu_script(self):
-        strings = [row for row in self.strings_data if row.get("disk_num") == Const.MENU]
-        patch = [row for row in self.basic_patch if row["disk"] == Const.MENU]
-        self.menu_insert_new_disk_data(patch)
-        compiler = BasicCompiler(strings, patch)
-        compiler.open_file(I_FOLDER_BASIC / f"{Const.MENU}.bas")
-        binary = compiler.compile_single(self.enable_translation, "menu.bas")
-        (I_FOLDER_DATA / f"{Const.MENU}.raw").parent.mkdir(parents=True, exist_ok=True)
-        (I_FOLDER_DATA / f"{Const.MENU}.raw").write_bytes(bytes(binary))
-        entry = next(row for row in csv_hash_array(ECSV_CDDATA) if row["filename"] == Const.MENU)
-        offset = integer(entry["offset"])
-        self.cd_image[offset:offset + len(binary)] = bytes(binary)
+    def importMenuScript(self):
+        introData = [
+            item for item in self.stringsData
+            if item["disk_num"] == Const.Const_Menu
+        ]
+        basicPatch = [
+            item for item in self.basicPatch
+            if item["disk"] == Const.Const_Menu
+        ]
+        self.menu_insertNewDiskData(basicPatch)
+        comp = BasicCompiler(introData, basicPatch)
+        comp.openFile(Paths.IFolder_Basic / (Const.Const_Menu + ".bas"))
+        bin_ = comp.compileSingle(self.enableTranslation, "menu.bas")
+        Paths.IFolder_Data.mkdir(parents=True, exist_ok=True)
+        (Paths.IFolder_Data / (Const.Const_Menu + ".raw")).write_bytes(
+            bytes(bin_)
+        )
+        offset = int(next(
+            item for item in Util.CSV2hashArray(Paths.ECSV_CDData)
+            if item["filename"] == Const.Const_Menu
+        )["offset"], 16)
+        for i, x in enumerate(bin_):
+            self.cdImage[offset + i] = x
 
-    def delete_unused_data(self):
-        self.disk_mans["disk52"].free_file("ﾘﾝR")
+    def deleteUnusedData(self):
+        self.diskMans["disk52"].freeFile("ﾘﾝR".encode("shift_jis"))
 
-    def generate_fonts(self):
-        from .paths import FONT_MENU, FONT_SCRIPT, FONT_UI
-        generator = FontGen()
-        generator.generate_vwf(FONT_SCRIPT, "script")
-        self.script_font = generator.generate_vwf(FONT_UI, "ui")
-        generator.generate_vwf(FONT_MENU, "menu")
+    def generateFonts(self):
+        customFont = FontGen()
+        customFont.generateVWF(Paths.Font_Script, "script")
+        self.scriptFont = customFont.generateVWF(Paths.Font_UI, "ui")
+        customFont.generateVWF(Paths.Font_Menu, "menu")
 
-    def replace_images(self):
-        for gfx in csv_hash_array(ICSV_GFX):
-            print(f'Converting image {gfx["origFile"]}')
-            encoded = ImgEncoder().img_encode(GFX_PATH / gfx["origFile"], gfx["isMono"] == "true")
-            header = n2b(len(encoded), 2, little_endian=False) + n2b(integer(gfx["loadAddr"]), 2, little_endian=False)
-            header += [(len(encoded) + 0x3FF) // 0x400, 2]
-            # Same Array#unshift order as the Ruby image path.
-            for value in header:
-                encoded.insert(0, value)
-            output = I_FOLDER_FILES / gfx["disk"]
-            output.mkdir(parents=True, exist_ok=True)
-            (output / gfx["file"]).write_bytes(bytes(encoded))
-            self.disk_mans[gfx["disk"]].add_replace_file(gfx["file"], encoded)
+    def replaceImages(self):
+        gfxData = Util.CSV2hashArray(Paths.ICSV_GFX)
+        for gfx in gfxData:
+            print("Converting image %s" % gfx["origFile"])
+            imgEncoder = ImgEncoder()
+            convData = imgEncoder.imgEncode(
+                Paths.GFX_PATH / gfx["origFile"],
+                gfx["isMono"] == "true",
+            )
+            header = []
+            header += Util.n2b(len(convData), 2, False)
+            header += Util.n2b(int(gfx["loadAddr"], 16), 2, False)
+            header += [math.ceil(len(convData) / Const.Disk_SectorSize), 2]
+            for x in header:
+                convData.insert(0, x)
 
-    def import_data(self):
-        self.cd_image = bytearray(ORIGINAL_ISO_DATATRACK.read_bytes())
-        self.generate_fonts()
-        self.replace_images()
-        self.compile_asm()
-        self.import_intro_script()
-        self.import_menu_script()
-        self.delete_unused_data()
-        self.translate_basic_scripts()
-        self.create_pack_floppy_images()
+            outDir = Paths.IFolder_Files / gfx["disk"]
+            outDir.mkdir(parents=True, exist_ok=True)
+            (outDir / gfx["file"]).write_bytes(bytes(convData))
+            self.diskMans[gfx["disk"]].addReplaceFile(
+                gfx["file"], convData
+            )
 
-        for entry in csv_hash_array(ICSV_CDDATA):
-            source_file = IMPORT_PATH / entry["path"] / f'{entry["filename"]}.raw'
-            data = source_file.read_bytes()
-            offset = integer(entry["offset"])
-            limit = integer(entry["size"])
-            self.cd_image[offset:offset + min(len(data), limit)] = data[:limit]
+    def importData(self):
+        self.cdImage = list(Paths.Original_ISO_DataTrack.read_bytes())
+        self.generateFonts()
+        self.replaceImages()
+        self.compileASM()
+        self.importIntroScript()
+        self.importMenuScript()
+        self.deleteUnusedData()
+        self.translateBasicScripts()
+        self.createPackFloppyImages()
 
-        PATCHED_ISO_DATATRACK.parent.mkdir(parents=True, exist_ok=True)
-        PATCHED_ISO_DATATRACK.write_bytes(self.cd_image)
+        importCsv = Util.CSV2hashArray(Paths.ICSV_CDData)
+        for file in importCsv:
+            iFile = list(
+                (Paths.IMPORT_PATH / file["path"] /
+                 (file["filename"] + ".raw")).read_bytes()
+            )
+            offset = int(file["offset"], 16)
+            for i in range(int(file["size"], 16)):
+                if i >= len(iFile):
+                    break
+                self.cdImage[offset + i] = iFile[i]
+
+        Paths.Patched_ISO_DataTrack.parent.mkdir(parents=True, exist_ok=True)
+        Paths.Patched_ISO_DataTrack.write_bytes(bytes(self.cdImage))

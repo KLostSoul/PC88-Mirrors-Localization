@@ -1,246 +1,386 @@
 import re
-from pathlib import Path
 
-from .basic_decompiler import BasicDecompiler
-from .paths import BASIC_EXT_WORDS, BASIC_RES_WORDS, Const, LINE_TOKENS, TEMP_PATH
-from .util import n2b, safe_shift_jis
-
-
-TOKEN_RE = re.compile(
-    r'(".+?")|(-)|(,)|(=)|(:)|(\*)|([A-Z]+?\$)|(&H[0-9A-F]{4})|'
-    r'(&H[0-9A-F]{2})|(&H[0-9A-F]{1})|(&O[0-7]{3})|(\s)|\b'
-)
+from .defines import Const, Paths
+from .util import Util
 
 
 class BasicCompiler:
-    LINE_LIMIT = 362
+    LineLimit = 362
 
-    def __init__(self, strings_data=None, patch_data=None, width_data=None):
-        self.comp_file = []
-        self.reg_ops = {word: chr(index + 0x80) for index, word in enumerate(BASIC_RES_WORDS)}
-        self.ext_ops = {word: chr(index + 0x80) for index, word in enumerate(BASIC_EXT_WORDS)}
-        self.txt_file = []
-        self.strings_data = strings_data
-        self.patch_data = patch_data
-        self.width_data = width_data
-        self.is_data_token = False
-        self.is_line_token = False
+    def __init__(self, _stringsData=None, _patchData=None, _widthData=None):
+        self.initialize(_stringsData, _patchData, _widthData)
 
-    def open_file(self, filename):
-        # File.readlines preserves the source line terminators.  Path.read_text
-        # performs universal-newline conversion on Windows, which is not the
-        # Ruby behaviour.
-        with Path(filename).open("r", encoding="utf-8", newline="") as handle:
-            self.txt_file = handle.readlines()
+    def initialize(self, _stringsData=None, _patchData=None, _widthData=None):
+        self.compFile = []
+        self.regOps = {}
+        self.extOps = {}
+        self.txtFile = ""
 
-    def check_line_token(self, token):
-        self.is_line_token = token in LINE_TOKENS
+        for i, x in enumerate(Const.BasicResWords):
+            self.regOps[x] = r"\x%x" % (i + 0x80)
+        for i, x in enumerate(Const.BasicExtWords):
+            self.extOps[x] = r"\x%x" % (i + 0x80)
 
-    @staticmethod
-    def is_number(value):
-        return re.fullmatch(r"\d+", value) is not None
+        self.LineTokens = [
+            0x8C, 0xA8, 0xA9, 0xA7, 0xA4, 0xA6, 0xE4, 0x9F,
+            0x8A, 0x93, 0x9C, 0x89, 0x8E, 0xDD, 0x8D,
+        ]
 
-    @staticmethod
-    def patch_statement(statement):
-        if len(statement) > 1:
-            statement[1] = statement[1].replace("COMMON FM", "COMMON STOP")
-            statement[1] = statement[1].replace("COMMON FP", "COMMON STOP:COMMON FP")
+        self.stringsData = _stringsData
+        self.patchData = _patchData
+        self.widthData = _widthData
 
-    @staticmethod
-    def compile_end_string(value):
-        return value + '"'
+    def openFile(self, _filename):
+        with open(_filename, "r", encoding="utf-8") as handle:
+            self.txtFile = handle.readlines()
 
-    @staticmethod
-    def _line_parts(line):
-        parts = re.split(r"\s", line, maxsplit=1)
-        if len(parts) == 1:
-            parts.append("")
-        return parts
+    def isNumber(self, _str):
+        return re.fullmatch(r"\d+", _str)
 
-    def split_and_compile(self, script, split_array, translate_strings=True):
-        new_script = split_array[0]
-        sc1nums = [int(split_array[1]), int(split_array[2])]
-        sc2nums = [int(split_array[3]), int(split_array[4])]
-        sc1 = [line for line in self.txt_file if not (sc2nums[0] <= int(self._line_parts(line)[0]) <= sc2nums[1])]
-        sc2 = [line for line in self.txt_file if not (sc1nums[0] <= int(self._line_parts(line)[0]) <= sc1nums[1])]
-        sc1.append(f"{int(split_array[2]) + 1} CMD RUN \"{new_script}\" ")
-        return [self.compile(sc1, translate_strings, script), self.compile(sc2, translate_strings, new_script)]
+    def checkLineToken(self, _token):
+        self.isLineToken = _token in self.LineTokens
 
-    def compile_single(self, translate_strings=True, debug_name=""):
-        return self.compile(list(self.txt_file), translate_strings, debug_name)
+    def patchStatement(self, _statement):
+        _statement[1] = _statement[1].replace("COMMON FM", "COMMON STOP")
+        _statement[1] = _statement[1].replace(
+            "COMMON FP", "COMMON STOP:COMMON FP"
+        )
 
-    def _find_translation(self, original, line_number):
-        if not self.strings_data:
+    def _line_number(self, line):
+        return re.split(r"\s{1}", line, maxsplit=1)[0].strip()
+
+    def _ruby_split(self, text, regex):
+        tokens = []
+        last = 0
+        for match in regex.finditer(text):
+            tokens.append(text[last:match.start()])
+            for group in match.groups():
+                if group is not None:
+                    tokens.append(group)
+            last = match.end()
+        # Ruby String#split drops a trailing empty field. The caller then
+        # follows the original tokens[0..-2] behavior, which removes the
+        # final captured whitespace/boundary token as well.
+        if last < len(text):
+            tokens.append(text[last:])
+        return tokens
+
+    def splitAndCompile(self, _script, _splitArray, _translateStrings=True):
+        newScript = _splitArray[0]
+        sc1nums = [int(_splitArray[1]), int(_splitArray[2])]
+        sc2nums = [int(_splitArray[3]), int(_splitArray[4])]
+        sc1 = [
+            line for line in self.txtFile
+            if (
+                int(self._line_number(line)) < sc2nums[0]
+                or int(self._line_number(line)) > sc2nums[1]
+            )
+        ]
+        sc2 = [
+            line for line in self.txtFile
+            if (
+                int(self._line_number(line)) < sc1nums[0]
+                or int(self._line_number(line)) > sc1nums[1]
+            )
+        ]
+        sc1.append("%d CMD RUN \"%s\" " %
+                   (int(_splitArray[2]) + 1, newScript))
+        bin1 = self.compile(sc1, _translateStrings, _script)
+        bin2 = self.compile(sc2, _translateStrings, newScript)
+        return [bin1, bin2]
+
+    def compileSingle(self, _translateStrings=True, _debugName=""):
+        return self.compile(self.txtFile, _translateStrings, _debugName)
+
+    def compile_EndString(self, _newStr):
+        return _newStr + '"'
+
+    def _lookup_translation(self, original, line):
+        if self.stringsData is None:
             return None
-        candidates = [row for row in self.strings_data
-                      if row.get("source_text") == original and row.get("basic_line") == line_number]
-        if not candidates:
-            candidates = [row for row in self.strings_data if row.get("source_text") == original]
-        if candidates and candidates[0].get("translation", "") != "":
-            return candidates[0]["translation"]
+        replace = [
+            s for s in self.stringsData
+            if s.get("source_text") == original
+            and s.get("basic_line") == line
+        ]
+        if not replace:
+            replace = [
+                s for s in self.stringsData
+                if s.get("source_text") == original
+            ]
+        if replace and replace[0].get("translation", "") != "":
+            return replace[0].get("translation", "")
         return None
 
-    def _translate_string(self, token, line_number, translate_strings):
-        original = token[1:-1].replace("−", "－").replace("－", "−")
-        replacement = self._find_translation(original, line_number) if translate_strings else None
-        if replacement is None:
-            return token.encode("cp932", errors="ignore")
+    def _font_width(self, text):
+        return sum(self.widthData[ord(char) - 0x20] for char in text)
 
-        if self.width_data is not None:
-            new_string = '"'
-            temporary = ""
-            line_count = 0
-            translated_lines = replacement.split("\n")
-            for line_index, translated_line in enumerate(translated_lines):
-                prepared = translated_line.replace("—", " - ").replace('"', '`')
-                for word in prepared.split(" "):
-                    word_length = sum(self.width_data[ord(char) - 0x20] for char in word)
-                    temporary_length = sum(self.width_data[ord(char) - 0x20] for char in temporary)
-                    if (temporary_length + word_length) > self.LINE_LIMIT or (
-                            temporary_length > self.LINE_LIMIT and temporary[-2:-1] in {",", ".", "!", "?"}):
-                        line_count += 1
-                        new_string += temporary.rstrip()
-                        temporary = ""
-                        if line_count > 2:
-                            line_count = 0
-                            new_string = self.compile_end_string(new_string)
-                            if len(new_string) >= 0xF0:
-                                raise ValueError(f"String too long: {new_string}")
-                            new_string += "\x3A\x8D\x20\x0E\xEC\x13\x3A\x42\x4D\x24\xF1\""
+    def _encode_shift_jis(self, text):
+        # Ruby uses replace: "" for invalid/undefined characters here.
+        return list(text.encode("shift_jis", errors="ignore"))
+
+    def _encode_ruby_string_bytes(self, text):
+        """Encode a Ruby string that may contain literal BASIC byte escapes.
+
+        Ruby changes the encoding of the literal control-byte fragment used
+        by the VWF line splitter to ASCII-8BIT.  Python must preserve those
+        bytes instead of UTF-8 expanding them (for example, 0x8D -> C2 8D).
+        Other Unicode characters remain UTF-8, matching Ruby's String#bytes
+        for the translation text.
+        """
+        raw_bytes = {0x0E, 0x13, 0x8D, 0xEC, 0xF1}
+        encoded = bytearray()
+        for char in text:
+            code = ord(char)
+            if code in raw_bytes:
+                encoded.append(code)
+            else:
+                encoded.extend(char.encode("utf-8"))
+        return list(encoded)
+
+    def _compile_string(self, token, line, translateStrings):
+        original = token[1:-1]
+        original = original.replace("−", "－").replace("－", "−")
+        newStr = ""
+
+        translation = None
+        if self.stringsData is not None and translateStrings:
+            translation = self._lookup_translation(original, line)
+
+        if translation is not None:
+            if self.widthData is not None:
+                newStr += '"'
+                tmpString = ""
+                trLines = translation.split("\n")
+                lineCount = 0
+                for ind, tr in enumerate(trLines):
+                    prepStr = tr.replace("—", " - ").replace('"', chr(96))
+                    splitStr = prepStr.split()
+                    for word in splitStr:
+                        wordLength = self._font_width(word)
+                        tmpStringLength = self._font_width(tmpString)
+                        punctuation = (
+                            len(tmpString) >= 2
+                            and tmpString[-2] in ",.!?"
+                        )
+                        if (
+                            (tmpStringLength + wordLength) > self.LineLimit
+                            or (
+                                tmpStringLength > self.LineLimit
+                                and punctuation
+                            )
+                        ):
+                            lineCount += 1
+                            newStr += tmpString.rstrip()
+                            tmpString = ""
+                            if lineCount > 2:
+                                lineCount = 0
+                                newStr = self.compile_EndString(newStr)
+                                if len(newStr) >= 0xF0:
+                                    raise ValueError("String too long: %s" %
+                                                     newStr)
+                                newStr += (
+                                    "\x3a\x8d\x20\x0e\xec\x13"
+                                    "\x3a\x42\x4d\x24\xf1"
+                                )
+                                newStr += '"'
+                            else:
+                                newStr += "\\"
+                        tmpString += word + " "
+
+                    newStr += tmpString.rstrip()
+                    if ind < len(trLines) - 1:
+                        lineCount += 1
+                        tmpString = ""
+                        if lineCount > 2:
+                            lineCount = 0
+                            newStr = self.compile_EndString(newStr)
+                            if len(newStr) >= 0xF0:
+                                raise ValueError("String too long: %s" %
+                                                 newStr)
+                            newStr += (
+                                "\x3a\x8d\x20\x0e\xec\x13"
+                                "\x3a\x42\x4d\x24\xf1"
+                            )
+                            newStr += '"'
                         else:
-                            new_string += "\\"
-                    temporary += word + " "
-                new_string += temporary.rstrip()
-                if line_index < len(translated_lines) - 1:
-                    line_count += 1
-                    temporary = ""
-                    if line_count > 2:
-                        line_count = 0
-                        new_string = self.compile_end_string(new_string)
-                        if len(new_string) >= 0xF0:
-                            raise ValueError(f"String too long: {new_string}")
-                        new_string += "\x3A\x8D\x20\x0E\xEC\x13\x3A\x42\x4D\x24\xF1\""
-                    else:
-                        new_string += "\\"
-            new_string = self.compile_end_string(new_string)
+                            newStr += "\\"
+                newStr = self.compile_EndString(newStr)
+            else:
+                newStr += '"'
+                newStr += (
+                    translation.replace("—", " - ")
+                    .replace("\r", "")
+                    .replace('"', chr(96))
+                    .replace("\n", "\\")
+                )
+                newStr = self.compile_EndString(newStr)
         else:
-            new_string = '"' + replacement.replace("—", " - ").replace("\r", "").replace('"', '`').replace("\n", "\\") + '"'
-        # Ruby String#bytes uses the source string encoding here (UTF-8).
-        return new_string.encode("utf-8")
+            return self._encode_shift_jis(token)
 
-    def compile(self, txt_file, translate_strings=True, debug_name=""):
-        lines = list(txt_file)
-        if self.patch_data is not None:
-            line_numbers = [self._line_parts(line)[0] for line in lines]
-            for patch in self.patch_data:
-                if str(patch["line"]) not in line_numbers:
-                    lines.append(f'{patch["line"]} {patch.get("patchedLine", "")}')
-        # The reference Ruby sort_by! output reverses the only equal-key pair
-        # in the distributed source (menu line 9970).  Preserve that observable
-        # order rather than Python's stable equal-key ordering.
-        lines = [line for _, line in sorted(
-            enumerate(lines),
-            key=lambda item: (int(self._line_parts(item[1])[0]), -item[0]),
-        )]
+        return self._encode_ruby_string_bytes(newStr)
 
-        code = []
-        for line_index, raw_line in enumerate(lines):
-            statement = self._line_parts(raw_line)
-            if self.patch_data is not None:
-                matching = [patch for patch in self.patch_data if int(patch["line"]) == int(statement[0])]
-                if len(matching) > 1:
-                    raise ValueError(f"Duplicate patch lines found for line {statement[0]}")
-                if matching:
-                    replacement = str(matching[0].get("patchedLine", ""))
-                    statement[1] = "" if replacement == "" else replacement + " "
+    def compile(self, _txtFile, _translateStrings, _debugName):
+        if self.patchData is not None:
+            lineNums = [self._line_number(x) for x in _txtFile]
+            for patch in self.patchData:
+                if patch.get("line") not in lineNums:
+                    _txtFile.append(
+                        patch.get("line", "") + " "
+                        + str(patch.get("patchedLine", ""))
+                    )
+
+        indexed = list(enumerate(_txtFile))
+        indexed.sort(
+            key=lambda item: (int(self._line_number(item[1])), -item[0])
+        )
+        _txtFile[:] = [line for _index, line in indexed]
+
+        binCode = []
+        debugName = _debugName
+        debugStrings = {}
+        self.isDataToken = False
+        self.isLineToken = False
+
+        regex = re.compile(
+            r"""
+            (\".+?\")
+            |(\-)
+            |(\,)
+            |(\=)
+            |(\:)
+            |(\*)
+            |([A-Z]+?\$)
+            |(&H[0-9A-F]{4})
+            |(&H[0-9A-F]{2})
+            |(&H[0-9A-F]{1})
+            |(&O[0-7]{3})
+            |(\s)
+            |\b
+            """,
+            re.X,
+        )
+
+        for lnum, line in enumerate(_txtFile):
+            statement = re.split(r"\s{1}", line, maxsplit=1)
+            if self.patchData is not None:
+                patched = [
+                    i for i in self.patchData
+                    if int(i.get("line", 0)) == int(statement[0])
+                ]
+                if patched:
+                    if len(patched) == 1:
+                        patchStr = str(patched[0].get("patchedLine", ""))
+                        if patchStr == "":
+                            statement[1] = ""
+                        else:
+                            statement[1] = patchStr + " "
+                    else:
+                        raise ValueError(
+                            "Duplicate patch lines found for line %d" %
+                            int(statement[0])
+                        )
+
             if statement[1] == "":
                 continue
 
-            self.patch_statement(statement)
-            if int(statement[0]) == 9999 and debug_name != f"{Const.MENU}.bas":
-                line_code = [0xD6, 0x20, 0x11, 0x2C, 0x0F, 0x12, 0x3A, 0x91, 0x22] + [0x87] * 0x50 + [0x22, 0x3A, 0x8E]
+            self.patchStatement(statement)
+            if (
+                int(statement[0]) == 9999
+                and debugName != Const.Const_Menu + ".bas"
+            ):
+                binLine = [
+                    0xD6, 0x20, 0x11, 0x2C, 0x0F, 0x12, 0x3A, 0x91,
+                    0x22,
+                ] + [0x87] * 0x50 + [0x22, 0x3A, 0x8E]
             else:
-                # Ruby executes tokens[0..-2], not a conditional removal of a
-                # trailing empty item.  This intentionally discards the final
-                # token produced by String#split, including a final whitespace
-                # token on injected menu lines.
-                tokens = TOKEN_RE.split(statement[1])
-                # Ruby String#split removes trailing empty fields before the
-                # source's explicit [0..-2] slice.  Python re.split retains
-                # that final empty field, so remove only those fields first.
-                while tokens and tokens[-1] == "":
-                    tokens.pop()
-                tokens = tokens[:-1]
-                line_code = []
-                self.is_data_token = False
-                self.is_line_token = False
-                for token in tokens:
-                    if token is None or token == "":
+                tokens = self._ruby_split(statement[1], regex)
+                binLine = []
+                commentIndex = -1
+                self.isDataToken = False
+                self.isLineToken = False
+
+                for i, token in enumerate(tokens[:-1]):
+                    if token == "":
                         continue
                     if token == "'":
-                        line_code += [0x3A, 0x8F, 0xE9]
+                        binLine += [0x3A, 0x8F, 0xE9]
+                        commentIndex = i + 1
                         break
                     if token == "DATA":
-                        line_code.append(0x84)
-                        self.is_data_token = True
-                    elif token in BASIC_RES_WORDS and not self.is_data_token:
-                        value = BASIC_RES_WORDS.index(token) | 0x80
-                        line_code.append(value)
-                        self.check_line_token(value)
-                    elif token in BASIC_EXT_WORDS and not self.is_data_token:
-                        value = BASIC_EXT_WORDS.index(token) | 0x80
-                        line_code += [0xFF, value]
-                        # The distributed Ruby output uses the extended token
-                        # value here (for example ISET must not inherit RETURN
-                        # as a line-number token across a colon).
-                        self.check_line_token(value)
-                    elif token.startswith('"'):
-                        line_code.extend(self._translate_string(token, statement[0], translate_strings))
-                    elif token.startswith("&O"):
-                        line_code.append(0x0B)
-                        line_code += n2b(int(token[2:], 8), 2)
-                    elif token.startswith("&H"):
-                        line_code.append(0x0C)
-                        line_code += n2b(int(token[2:], 16), 2)
-                    elif token.isdigit():
-                        value = int(token)
-                        if self.is_data_token:
-                            line_code.extend(token.encode("ascii"))
-                        elif self.is_line_token:
-                            line_code.append(0x0E)
-                            line_code += n2b(value, 2)
-                        elif 0 <= value <= 9:
-                            line_code.append(value + 0x11)
-                        elif value < 0x100:
-                            line_code += [0x0F, value]
+                        binLine.append(0x84)
+                        self.isDataToken = True
+                        continue
+                    if token in Const.BasicResWords and not self.isDataToken:
+                        tokenValue = Const.BasicResWords.index(token) | 0x80
+                        binLine.append(tokenValue)
+                        self.checkLineToken(tokenValue)
+                        continue
+                    if token in Const.BasicExtWords and not self.isDataToken:
+                        extValue = Const.BasicExtWords.index(token) | 0x80
+                        binLine += [0xFF, extValue]
+                        self.checkLineToken(extValue)
+                        continue
+                    if token.startswith('"'):
+                        binLine += self._compile_string(
+                            token, statement[0], _translateStrings
+                        )
+                        continue
+                    if token.startswith("&O"):
+                        binLine.append(0x0B)
+                        binLine += Util.n2b(int(token[2:], 8), 2)
+                        continue
+                    if token.startswith("&H"):
+                        binLine.append(0x0C)
+                        binLine += Util.n2b(int(token[2:], 16), 2)
+                        continue
+                    if re.fullmatch(r"\d+", token):
+                        number = int(token)
+                        if self.isDataToken:
+                            binLine += list(token.encode())
+                        elif self.isLineToken:
+                            binLine.append(0x0E)
+                            binLine += Util.n2b(number, 2)
+                        elif 0 <= number <= 9:
+                            binLine.append(number + 0x11)
+                        elif number < 0x100:
+                            binLine += [0x0F, number]
                         else:
-                            line_code.append(0x1C)
-                            line_code += n2b(value, 2)
-                    elif token == ":":
-                        self.is_line_token = False
-                        self.is_data_token = False
-                        line_code.append(0x3A)
-                    else:
-                        for char in token:
-                            value = ord(char)
-                            if 0x20 <= value < 0x80:
-                                line_code.append(value)
-                            else:
-                                raise ValueError(f"Unexpected symbol {char} at line {line_index}")
+                            binLine.append(0x1C)
+                            binLine += Util.n2b(number, 2)
+                        continue
+                    if token == ":":
+                        self.isLineToken = False
+                        self.isDataToken = False
+                        binLine.append(0x3A)
+                        continue
 
-            line_code.append(0)
-            line_number = n2b(int(statement[0]), 2)
-            line_code = line_number + line_code
-            next_address = n2b(len(code) + len(line_code) + 3, 2)
-            code = code + next_address + line_code
+                    for char in token:
+                        if 0x20 <= ord(char) < 0x80:
+                            binLine.append(ord(char))
+                        else:
+                            raise ValueError(
+                                "Unexpected symbol %s at line %d" %
+                                (char, lnum)
+                            )
 
-        code += [0, 0, 0, 0]
-        if debug_name:
-            debug_dir = TEMP_PATH / "basic"
-            debug_dir.mkdir(parents=True, exist_ok=True)
-            decompiler = BasicDecompiler()
-            decompiler.open_memory(code)
-            (debug_dir / debug_name).write_bytes(
-                decompiler.decompile()["mData"].encode("utf-8")
-            )
-        return code
+            binLine.append(0)
+            lineNum = Util.n2b(int(statement[0]), 2)
+            binLine[0:0] = lineNum
+            lineAddr = Util.n2b(len(binCode) + len(binLine) + 3, 2)
+            binLine[0:0] = lineAddr
+            binCode += binLine
+
+        binCode += [0, 0, 0, 0]
+
+        if debugName != "":
+            from .basic_decompiler import BasicDecompiler
+
+            basicDec = BasicDecompiler()
+            basicDec.openMemory(binCode)
+            decomp = basicDec.decompile()
+            debugPath = Paths.TEMP_PATH / "basic" / debugName
+            debugPath.parent.mkdir(parents=True, exist_ok=True)
+            debugPath.write_text(decomp["mData"], encoding="utf-8")
+
+        return binCode
