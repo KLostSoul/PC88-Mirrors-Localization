@@ -20,11 +20,10 @@ class FileStreamer:
         self._offset = 0
 
     def clone(self):
-        stream = FileStreamer()
-        stream.endianness = self.endianness
-        stream.data = bytes(self.data)
-        stream._offset = self._offset
-        return stream
+        # FileStreamer#clone in the reference calls the undefined StreamFile
+        # constant.  It is not used by the build, but must not acquire new
+        # behaviour in the port.
+        raise NameError("uninitialized constant StreamFile")
 
     def get_addr(self, address):
         return self._offset if address == -1 else address
@@ -48,9 +47,11 @@ class FileStreamer:
     def advance(self, count):
         self._offset += count
 
-    def peek(self, offset=0, fail_char=0):
+    def peek(self, offset=0, fail_char="\0"):
+        if self.eof():
+            return fail_char
         position = self._offset + offset
-        return self.data[position] if 0 <= position < len(self.data) else fail_char
+        return self.data[position] if 0 <= position < len(self.data) else None
 
     def _position(self, address):
         return self._offset if address == -1 else address

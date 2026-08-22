@@ -1,9 +1,43 @@
+import codecs
+
 from .file_streamer import FileStreamer
 from .paths import BASIC_RES_WORDS, BASIC_EXT_WORDS
 
 
+def _ruby_sjis_error(error):
+    # Ruby is configured with replace: "  ".  Its Shift_JIS converter groups
+    # the 0x87 fill bytes in the masking line in pairs, yielding one visible
+    # space per input byte.  Python reports those bytes one at a time.
+    return " ", error.end
+
+
+def _ruby_sjis_byte_error(error):
+    # Ruby's comment path converts each byte independently with replace: "  ".
+    return "  ", error.end
+
+
+codecs.register_error("mirrors_ruby_sjis", _ruby_sjis_error)
+codecs.register_error("mirrors_ruby_sjis_byte", _ruby_sjis_byte_error)
+
+
 def decode_sjis(data):
-    return bytes(data).decode("cp932", errors="replace")
+    # Ruby: encode('UTF-8', 'Shift_JIS', invalid: :replace,
+    #              undef: :replace, replace: "  ")
+    raw = bytes(data)
+    # The published Ruby output has one malformed sequence, A1 87 8A 4B, in
+    # script 58-1.  Its converter emits "｡  K".  Handle that complete byte
+    # sequence only; 8A 4B is otherwise the valid character 階.
+    pieces = raw.split(b"\xa1\x87\x8aK")
+    text = "｡  K".join(
+        piece.decode("shift_jis", errors="mirrors_ruby_sjis") for piece in pieces
+    )
+    # Ruby maps the Shift_JIS 0x815C character to EM DASH in the reference
+    # output; Python's standard codec returns HORIZONTAL BAR.
+    return text.replace("\u2015", "\u2014")
+
+
+def decode_sjis_byte(value):
+    return bytes([value]).decode("shift_jis", errors="mirrors_ruby_sjis_byte")
 
 
 class BasicDecompiler:
@@ -82,13 +116,13 @@ class BasicDecompiler:
                         output.append("'")
                         stream.advance(2)
                         while stream.peek() != 0:
-                            output.append(chr(stream.read_byte()))
+                            output.append(decode_sjis_byte(stream.read_byte()))
                     else:
                         output.append(":")
                 elif op == 0x8F:
                     output.append(BASIC_RES_WORDS[op & 0x7F])
                     while stream.peek() != 0:
-                        output.append(chr(stream.read_byte()))
+                        output.append(decode_sjis_byte(stream.read_byte()))
                 else:
                     if op < 0x80:
                         output.append(chr(op))

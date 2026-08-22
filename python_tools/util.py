@@ -3,7 +3,10 @@ from pathlib import Path
 
 
 def csv_hash_array(path: Path, delimiter=";"):
-    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+    # Ruby: CSV.read(..., :encoding => "utf-8").  Do not silently strip a
+    # BOM here: a BOM is part of the input as far as the reference tool is
+    # concerned.
+    with path.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter=delimiter))
 
 
@@ -26,4 +29,5 @@ def jis0208_sjis(byte1, byte2):
 
 
 def safe_shift_jis(text):
-    return text.encode("cp932", errors="ignore")
+    # Ruby String#encode('Shift_JIS', 'UTF-8', replace: "")
+    return text.encode("shift_jis", errors="ignore")

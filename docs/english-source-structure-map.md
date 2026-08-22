@@ -358,5 +358,9 @@ menu BASIC의 그룹 선택
 ## 10. 분석 상태와 문서 경계
 
 - 원본 `Mirrors.img`에서 Track 2를 `Export/ISO/02 MIRR.iso`로 추출하고, Python `export`로 44개 2D 플로피 RAW를 생성해 원본 구간과 비교했다.
+- Ruby 포트 기준으로 Python 컴파일러·디컴파일러·이미지/플로피 패커의 차이를 수정한 뒤, 원본 데이터 트랙 `02 MIRR.iso`를 Python `export`로 다시 추출했다.
+- 재추출 결과는 `python_mirrors_tools/Export/Floppy`의 44개 RAW이며, 각 파일은 409,600바이트다. 이 재추출 결과를 현재 Python 후속 작업의 플로피 입력 기준으로 사용한다.
+- Ruby가 제공한 기준 산출물과의 바이트 비교는 `Export/BASIC` 107개와 `Import/Data` 10개가 모두 일치했다. 이전에 수정 전 Python으로 추출한 플로피와 산출물은 기준에서 폐기한다.
+- 공개 영문 배포 이미지에서 추출한 전체 Track 2와 소스 묶음 기반 재빌드 결과는 별도 제작본 차이가 남아 있으므로, Ruby 기준 산출물과 구분해 기록한다.
 - 이 문서는 영문 패치의 소스·CSV·바이너리 구조를 기록한 정적 분석표이며, 실행 추적이나 에뮬레이터 검증 결과를 포함하지 않는다.
 - 한글 토큰, 폰트 용량 계산, VWF 변경, 시험 이미지와 구현 계획은 `docs/korean-localization-design.md`에서 관리한다.

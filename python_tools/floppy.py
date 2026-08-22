@@ -18,7 +18,7 @@ class FloppyMan:
 
     @staticmethod
     def _sjis(value):
-        return value.encode("cp932", errors="replace")
+        return value.encode("shift_jis")
 
     def free_file(self, name):
         if isinstance(name, str):
@@ -41,7 +41,9 @@ class FloppyMan:
         next_index = 0
         for _ in range(count):
             try:
-                index = mapping.index(0xFF, next_index)
+                # Ruby's map.drop(nextIndex).find_index returns the index in
+                # the dropped array, not the original map.
+                index = mapping[next_index:].index(0xFF)
             except ValueError:
                 break
             result.append(index)
@@ -134,5 +136,5 @@ class FloppyMan:
                                                              sector * Const.DISK_SECTOR_SIZE))
             directory = E_FOLDER_FILES / self.disk_name
             directory.mkdir(parents=True, exist_ok=True)
-            filename = entry["file_name"].decode("cp932", errors="replace")
+            filename = entry["file_name"].decode("shift_jis")
             (directory / filename).write_bytes(data)

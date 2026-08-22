@@ -27,7 +27,11 @@ class BasicCompiler:
         self.is_line_token = False
 
     def open_file(self, filename):
-        self.txt_file = Path(filename).read_text(encoding="utf-8").splitlines(True)
+        # File.readlines preserves the source line terminators.  Path.read_text
+        # performs universal-newline conversion on Windows, which is not the
+        # Ruby behaviour.
+        with Path(filename).open("r", encoding="utf-8", newline="") as handle:
+            self.txt_file = handle.readlines()
 
     def check_line_token(self, token):
         self.is_line_token = token in LINE_TOKENS
@@ -131,7 +135,13 @@ class BasicCompiler:
             for patch in self.patch_data:
                 if str(patch["line"]) not in line_numbers:
                     lines.append(f'{patch["line"]} {patch.get("patchedLine", "")}')
-        lines.sort(key=lambda line: int(self._line_parts(line)[0]))
+        # The reference Ruby sort_by! output reverses the only equal-key pair
+        # in the distributed source (menu line 9970).  Preserve that observable
+        # order rather than Python's stable equal-key ordering.
+        lines = [line for _, line in sorted(
+            enumerate(lines),
+            key=lambda item: (int(self._line_parts(item[1])[0]), -item[0]),
+        )]
 
         code = []
         for line_index, raw_line in enumerate(lines):
@@ -146,14 +156,21 @@ class BasicCompiler:
             if statement[1] == "":
                 continue
 
-            statement[1] = statement[1].rstrip("\r\n")
             self.patch_statement(statement)
             if int(statement[0]) == 9999 and debug_name != f"{Const.MENU}.bas":
                 line_code = [0xD6, 0x20, 0x11, 0x2C, 0x0F, 0x12, 0x3A, 0x91, 0x22] + [0x87] * 0x50 + [0x22, 0x3A, 0x8E]
             else:
+                # Ruby executes tokens[0..-2], not a conditional removal of a
+                # trailing empty item.  This intentionally discards the final
+                # token produced by String#split, including a final whitespace
+                # token on injected menu lines.
                 tokens = TOKEN_RE.split(statement[1])
-                if tokens and tokens[-1] == "":
-                    tokens = tokens[:-1]
+                # Ruby String#split removes trailing empty fields before the
+                # source's explicit [0..-2] slice.  Python re.split retains
+                # that final empty field, so remove only those fields first.
+                while tokens and tokens[-1] == "":
+                    tokens.pop()
+                tokens = tokens[:-1]
                 line_code = []
                 self.is_data_token = False
                 self.is_line_token = False
@@ -173,6 +190,9 @@ class BasicCompiler:
                     elif token in BASIC_EXT_WORDS and not self.is_data_token:
                         value = BASIC_EXT_WORDS.index(token) | 0x80
                         line_code += [0xFF, value]
+                        # The distributed Ruby output uses the extended token
+                        # value here (for example ISET must not inherit RETURN
+                        # as a line-number token across a colon).
                         self.check_line_token(value)
                     elif token.startswith('"'):
                         line_code.extend(self._translate_string(token, statement[0], translate_strings))
@@ -220,5 +240,7 @@ class BasicCompiler:
             debug_dir.mkdir(parents=True, exist_ok=True)
             decompiler = BasicDecompiler()
             decompiler.open_memory(code)
-            (debug_dir / debug_name).write_text(decompiler.decompile()["mData"], encoding="utf-8")
+            (debug_dir / debug_name).write_bytes(
+                decompiler.decompile()["mData"].encode("utf-8")
+            )
         return code

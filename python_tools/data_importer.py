@@ -17,12 +17,12 @@ from .util import csv_hash_array, n2b
 
 
 def read_tsv(path):
-    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+    with path.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
 
 
 def integer(value):
-    return int(str(value), 0)
+    return int(str(value), 16)
 
 
 class DataImporter:
@@ -30,6 +30,8 @@ class DataImporter:
         from .paths import IDATA_BASICPATCH, IDATA_SCRIPTS
 
         self.strings_data = read_tsv(IDATA_SCRIPTS)
+        for row in self.strings_data:
+            row["source_text"] = row["source_text"].replace("−", "－").replace("－", "−")
         self.basic_patch = csv_hash_array(IDATA_BASICPATCH)
         self.disk_data = csv_hash_array(ICSV_DISKS)
         self.script_data = csv_hash_array(ECSV_SCRIPTS)
@@ -133,7 +135,10 @@ class DataImporter:
         print(f"Compiled size: {size}/12288 ({size * 100.0 / 12288:3.2f} %)")
         if size > 12288:
             print("WARNING: exceeding maximum size")
-        binary[:0] = header
+        # Ruby adds each header byte with Array#unshift, reversing the header
+        # array in the resulting file.
+        for value in header:
+            binary.insert(0, value)
         return binary
 
     def translate_basic_scripts(self):
@@ -209,7 +214,7 @@ class DataImporter:
             result = subprocess.run([
                 str(ASM_EXE), "-L", str(listing), "-Fbin", "-o", str(binary), str(source),
             ], capture_output=True, text=True)
-            if result.returncode != 0 or result.stderr:
+            if result.stderr:
                 raise RuntimeError(f"ASM compilation error for {source}: {result.stderr}")
             if asm["compileOnly"] == "true" and integer(asm["fileSize"]) > 0:
                 expected = integer(asm["fileSize"])
@@ -278,7 +283,9 @@ class DataImporter:
             encoded = ImgEncoder().img_encode(GFX_PATH / gfx["origFile"], gfx["isMono"] == "true")
             header = n2b(len(encoded), 2, little_endian=False) + n2b(integer(gfx["loadAddr"]), 2, little_endian=False)
             header += [(len(encoded) + 0x3FF) // 0x400, 2]
-            encoded = header + encoded
+            # Same Array#unshift order as the Ruby image path.
+            for value in header:
+                encoded.insert(0, value)
             output = I_FOLDER_FILES / gfx["disk"]
             output.mkdir(parents=True, exist_ok=True)
             (output / gfx["file"]).write_bytes(bytes(encoded))

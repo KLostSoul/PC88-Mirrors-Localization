@@ -31,24 +31,22 @@ class DataExporter:
     def extract_data(self):
         for entry in csv_hash_array(ECSV_CDDATA):
             raw = self.read_data(int(entry["offset"], 16), int(entry["size"], 16))
-            # ``path`` is relative to Export/ in e_cddata.csv.  In particular,
-            # floppy entries must land in Export/Floppy so FloppyMan can open
-            # them during the following extraction stage.
             output = EXPORT_PATH / entry["path"] / f'{entry["filename"]}.raw'
-            output.parent.mkdir(parents=True, exist_ok=True)
             output.write_bytes(raw)
             if entry["type"] == "basic":
                 decompiler = BasicDecompiler()
                 decompiler.open_memory(raw)
                 result = decompiler.decompile()
-                (E_FOLDER_BASIC / f'{entry["filename"]}.bas').write_text(result["mData"], encoding="utf-8")
+                (E_FOLDER_BASIC / f'{entry["filename"]}.bas').write_bytes(result["mData"].encode("utf-8"))
                 self.export_strings(entry["filename"], entry["filename"], result["mStrings"])
             elif entry["type"] == "asm":
                 asm_name = E_FOLDER_ASM / f'{entry["filename"]}.asm'
-                subprocess.run([
+                result = subprocess.run([
                     str(DASM_EXE), str(output), str(asm_name), "--hex:x", "--xref",
                     "--lowercase", "--addr:" + entry["loadAddr"],
-                ], check=True)
+                ], stderr=subprocess.PIPE)
+                if result.stderr:
+                    raise RuntimeError(result.stderr.decode(errors="replace"))
 
     def export_floppy_data(self):
         for entry in [row for row in csv_hash_array(ECSV_CDDATA) if row["type"] == "floppy"]:
@@ -63,11 +61,10 @@ class DataExporter:
             decompiler = BasicDecompiler()
             decompiler.open_memory(raw[7:7 + file_size])
             result = decompiler.decompile()
-            (E_FOLDER_BASIC / entry["script"]).write_text(result["mData"], encoding="utf-8")
+            (E_FOLDER_BASIC / entry["script"]).write_bytes(result["mData"].encode("utf-8"))
             self.export_strings(entry["disk"], entry["script"], result["mStrings"])
 
     def export(self):
-        E_FOLDER_STRINGS.mkdir(parents=True, exist_ok=True)
         self.extract_data()
         self.export_floppy_data()
         self.export_basic_scripts()

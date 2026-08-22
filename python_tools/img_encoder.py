@@ -26,18 +26,11 @@ class ImgEncoder:
         if width % 8:
             raise ValueError("Image width must be divisible by 8")
 
-        # ChunkyPNG indexes each pixel through the PNG palette. Preserve the
-        # existing palette indices for indexed assets; for true-colour PNGs,
-        # use the first-seen color order as the closest equivalent.
-        if source.mode == "P":
-            pixels = list(source.getdata())
-        else:
-            palette_index = {}
-            pixels = []
-            for pixel in source.convert("RGBA").getdata():
-                if pixel not in palette_index:
-                    palette_index[pixel] = len(palette_index)
-                pixels.append(palette_index[pixel])
+        # ChunkyPNG obtains every value through the PNG PLTE chunk.  The Ruby
+        # encoder has no true-colour fallback, so neither does the port.
+        if source.mode != "P":
+            raise ValueError("Image does not contain a PNG palette")
+        pixels = list(source.getdata())
 
         pattern_data = []
         cursor = 0
@@ -83,4 +76,5 @@ class ImgEncoder:
                     out.extend([repeat_count, current])
                     repeat_count = 0
 
-        return n2b(0xC000, 2, little_endian=False) + out
+        # Ruby calls Util.n2b(0xc000, 2) without an endianness argument.
+        return n2b(0xC000, 2) + out
