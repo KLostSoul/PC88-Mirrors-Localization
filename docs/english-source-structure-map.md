@@ -62,6 +62,24 @@ main.rb
 
 `export` 모드에서는 `DataExporter`가 원본 데이터 트랙을 읽고 BASIC을 디컴파일하며 ASM을 디스어셈블한다. `custom` 모드는 테스트용 코드가 남아 있지만 기본 실행 경로는 아니다.
 
+### 3.1 초기 Main/Game 디스크 구성 루틴
+
+초기 실행 시 외부 플로피를 준비하고 CD에서 Main/Game 데이터를 복사하는 흐름 자체는 원본 BASIC에도 존재한다. 원본 `Export/BASIC/menu.bas`는 빈 디스크를 포맷한 뒤 다음 CD 복사를 수행한다.
+
+```basic
+1380 COMMON COPY &H00,13381
+1480 COMMON COPY &H01,13581
+```
+
+영문 패치는 이 절차를 삭제하지 않고 2HD 배치에 맞게 확장했다. 이미 준비된 Main/Game 디스크인지 먼저 검사하고, 빈 디스크일 때만 CD 복사를 수행한다. 복사 위치는 새 2HD 그룹의 시작으로 바뀐다.
+
+```basic
+1380 COMMON COPY &H0,13414
+1480 COMMON COPY &H1,14030
+```
+
+또한 영문판은 별도 Save 디스크를 제거하고 제공된 `disk1main.d88`, `disk2game.d88`를 Drive 1·2에 사용한다. 따라서 한글판이 영문판의 2HD 그룹·서브디스크 배치와 Main/Game 디스크 형식을 유지하는 한, 이 초기화·복사 루틴은 수정 대상이 아니다. 디스크 배치, CD 복사 주소, 디스크 형식을 변경할 때만 함께 수정해야 한다.
+
 ## 4. CD Track 2 데이터 구조
 
 `Data/e_cddata.csv`의 주소는 CloneCD `.img` 파일의 raw 오프셋이 아니라, 추출된 `02 MIRR.iso` 데이터 트랙 안의 2048바이트 데이터 오프셋이다.
