@@ -1,4 +1,5 @@
 # Original game images and emulator bundles
+reference/Original/
 *.ccd
 *.img
 *.sub
