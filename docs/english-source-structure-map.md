@@ -29,7 +29,7 @@
 
 영문 소스 저장소는 완전한 원본 입력을 포함한 즉시 재현 가능한 빌드 트리는 아니다. 현재 소스에는 `Export/ISO/02 MIRR.iso`와 일부 `Export/Floppy`, `Export/Files`, `Import/Floppy`, `Import/Files`, `Import/ASM` 생성물이 없다. 이 입력·생성물은 원본 CD Track 2 추출 및 빌드 준비 과정에서 별도로 확보해야 한다.
 
-### 2.1 Python 포팅 정적 검증
+### 2.1 Python 포팅 정적 검증 상태
 
 `python_tools/`는 Ruby 도구의 실행 대체본이다. Ruby 소스는 원본 구조와 포팅 내용을 대조하는 참조 자료로 유지한다.
 
@@ -37,6 +37,9 @@
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.
 - Python 모듈 15개는 정적 문법 검사를 통과했다.
 - 정적 대조에서 `DataExporter.extract_data()`의 출력 경로 오류를 발견·수정했다. Ruby 원본은 CSV의 `path`를 `Export/` 기준으로 해석하지만, 기존 Python 포팅은 이를 `Export/Data/` 기준으로 해석했다. 따라서 플로피가 잘못된 `Export/Data/Floppy/`에 기록될 문제를 `Export/Floppy/`로 수정했다.
+- 위 결과는 공통 파일·문법·일부 경로 로직의 정적 대조 결과이며, Ruby와 Python의 모든 생성물 바이트가 일치한다는 뜻은 아니다.
+- 2026-08-23 BASIC 출력 대조에서 차이가 확인됐다. Ruby `BasicCompiler.rb`는 `tokens[0..-2]`로 마지막 토큰을 항상 제외하지만, Python `basic_compiler.py`는 마지막 토큰이 빈 문자열일 때만 제외한다. 공백을 캡처하는 정규식과 `data_importer.py`의 후행 공백이 결합되어 Python 생성 메뉴 데이터에 불필요한 `0x20`이 남는다.
+- 그 결과 기준 영문 `menu.raw`는 11,140바이트, 현재 Python 한글 `menu.raw`는 11,245바이트다. 토큰 치환과 별개로 105바이트 차이가 생겼으므로, Python 포팅은 현재 Ruby와 바이트 단위 호환이 완료된 상태가 아니다.
 
 이 수정 뒤 원본 Track 2에서 정의된 플로피 44개를 `Export/Floppy/*.raw`에 추출했으며, 각 파일은 CSV의 원본 오프셋·크기 구간과 바이트 단위로 일치한다. 추출 Track 2와 플로피 RAW는 원본 게임 데이터이므로 Git ignore 대상이다.
 
@@ -214,6 +217,8 @@ glyph_address = font_base + index * 0x10
 - `Import/BASIC/`: 패치용 BASIC
 
 `BasicCompiler.rb`는 BASIC 토큰을 다시 바이너리로 만들고, 문자열을 번역 CSV의 `source_text`, `basic_line`과 대조해 교체한다. 현재 영문 경로의 줄 길이 계산은 `@widthData[l.ord - 0x20]`처럼 ASCII 인덱스를 직접 사용한다.
+
+Python 포팅을 사용할 때는 이 Ruby 동작을 기준으로 컴파일 결과를 다시 대조해야 한다. 특히 `menu.bas`에 삽입하는 `COMMON COPY`와 `DATA` 줄의 후행 공백은 BASIC 소스상 사소해 보여도 RAW의 줄 길이와 이후 데이터 문자열에 영향을 줄 수 있다.
 
 ### 7.2 VWF 호출 연결
 
