@@ -9,7 +9,7 @@ from .img_encoder import ImgEncoder
 from .paths import (
     ASM_EXE, ECSV_CDDATA, ECSV_SCRIPTS, E_FOLDER_BASIC, GFX_PATH,
     ICSV_ASM, ICSV_CDDATA,
-    ICSV_DISKS, ICSV_GFX, I_FOLDER_DATA, I_FOLDER_FILES, I_FOLDER_FLOPPY,
+    ICSV_DISKS, ICSV_GFX, I_FOLDER_BASIC, I_FOLDER_DATA, I_FOLDER_FILES, I_FOLDER_FLOPPY,
     I_FOLDER_ISO, I_FOLDER_STRINGS, IASM_BIN, IASM_SOURCE, IMPORT_PATH,
     ORIGINAL_ISO_DATATRACK, PATCHED_ISO_DATATRACK, Const,
 )
@@ -221,7 +221,7 @@ class DataImporter:
         strings = [row for row in self.strings_data if row.get("disk_num") == Const.INTRO]
         patch = [row for row in self.basic_patch if row["disk"] == Const.INTRO]
         compiler = BasicCompiler(strings, patch)
-        compiler.open_file(E_FOLDER_BASIC / f"{Const.INTRO}.bas")
+        compiler.open_file(I_FOLDER_BASIC / f"{Const.INTRO}.bas")
         binary = compiler.compile_single(True, f"{Const.INTRO}.bas")
         entry = next(row for row in csv_hash_array(ECSV_CDDATA) if row["filename"] == Const.INTRO)
         offset = integer(entry["offset"])
@@ -254,7 +254,7 @@ class DataImporter:
         patch = [row for row in self.basic_patch if row["disk"] == Const.MENU]
         self.menu_insert_new_disk_data(patch)
         compiler = BasicCompiler(strings, patch)
-        compiler.open_file(E_FOLDER_BASIC / f"{Const.MENU}.bas")
+        compiler.open_file(I_FOLDER_BASIC / f"{Const.MENU}.bas")
         binary = compiler.compile_single(self.enable_translation, "menu.bas")
         (I_FOLDER_DATA / f"{Const.MENU}.raw").parent.mkdir(parents=True, exist_ok=True)
         (I_FOLDER_DATA / f"{Const.MENU}.raw").write_bytes(bytes(binary))

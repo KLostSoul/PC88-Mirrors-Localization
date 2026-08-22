@@ -419,7 +419,7 @@ copyFnt:di
         out     (0xe3),a
         ld      de,0x0
         ld      hl,0xA300
-        ld      bc,0x2000
+        ld      bc,0x3000        ; VWF code (0x1000) + 500 glyphs (0x1F40)
         ldir
         xor     a
         out     (0xe2),a
