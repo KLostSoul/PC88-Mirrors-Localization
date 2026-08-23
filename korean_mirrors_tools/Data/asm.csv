@@ -1,0 +1,7 @@
+"asmFile";"compileOnly";"fileSize"
+"asmsub";"true";"0x800"
+"asmbasic";"true";"0x900"
+"asminit2";"true";"0x800"
+"asmmain";"true";"0x2800"
+"vwf";"true";0
+"patch_copy";"true";0

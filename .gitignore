@@ -29,3 +29,22 @@ python_mirrors_tools/Import/Data/*.raw
 python_mirrors_tools/Export/ISO/02 MIRR.iso
 python_mirrors_tools/Export/Floppy/
 python_mirrors_tools/Export/Files/
+
+# Korean build tree: local original inputs and generated game data
+korean_mirrors_tools/Temp/
+korean_mirrors_tools/Import/ISO/
+korean_mirrors_tools/Import/Floppy/
+korean_mirrors_tools/Import/Files/
+korean_mirrors_tools/Import/ASM/
+korean_mirrors_tools/Import/Data/
+korean_mirrors_tools/Export/ISO/*.iso
+korean_mirrors_tools/Export/Floppy/
+korean_mirrors_tools/Export/ASM/
+korean_mirrors_tools/Export/BASIC/
+korean_mirrors_tools/Export/Data/
+korean_mirrors_tools/python_tools/__pycache__/
+korean_mirrors_tools/Data/*_test.csv
+
+# Reference copy: local extracted inputs only
+reference/mirrors_tools/Export/ISO/
+reference/mirrors_tools/Export/Floppy/
