@@ -177,7 +177,7 @@ VWF 0x1000 + 500자 글리프 0x1F40 = 0x2F40
 - 최종 안전 토큰 시험 CloneCD는 Track 2의 19,800개 섹터를 검사했고 패치 섹터는 12개였다. 출력 Track 2의 전체 페이로드가 일치했으며, Track 2 밖의 바이트 차이는 0개이고 `.ccd`·`.sub` 메타데이터도 변경하지 않았다.
 - 사용자의 런타임 확인으로 안전 2바이트 토큰, 500자 연속 글리프 상주, 기존 VWF 합성 경로, CloneCD 생성물을 결합한 시험이 메뉴까지 진입하고 한글을 정상 출력하는 것을 확인했다. 따라서 이 시험 범위에서는 VWF·글리프·토큰·CD 섹터 경로가 함께 작동한다.
 - 원본 `Mirrors.img`에서 Track 2를 추출했고, Python `export`로 영문 소스가 정의한 44개 2D 플로피 RAW를 생성해 원본 Track 2 구간과 바이트 단위로 대조했다.
-- 시험 ISO·CloneCD·중간 산출물은 계속 `korean_mirrors_tools/Temp`에서 관리하고 Git에는 넣지 않는다.
+- 시험 ISO·CloneCD·RAW·로그·비교 결과 같은 생성 산출물은 계속 `korean_mirrors_tools/Temp`에서 관리하고 Git에는 넣지 않는다. 반면 재현에 필요한 500자 시험용 Python·BASIC·ASM·토큰표·폰트 PNG와 `i_cddata_korean500_test.csv`는 소스 입력이므로 Git에 기록한다. 이 500자 프로필은 생산판 글자 수를 확정하는 자료가 아니라 VWF·토큰·글리프 상주 시험용이다.
 
 ## 8. 다음 구현 순서
 
@@ -222,6 +222,7 @@ Git에 기록할 수 있는 항목:
 - Python 빌드 도구
 - ASM/BASIC 수정 소스
 - 한글 폰트 제작 자료와 토큰표
+- 500자 글리프 시험의 재현용 소스 입력(`Temp/korean_500_test/assets`의 Python·BASIC·ASM·CSV·PNG, `Data/i_cddata_korean500_test.csv`)
 - 분석·설계 문서
 
 Git에서 제외할 항목:

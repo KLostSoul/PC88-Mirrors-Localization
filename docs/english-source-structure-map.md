@@ -230,6 +230,25 @@ glyph_address = font_base + index * 0x10
 
 Python 포팅을 사용할 때는 이 Ruby 동작을 기준으로 컴파일 결과를 다시 대조해야 한다. 특히 `menu.bas`에 삽입하는 `COMMON COPY`와 `DATA` 줄의 후행 공백은 BASIC 소스상 사소해 보여도 RAW의 줄 길이와 이후 데이터 문자열에 영향을 줄 수 있다.
 
+### 7.1.1 원문·영문 문자열 대조 결과
+
+원문 추출표와 영문 패치 입력표의 전체 대응은 `korean_mirrors_tools/Export/Strings/stringsJapaneseEnglish.csv`에 기록했다.
+
+- 원문 `stringsExport.csv`: 9,720행
+- 영문 패치 `stringsImport.csv`: 5,282행
+- 1차 대응: 5,278행
+- 번역이 있는 대응: 4,979행
+- 영문 패치 입력은 있으나 번역이 빈 대응: 299행
+- 패치 쪽에 같은 원문이 추가로 반복된 행: 4행(`patch_duplicate`)
+- 원문에만 존재하고 영문 패치 입력표에 없는 행: 4,442행(`original_only`)
+- 대응되지 않은 패치 행: 0행
+
+대조는 `i_disks.csv`의 스크립트 매핑을 먼저 적용한 뒤 `script_num` 단위로 수행했다. 원문과 패치의 줄 번호·문자열 번호가 달라진 경우에는 원문 순서와 정규화한 원문을 함께 사용해 대응했으며, 동일한 원문이 반복될 때는 줄 번호가 가장 가까운 행을 우선했다. 따라서 단순한 `disk_num + script_num + basic_line + string_num` 완전 일치 방식이 아니다.
+
+비교 시 `−`·`－` 계열 대시 차이와 원문 추출 과정에서 붙은 `:GOSUB 5100` 꼬리를 정규화했다. 이 정규화로 대응된 행의 원문 내용은 모두 일치한다. 원문에만 존재하는 4,442행은 대조 실패가 아니라 원문 추출표에 포함된 제어값·식별자·데이터 문자열·패치가 건드리지 않은 문자열이다. 예를 들어 메뉴의 `n/N/y/Y`, `A:`, `B:`와 `OPN1`, `NAM1`, `TX1` 같은 값이 여기에 포함된다.
+
+기존의 `english_only` 표기는 패치 쪽 중복 행을 실제 영문-only 행처럼 보이게 했으므로 제거했다. 중복 행은 대응 원문 좌표를 반복 기록하고 `patch_duplicate` 및 `patch_extra_occurrence_of_existing_source`로 구분한다.
+
 ### 7.2 VWF 호출 연결
 
 `DataImporter#basic_applyVWFHandler`가 각 공통 스크립트에 출력 루틴을 삽입한다.
