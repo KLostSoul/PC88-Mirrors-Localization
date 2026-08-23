@@ -63,6 +63,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 - [영문 소스 구조 분석](docs/english-source-structure-map.md)
 - [한글화 설계 및 진행 기록](docs/korean-localization-design.md)
+- [문자열 바이트 용량 재계산](docs/string-byte-capacity-analysis.md)
 - [원본 CD 이미지 분석](docs/original-cd-image-analysis.md)
 - [영문 패치 출처](docs/english-patch-source.md)
 
