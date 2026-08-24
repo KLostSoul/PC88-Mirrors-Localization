@@ -156,7 +156,7 @@ absolute_sector = data_offset / 0x800 + 13350
 
 ### 5.1 확장 RAM의 하드웨어 창과 영문 패치의 실제 사용 범위
 
-PC-88 M 계열의 확장 RAM은 접근 제어가 활성화되면 CPU 주소 `0x0000~0x7FFF`에 한 번에 `0x8000`바이트(32KB)를 매핑할 수 있다. `E2`는 확장 RAM 읽기·쓰기 접근 제어이고 `E3`가 선택 뱅크를 지정한다. 자세한 포트 정의는 [PC-8801 I/O 메모리 맵](https://www.hitchhikr.net/PC-8801%20Memorandum/PC-8801%20IO%20map.html)을 참조한다.
+PC-88 M 계열의 확장 RAM은 접근 제어가 활성화되면 CPU 주소 `0x0000~0x7FFF`에 한 번에 `0x8000`바이트(32KB)를 매핑할 수 있다. `E2`는 확장 RAM 읽기·쓰기 접근 제어이고 `E3`가 선택 뱅크를 지정한다. 자세한 포트 정의는 [PC-8801 I/O 메모리 맵](https://www.hitchhikr.net/PC-8801%20Memorandum/PC-8801%20IO%20map.html)을 참조한다. 주소 공간 구성은 [PC-8801 Memory map](https://www.hitchhikr.net/PC-8801%20Memorandum/PC-8801%20Memory%20map.html), 기종 사양은 [NEC 공식 PC-8801 사양 페이지](https://support.nec-lavie.jp/support/product/data/spec/cpu/b034-1.html)를 참조한다.
 
 영문 소스의 `E2=0x11`은 뱅크 번호가 아니라 접근 제어 포트에 쓰는 값이다. 영문판은 `E3=0`만 사용하므로 다른 확장 RAM 뱅크를 선택하지 않는다. `copyFnt`는 선택된 뱅크의 `0x0000~0x1FFF`와 `0x2000~0x3FFF`만 채우며, 현재 소스에는 `0x4000~0x7FFF`에 대한 폰트·VWF 복사나 접근이 없다.
 

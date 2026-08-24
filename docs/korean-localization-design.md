@@ -75,7 +75,7 @@
 
 ## 3. 확장 RAM의 한글 글리프 배치
 
-영문판은 확장 RAM의 32KB CPU 매핑 창(`0x0000~0x7FFF`) 중 앞의 16KB만 다음처럼 사용한다. `E2`는 확장 RAM 접근 제어값이고 `E3`가 선택 뱅크다. 영문 소스는 `E2=0x11`, `E3=0`만 사용한다.
+영문판은 확장 RAM의 32KB CPU 매핑 창(`0x0000~0x7FFF`) 중 앞의 16KB만 다음처럼 사용한다. `E2`는 확장 RAM 접근 제어값이고 `E3`가 선택 뱅크다. 영문 소스는 `E2=0x11`, `E3=0`만 사용한다. 주소와 기종 사양은 [PC-8801 Memory map](https://www.hitchhikr.net/PC-8801%20Memorandum/PC-8801%20Memory%20map.html) 및 [NEC 공식 PC-8801 사양 페이지](https://support.nec-lavie.jp/support/product/data/spec/cpu/b034-1.html)를 참조한다.
 
 ```text
 0x0000~0x0FFF : VWF 코드
