@@ -73,6 +73,22 @@
 
 따라서 용량 계산은 화면에 표시되어 CMD KANJI로 전달되는 문자열과 키 입력·분기 판정용 BASIC 문자열을 구분해야 한다.
 
+### 2.5 영문 저장 루틴 안내문의 한글화
+
+영문 소스 분석 결과, `stringsImport.csv`에는 번역란이 비어 있는 저장 관련 원문 행이 300개 있다. 이 중 299행은 100개 `allowSave=true` 스크립트의 원래 BASIC 저장 안내문이고, 나머지 1행은 `disk30/NO62/9565`에 남은 대조표 중복 항목이다.
+
+영문 패치의 `DataImporter#basic_applySavePatch()`는 문자열 CSV를 처리한 뒤가 아니라 BASIC 컴파일 전에 저장 루틴을 직접 교체한다.
+
+- BASIC `10000`: `Save game? (press Y or N)`으로 교체
+- BASIC `10040`: `Select slot (1-9, ESC to exit):`으로 교체
+- BASIC `10049~10080`: 키 입력·슬롯 저장 루틴으로 교체
+- BASIC `10090`: `Done. Press ENTER to continue.`를 추가
+- BASIC `10110~10150`: 원래 SAVE 디스크 재삽입 루틴을 제거
+
+따라서 원문 299행은 `stringsImport.csv`의 번역문으로 직접 처리되는 문자열이 아니다. 최종 영문 이미지에는 저장 패치 코드가 삽입한 영문 안내문이 들어가며, 이 안내문은 `GOSUB 5000` 또는 `GOSUB 5100`을 통해 VWF 출력 경로를 사용한다. `NO62/9565` 1행은 실제 BASIC 소스에 문자열이 없어 빌드 결과에 영향을 주지 않는다.
+
+한글판에서 저장 안내문까지 한글화하려면 299행을 개별 번역하는 것이 아니라, 활성 Python 빌드 도구의 `basic_applySavePatch()`에 있는 `10000`, `10040`, `10090`의 하드코딩 문구를 한글 2바이트 토큰 문자열로 수정해야 한다. 이 추가 안내문은 영문 번역 데이터 4,982행에 포함되지 않는 별도 소스 문자열이다.
+
 ## 3. 확장 RAM의 한글 글리프 배치
 
 영문판은 확장 RAM의 32KB CPU 매핑 창(`0x0000~0x7FFF`) 중 앞의 16KB만 다음처럼 사용한다. `E2`는 확장 RAM 접근 제어값이고 `E3`가 선택 뱅크다. 영문 소스는 `E2=0x11`, `E3=0`만 사용한다. 주소와 기종 사양은 [PC-8801 Memory map](https://www.hitchhikr.net/PC-8801%20Memorandum/PC-8801%20Memory%20map.html) 및 [NEC 공식 PC-8801 사양 페이지](https://support.nec-lavie.jp/support/product/data/spec/cpu/b034-1.html)를 참조한다.
