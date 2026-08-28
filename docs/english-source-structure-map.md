@@ -264,6 +264,29 @@ Python 포팅을 사용할 때는 이 Ruby 동작을 기준으로 컴파일 결�
 
 기존의 `english_only` 표기는 패치 쪽 중복 행을 실제 영문-only 행처럼 보이게 했으므로 제거했다. 중복 행은 대응 원문 좌표를 반복 기록하고 `patch_duplicate` 및 `patch_extra_occurrence_of_existing_source`로 구분한다.
 
+### 7.1.2 저장 루틴 문자열 300행의 처리
+
+`stringsImport.csv`에는 영문 번역란이 비어 있는 행이 300개 있다. 이 300행은 일반 시나리오 대사가 아니라 저장 기능에서 사용하는 안내문이다.
+
+| BASIC 줄 | 행 수 | 원문 역할 |
+|---:|---:|---|
+| `10000` | 100 | 데이터 저장 여부(`Y/N`) |
+| `10040` | 100 | Drive 1에 SAVE 디스크 삽입 안내 |
+| `10110` | 99 | 저장 완료 후 MAIN 디스크 삽입 안내 |
+| `9565` | 1 | `disk30/NO62`의 중복 잔여 항목 |
+
+`Data/e_scripts.csv`에서 `allowSave=true`인 스크립트는 100개다. 빌드 시 `DataImporter#basic_applySavePatch()`가 컴파일 전에 각 저장 가능 스크립트의 원래 저장 루틴을 직접 수정한다.
+
+- `10000`: `Save game? (press Y or N)`으로 교체
+- `10040`: `Select slot (1-9, ESC to exit):`으로 교체
+- `10049~10080`: 키 입력·슬롯 저장 루틴으로 교체
+- `10090`: `Done. Press ENTER to continue.`를 추가
+- `10110~10150`: 기존 SAVE 디스크 재삽입 루틴을 제거
+
+따라서 원문 저장 안내문 299행은 `stringsImport.csv`의 번역문으로 직접 컴파일되는 것이 아니다. 저장 패치 코드가 해당 BASIC 행을 대체하므로 최종 영문 이미지에는 하드코딩된 영문 저장 안내문과 새 저장 루틴이 들어간다. `disk30/NO62/9565`의 1행은 실제 `Export/BASIC/NO62`의 9565행에 문자열이 없어 컴파일 대상이 아닌 대조표 잔여 항목이다.
+
+한글화할 때는 이 299행에 개별 번역을 추가하는 대신, 활성 빌드 도구의 `basic_applySavePatch()`에 있는 저장 안내문을 한글 토큰 문자열로 교체해야 한다. 이 안내문도 `GOSUB 5000` 또는 `GOSUB 5100`을 통해 VWF 출력 경로를 사용한다.
+
 ### 7.2 VWF 호출 연결
 
 `DataImporter#basic_applyVWFHandler`가 각 공통 스크립트에 출력 루틴을 삽입한다.
