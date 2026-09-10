@@ -2,7 +2,7 @@
 
 분석 대상: `reference/mirrors_tools`
 
-이 문서는 영문 패치 소스에 포함된 Ruby 빌드 도구, 데이터 CSV, BASIC/ASM 소스와 현재 작업 폴더의 Python 포팅본을 대조해 작성한 정적 구조 분석표다. 에뮬레이터 실행 결과가 아니라 소스와 주소표를 기준으로 한 분석이다.
+이 문서는 영문 패치 소스에 포함된 **Ruby 빌드 도구**와 데이터 CSV, BASIC/ASM 소스를 기준으로 작성한 정적 구조 분석표다. `reference/mirrors_tools/Ruby/`가 영문 패치의 기준 구현이며, 현재 작업 폴더의 Python 포팅본은 한글 패치 빌드에 사용할 별도 활성 구현이다. 에뮬레이터 실행 결과가 아니라 소스와 주소표를 기준으로 한 분석이다.
 
 ## 1. 핵심 결론
 
@@ -31,7 +31,7 @@
 
 ### 2.1 Python 포팅 정적 검증 상태
 
-`python_mirrors_tools/python_tools/`는 Ruby 도구의 실행 대체본이다. Ruby 소스는 원본 구조와 포팅 내용을 대조하는 참조 자료로 유지한다.
+`python_mirrors_tools/python_tools/`는 Ruby 결과와 바이트 단위로 일치하도록 포팅·검증한 Python 기반이다. 실제 한글 패치 작업 트리는 이를 바탕으로 한 `korean_mirrors_tools/python_tools/`를 사용한다. 영문 패치 자체의 기준 소스는 계속 `reference/mirrors_tools/Ruby/`다.
 
 - Ruby 핵심 구현 11개(`BasicCompiler`, `DataImporter`, `FloppyMan`, `FontGen` 등)에 Python 대응 구현이 있다.
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.

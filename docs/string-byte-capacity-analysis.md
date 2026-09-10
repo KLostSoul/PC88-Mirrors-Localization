@@ -40,7 +40,8 @@
 
 - 문자열 대조표: korean_mirrors_tools/Export/Strings/stringsJapaneseEnglish.csv
 - 스크립트 폭 정보: korean_mirrors_tools/Import/Data/script_widths.raw
-- 영문 컴파일 규칙: korean_mirrors_tools/Export/Basic/BasicCompiler.rb
+- 영문 컴파일 규칙(기준 구현): reference/mirrors_tools/Ruby/BasicCompiler.rb
+- 한글판 최종 컴파일 규칙(활성 구현): korean_mirrors_tools/python_tools/basic_compiler.py
 
 ## 3. 대조표 상태
 
