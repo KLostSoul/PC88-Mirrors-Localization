@@ -69,3 +69,40 @@ class FontGen:
         (Paths.IFolder_Data / (_name + "_widths.raw")).write_bytes(bytes(tileWidths))
         print("Font %s generated" % _fontFile)
         return [tileWidths, tileBytes]
+
+    def generateKoreanFixed8x16(self, _fontFile, _outputFile):
+        """Convert the 1280-slot production sheet to 0x5000 raw bytes."""
+        img = Image.open(_fontFile).convert("1")
+        charWidth = 8
+        charHeight = 16
+        columns = 16
+        rows = 80
+        expectedSize = (columns * charWidth, rows * charHeight)
+        if img.size != expectedSize:
+            raise ValueError(
+                "Korean font image must be %dx%d, got %dx%d" %
+                (expectedSize[0], expectedSize[1], img.width, img.height)
+            )
+
+        tileBytes = bytearray()
+        for glyphY in range(rows):
+            for glyphX in range(columns):
+                x0 = glyphX * charWidth
+                y0 = glyphY * charHeight
+                for line in range(charHeight):
+                    value = 0
+                    for pixel in range(charWidth):
+                        value <<= 1
+                        if img.getpixel((x0 + pixel, y0 + line)) != 0:
+                            value |= 1
+                    tileBytes.append(value)
+
+        if len(tileBytes) != 0x5000:
+            raise RuntimeError(
+                "Korean font raw size is %d, expected 0x5000" % len(tileBytes)
+            )
+        _outputFile.parent.mkdir(parents=True, exist_ok=True)
+        _outputFile.write_bytes(tileBytes)
+        print("Korean font %s generated (%d bytes)" %
+              (_fontFile, len(tileBytes)))
+        return list(tileBytes)

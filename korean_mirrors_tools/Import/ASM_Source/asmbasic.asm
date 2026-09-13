@@ -428,7 +428,6 @@ copyFnt:di
         ei
         ret
         
-        
 fontNumber:
         .byte   0x01
         nop
@@ -1590,5 +1589,26 @@ L98FD:  ld      b,0x01
 
         ; Referenced from 9400, 942E
 L98FF:  inc     b
-        
-        
+
+; Korean expansion-RAM loader.  The original copyFnt routine at 0x92BC is
+; retained for bank 0.  This routine occupies the unused 0x9900-0x997F area;
+; patch_copy begins at 0x9980 in the same 0x1000-byte boot load block.
+copyFntBank1:
+        di
+        ld      a,0x7b
+        out     (0x31),a
+        ld      a,0x11
+        out     (0xe2),a
+        ld      a,0x01
+        out     (0xe3),a
+        ld      de,0x0000       ; operand patched at 0x990E/0x990F
+        ld      hl,0xA300
+        ld      bc,0x2000
+        ldir
+        xor     a
+        out     (0xe3),a
+        out     (0xe2),a
+        ld      a,0x79
+        out     (0x31),a
+        ei
+        ret

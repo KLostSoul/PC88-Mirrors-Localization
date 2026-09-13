@@ -11,4 +11,6 @@
 "Data";"ui_widths";"0x12F20";"0x60";"raw"
 "Data";"menu_bytes";"0x13000";"0xC00";"raw"
 "Data";"menu_widths";"0x13F20";"0x60";"raw"
+"ASM";"vwf";"0x14000";"0x1000";"asm"
+"Data";"korean_glyphs_20kb_1280";"0x15000";"0x5000";"raw"
 "Data";"snddat";"0xF000";"0x400";"raw"

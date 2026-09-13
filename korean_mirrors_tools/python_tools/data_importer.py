@@ -21,7 +21,7 @@ class DataImporter:
             self.stringsData = list(csv.DictReader(handle, delimiter="\t"))
         for string in self.stringsData:
             string["source_text"] = (
-                string["source_text"]
+                (string.get("source_text") or "")
                 .replace("−", "－")
                 .replace("－", "−")
             )
@@ -89,8 +89,12 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 5,
-            "FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB %d:GOTO %d:ELSE %d:" %
-            (_line + 44, _line + 20, _line + 10),
+            "FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):KA=ASC(K$):IF KA=92 THEN GOSUB %d:GOTO %d:ELSE %d:" %
+            (_line + 44, _line + 20, _line + 7),
+        )
+        self.basic_addPatchLine(
+            _patch, _scdata["disk"], _scdata["script"], _line + 7,
+            "IF KA>=224 AND KA<=229 THEN K$=MID$(BM$,K1,2):K1=K1+1",
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 10,
@@ -450,6 +454,9 @@ class DataImporter:
         customFont.generateVWF(Paths.Font_Script, "script")
         self.scriptFont = customFont.generateVWF(Paths.Font_UI, "ui")
         customFont.generateVWF(Paths.Font_Menu, "menu")
+        customFont.generateKoreanFixed8x16(
+            Paths.Font_Korean, Paths.Font_Korean_Raw
+        )
 
     def replaceImages(self):
         gfxData = Util.CSV2hashArray(Paths.ICSV_GFX)

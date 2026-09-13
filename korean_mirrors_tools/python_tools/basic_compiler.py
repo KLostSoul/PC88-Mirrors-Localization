@@ -1,3 +1,4 @@
+import csv
 import re
 
 from .defines import Const, Paths
@@ -29,6 +30,45 @@ class BasicCompiler:
         self.stringsData = _stringsData
         self.patchData = _patchData
         self.widthData = _widthData
+        self.koreanTokens = self._load_korean_tokens()
+
+    def _load_korean_tokens(self):
+        with open(Paths.IData_KoreanTokens, "r", encoding="utf-8-sig",
+                  newline="") as handle:
+            rows = list(csv.DictReader(handle, delimiter=";"))
+        if len(rows) != 1093:
+            raise RuntimeError(
+                "Korean token table contains %d entries, expected 1093" %
+                len(rows)
+            )
+
+        tokens = {}
+        for index, row in enumerate(rows):
+            char = row["character"]
+            glyphIndex = int(row["glyph_slot"])
+            tokenHi = int(row["token_hi"], 16)
+            tokenLo = int(row["token_lo"], 16)
+            trailIndex = index % 188
+            expectedHi = 0xE0 + index // 188
+            expectedLo = (
+                0x40 + trailIndex
+                if trailIndex < 0x3F
+                else 0x41 + trailIndex
+            )
+            if glyphIndex != index:
+                raise RuntimeError(
+                    "Korean glyph index mismatch at row %d: %d" %
+                    (index, glyphIndex)
+                )
+            if (tokenHi, tokenLo) != (expectedHi, expectedLo):
+                raise RuntimeError(
+                    "Korean token mismatch at row %d: %02X%02X != %02X%02X" %
+                    (index, tokenHi, tokenLo, expectedHi, expectedLo)
+                )
+            if char in tokens:
+                raise RuntimeError("Duplicate Korean glyph: %s" % char)
+            tokens[char] = (tokenHi, tokenLo)
+        return tokens
 
     def openFile(self, _filename):
         with open(_filename, "r", encoding="utf-8") as handle:
@@ -113,20 +153,28 @@ class BasicCompiler:
         return None
 
     def _font_width(self, text):
-        return sum(self.widthData[ord(char) - 0x20] for char in text)
+        width = 0
+        for char in text:
+            if char in self.koreanTokens:
+                width += 8
+            elif 0x20 <= ord(char) <= 0x7F:
+                width += self.widthData[ord(char) - 0x20]
+            else:
+                raise ValueError(
+                    "No output glyph width for U+%04X" % ord(char)
+                )
+        return width
 
     def _encode_shift_jis(self, text):
         # Ruby uses replace: "" for invalid/undefined characters here.
         return list(text.encode("shift_jis", errors="ignore"))
 
     def _encode_ruby_string_bytes(self, text):
-        """Encode a Ruby string that may contain literal BASIC byte escapes.
+        """Encode translated BASIC text and Korean display tokens.
 
-        Ruby changes the encoding of the literal control-byte fragment used
-        by the VWF line splitter to ASCII-8BIT.  Python must preserve those
-        bytes instead of UTF-8 expanding them (for example, 0x8D -> C2 8D).
-        Other Unicode characters remain UTF-8, matching Ruby's String#bytes
-        for the translation text.
+        Literal BASIC control-byte fragments remain single bytes.  Hangul
+        syllables use the production E0-E5 two-byte table, and printable
+        ASCII remains one byte for the existing English VWF path.
         """
         raw_bytes = {0x0E, 0x13, 0x8D, 0xEC, 0xF1}
         encoded = bytearray()
@@ -134,8 +182,14 @@ class BasicCompiler:
             code = ord(char)
             if code in raw_bytes:
                 encoded.append(code)
+            elif char in self.koreanTokens:
+                encoded.extend(self.koreanTokens[char])
+            elif code <= 0x7F:
+                encoded.append(code)
             else:
-                encoded.extend(char.encode("utf-8"))
+                raise ValueError(
+                    "No Korean/ASCII output token for U+%04X" % code
+                )
         return list(encoded)
 
     def _compile_string(self, token, line, translateStrings):
@@ -176,7 +230,7 @@ class BasicCompiler:
                             if lineCount > 2:
                                 lineCount = 0
                                 newStr = self.compile_EndString(newStr)
-                                if len(newStr) >= 0xF0:
+                                if len(self._encode_ruby_string_bytes(newStr)) >= 0xF0:
                                     raise ValueError("String too long: %s" %
                                                      newStr)
                                 newStr += (
@@ -195,7 +249,7 @@ class BasicCompiler:
                         if lineCount > 2:
                             lineCount = 0
                             newStr = self.compile_EndString(newStr)
-                            if len(newStr) >= 0xF0:
+                            if len(self._encode_ruby_string_bytes(newStr)) >= 0xF0:
                                 raise ValueError("String too long: %s" %
                                                  newStr)
                             newStr += (
@@ -216,6 +270,8 @@ class BasicCompiler:
                 )
                 newStr = self.compile_EndString(newStr)
         else:
+            if any(char in self.koreanTokens for char in original):
+                return self._encode_ruby_string_bytes(token)
             return self._encode_shift_jis(token)
 
         return self._encode_ruby_string_bytes(newStr)

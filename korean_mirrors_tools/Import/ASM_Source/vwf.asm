@@ -103,6 +103,32 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 inc     hl
                 ld      (vStrAddr),hl
                 ld      a,e
+                ; Korean tokens use lead bytes E0-E5 and one safe trail byte.
+                ; vStrLen is a byte count plus one, so consume both bytes here
+                ; while vCharsLeft remains a rendered-character count.
+                cp      0xe0
+                jr      c,_singleByteSymbol
+                cp      0xe6
+                jr      nc,_singleByteSymbol
+                ld      d,a
+                ld      e,(hl)
+                dec     c
+                ld      a,c
+                cp      0x00
+                jp      z,_endDraw
+                inc     hl
+                ld      (vStrAddr),hl
+                call    getKoreanRightMargin
+                ld      a,0xA8
+                out     (0x32),a        ; '2'
+                push    bc
+                call    convertKoreanTokenToCharAddr
+                ; Both expansion RAM banks contain this VWF at identical
+                ; addresses, so execution continues safely in bank 1.
+                ld      a,0x01
+                out     (0xe3),a
+                jr      _copyGlyph
+_singleByteSymbol:
                 cp      0x0d
                 jp      z,_nextLine
                 call    getRightMargin
@@ -112,6 +138,7 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 out     (0x32),a        ; '2'
                 push    bc
                 call    convertASCII_toCharAddr
+_copyGlyph:
                 call    copyCharToBuffer
                 call    copyToBuffer
                 
@@ -167,6 +194,10 @@ _secondSymbol:
 	            ld      (vPrintSecond), A
                 
 _prepareNext:    
+                ; Korean rendering reaches here in bank 1.  ASCII is already
+                ; in bank 0, so this is harmless for both paths.
+                xor     a
+                out     (0xe3),a
                 pop     bc  
                 
                 ld      a,(v32IndepAccess)
@@ -217,6 +248,66 @@ vRMarginAddr:   .byte   0x00
 ;        
 ; ------------------ PATCH AREA
 
+
+; Convert E040-E5D9 to Korean glyph index 0-1092.
+; Safe trail bytes are 40-7E and 80-FC (188 values per lead).
+; Invalid pairs select reserved blank glyph slot 1093 at 0x5450.
+; Returns the bank-1 glyph address in DE.
+convertKoreanTokenToCharAddr:
+                ld      a,e
+                cp      0x40
+                jr      c,_koreanInvalid
+                cp      0x7f
+                jr      c,_koreanTrailLow
+                cp      0x80
+                jr      c,_koreanInvalid
+                cp      0xfd
+                jr      nc,_koreanInvalid
+                sub     0x41
+                jr      _koreanTrailReady
+_koreanTrailLow:
+                sub     0x40
+_koreanTrailReady:
+                ld      l,a
+                ld      h,0
+                ld      a,d
+                sub     0xe0
+                ld      b,a
+                ld      de,0x00bc
+_koreanLeadOffset:
+                ld      a,b
+                or      a
+                jr      z,_koreanIndexReady
+                add     hl,de
+                dec     b
+                jr      _koreanLeadOffset
+_koreanIndexReady:
+                ; Valid production indices end at 0x0444 (1092).
+                ld      a,h
+                cp      0x04
+                jr      c,_koreanAddress
+                jr      nz,_koreanInvalid
+                ld      a,l
+                cp      0x45
+                jr      nc,_koreanInvalid
+_koreanAddress:
+                add     hl,hl
+                add     hl,hl
+                add     hl,hl
+                add     hl,hl
+                ld      de,0x1000
+                add     hl,de
+                ex      de,hl
+                ret
+_koreanInvalid:
+                ld      de,0x5450
+                ret
+
+; The renderer adds three pixels, giving an 8-pixel Korean advance.
+getKoreanRightMargin:
+                ld      a,0x05
+                ld      (vRightMargin),a
+                ret
 
 ; Returns address to char in DE
 convertASCII_toCharAddr:
