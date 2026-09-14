@@ -84,7 +84,7 @@ class DataImporter:
     def basic_applyVWFHandler(self, _patch, _scdata, _line=5000):
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 1,
-            "POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB %d" %
+            "POKE &HB401,0:POKE &H92DC,1:BN=&HEE83:GOSUB %d" %
             (_line + 40),
         )
         self.basic_addPatchLine(
@@ -123,7 +123,7 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 44,
-            "BN=BN+&H50*14:GOSUB %d:POKE &HB401,0:RETURN" % (_line + 40),
+            "BN=BN+&H50*16:GOSUB %d:POKE &HB401,0:RETURN" % (_line + 40),
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 105,
