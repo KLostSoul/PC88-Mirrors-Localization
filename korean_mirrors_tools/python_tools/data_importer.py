@@ -131,15 +131,15 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 410,
-            "POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1",
+            "POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT:POKE &H92DC,1",
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 420,
-            "LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN",
+            "LINE(110,154+CN*16)-(512,169+CN*16),7,BF,XOR:CN2=CN",
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 440,
-            "LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR",
+            "LINE(110,154+CN2*16)-(512,169+CN2*16),7,BF,XOR",
         )
 
     def basic_applySavePatch(self, _patch, _scdata, _diskData):
