@@ -48,20 +48,11 @@ printMsg:
                 or      0x40            ; '@'
                 ld      (v32ExtAccess),a
                 
-                ; get font address
-                ld      a,(vFontNumber)
-                sla     a
-                sla     a
-                sla     a
-                sla     a
-                ld      l,0
-                ld      h,a 
-                ld      (vFontAddr),hl
-                
-                ld      hl,(vFontAddr)
-                ld      de,RightMarginTable
-                add     hl,de  
-                ld      (vRMarginAddr),hl
+                ; New single-bank layout (physical expansion-RAM bank 0):
+                ;   0x1000-0x15FF: printable ASCII 0x20-0x7F, 16 bytes each
+                ;   0x2000-0x4CFF: 8x4x4 Korean component glyphs
+                ; vFontNumber and the three-font margin table are no longer
+                ; used by this renderer.
 
                 ; Referenced from 126B, BF6A, BF76, BF95, C15C
 _v.prPos:       ld		A, (vPrevPrint)
@@ -103,14 +94,16 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 inc     hl
                 ld      (vStrAddr),hl
                 ld      a,e
-                ; Korean tokens use lead bytes E0-E5 and one safe trail byte.
-                ; vStrLen is a byte count plus one, so consume both bytes here
-                ; while vCharsLeft remains a rendered-character count.
-                cp      0xe0
+                ; Korean composition tokens use the safe lead table below.
+                ; This keeps BASIC control bytes and the old E0-E5 leads out
+                ; of the two-byte token namespace.
+                cp      0x80
                 jr      c,_singleByteSymbol
-                cp      0xe6
-                jr      nc,_singleByteSymbol
                 ld      d,a
+                push    bc
+                call    isKoreanTokenLead
+                pop     bc
+                jr      c,_singleByteSymbol
                 ld      e,(hl)
                 dec     c
                 ld      a,c
@@ -118,105 +111,89 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 jp      z,_endDraw
                 inc     hl
                 ld      (vStrAddr),hl
-                call    getKoreanRightMargin
                 ld      a,0xA8
                 out     (0x32),a        ; '2'
                 push    bc
-                call    convertKoreanTokenToCharAddr
-                ; Both expansion RAM banks contain this VWF at identical
-                ; addresses, so execution continues safely in bank 1.
+                ; VWF code, ASCII cells, and Korean component cells all live
+                ; in physical expansion-RAM bank 0.  No bank switch is needed
+                ; while composing the 16x16 glyph.
+                call    composeKoreanGlyph
+                call    prepareKoreanBuffers
                 ld      a,0x01
-                out     (0xe3),a
-                jr      _copyGlyph
+                ld      (vPrintSecond),a
+                ld      a,0x02
+                ld      (vGlyphCells),a
+                jr      _copyBuffersFixed
 _singleByteSymbol:
                 cp      0x0d
                 jp      z,_nextLine
-                call    getRightMargin
-                ;ld      hl,(vPrintX)
-                
                 ld      a,0xA8
                 out     (0x32),a        ; '2'
                 push    bc
                 call    convertASCII_toCharAddr
 _copyGlyph:
                 call    copyCharToBuffer
-                call    copyToBuffer
-                
-                
-_copyBuffers:                
-                ld      a,(v32IndepAccess)
-                out     (0x32),a        ; '2'
-                ld      hl,(vScreenPos)
-                ld		(vScreenPos2), hl
-                
-_patch1:        ld      a,(vpatch1)
-                ld		b, a
-                ld		c, b
-                ld      a,(v32ExtAccess)
-                out     (0x32),a        ; '2'
-                
-                ; Referenced from C17B
-                ld      a,(vpatch5)
-                out     (0x34),a        ; '4'
-                ld      a,0x80
-                out     (0x35),a        ; '5'
-                
-                ld      a, (vGoNext)
-                or      a
-                jp 		nz, _secondSymbol
-                ld 		A, (vStarted)
-                or 		A
-                jp 		z, _secondSymbol
-                dec 	hl
-                ld 		(vScreenPos), hl
-                ld		(vScreenPos2), hl
-_secondSymbol:                
-                ld		a, 0x01
-	            ld		(vStarted), a
-	            ld      DE, vPrintBuffer
-	            ld 		B, C
-	            call	printBuffer
-                
-                ld 		a, (vPrintSecond)
-	            or		a
-	            jp 		z, _prepareNext
-                
-                ld 		hl, (vScreenPos2)
-	            inc 	hl
-                ld 		(vScreenPos), hl
-	            ld      de, vPrintBuffer2
-	            ld 		b, c
-	            call	printBuffer
-	            ld 		hl, (vScreenPos2)
-	            ld 		(vScreenPos), hl
-                
-                xor     A
-	            ld      (vPrintSecond), A
-                
-_prepareNext:    
-                ; Korean rendering reaches here in bank 1.  ASCII is already
-                ; in bank 0, so this is harmless for both paths.
+                call    prepareASCIIBuffers
                 xor     a
-                out     (0xe3),a
-                pop     bc  
+                ld      (vPrintSecond),a
+                ld      a,0x01
+                ld      (vGlyphCells),a
+                jr      _copyBuffersFixed
                 
+                
+; Fixed 8x16 ASCII / 16x16 Korean output path.
+; Both glyph classes use the same 16-raster-row screen writer; Korean uses
+; the second prepared buffer for its second 8-pixel half.
+_copyBuffersFixed:
                 ld      a,(v32IndepAccess)
-                out     (0x32),a        ; '2'
-                out     (0x5F),a        ; '_'
-
-                ld      a,(vCharsLeft)
-                dec     a
-                jr      z,_nextLine
-                ld      (vCharsLeft),a
+                out     (0x32),a
                 ld      hl,(vScreenPos)
+                ld      (vScreenPos2),hl
+                ld      a,(v32ExtAccess)
+                out     (0x32),a
+                ld      a,(vpatch5)
+                out     (0x34),a
+                ld      a,0x80
+                out     (0x35),a
+
+                ld      de,vPrintBuffer
+                ld      b,0x10
+                call    printBuffer16
+
+                ld      a,(vPrintSecond)
+                or      a
+                jr      z,_prepareNextFixed
+                ld      hl,(vScreenPos2)
                 inc     hl
                 ld      (vScreenPos),hl
-                LD 		(vPrevScreenPos), HL
-                XOR 	A
-                LD		(vPrevPrint), A 
-                
+                ld      de,vPrintBuffer2
+                ld      b,0x10
+                call    printBuffer16
+                ld      hl,(vScreenPos2)
+                ld      (vScreenPos),hl
+                xor     a
+                ld      (vPrintSecond),a
+
+_prepareNextFixed:
+                pop     bc
+                ld      a,(v32IndepAccess)
+                out     (0x32),a
+                out     (0x5F),a
+                ld      a,(vCharsLeft)
+                dec     a
+                jp      z,_nextLine
+                ld      (vCharsLeft),a
+                ld      a,(vGlyphCells)
+                ld      e,a
+                ld      d,0
+                ld      hl,(vScreenPos)
+                add     hl,de
+                ld      (vScreenPos),hl
+                ld      (vPrevScreenPos),hl
+                xor     a
+                ld      (vPrevPrint),a
                 jp      _nextSymbol
-                
+
                 ; Referenced from 11BE
 _nextLine:      ld      hl,(vStartScreenPos)
                 ld      de,(vLineBreakHeight)                  ; Line break in VRAM units
@@ -245,92 +222,292 @@ vFontAddr:      .byte   0x00
                 .byte   0x00
 vRMarginAddr:   .byte   0x00
                 .byte   0x00
+vGlyphCells:    .byte   0x01
+vKInitial:      .byte   0x00
+vKMedial:       .byte   0x00
+vKFinal:        .byte   0x00
+vKInitialProfile: .byte 0x00
+vKMedialProfile:  .byte 0x00
+vKFinalProfile:   .byte 0x00
 ;        
 ; ------------------ PATCH AREA
 
 
-; Convert E040-E5D9 to Korean glyph index 0-1092.
-; Safe trail bytes are 40-7E and 80-FC (188 values per lead).
-; Invalid pairs select reserved blank glyph slot 1093 at 0x5450.
-; Returns the bank-1 glyph address in DE.
-convertKoreanTokenToCharAddr:
-                ld      a,e
-                cp      0x40
-                jr      c,_koreanInvalid
-                cp      0x7f
-                jr      c,_koreanTrailLow
-                cp      0x80
-                jr      c,_koreanInvalid
-                cp      0xfd
-                jr      nc,_koreanInvalid
-                sub     0x41
-                jr      _koreanTrailReady
-_koreanTrailLow:
-                sub     0x40
-_koreanTrailReady:
-                ld      l,a
-                ld      h,0
+; Decode the packed token payload: initial(5) | medial(5) | final(5).
+; D:E contains the two token bytes.  The three indices are kept in the
+; variables above while the 8x4x4 component cells are OR-composited into the
+; 32-byte 16x16 buffer.
+isKoreanTokenLead:
                 ld      a,d
-                sub     0xe0
-                ld      b,a
-                ld      de,0x00bc
-_koreanLeadOffset:
-                ld      a,b
-                or      a
-                jr      z,_koreanIndexReady
-                add     hl,de
-                dec     b
-                jr      _koreanLeadOffset
-_koreanIndexReady:
-                ; Valid production indices end at 0x0444 (1092).
-                ld      a,h
-                cp      0x04
-                jr      c,_koreanAddress
-                jr      nz,_koreanInvalid
-                ld      a,l
-                cp      0x45
-                jr      nc,_koreanInvalid
-_koreanAddress:
-                add     hl,hl
-                add     hl,hl
-                add     hl,hl
-                add     hl,hl
-                ld      de,0x1000
-                add     hl,de
-                ex      de,hl
+                ld      hl,kTokenLeadTable
+                ld      b,0x4b
+                xor     a
+                ld      c,a
+                ld      a,d
+_findKoreanTokenLead:
+                cp      (hl)
+                jr      z,_koreanLeadFound
+                inc     hl
+                inc     c
+                djnz    _findKoreanTokenLead
+                scf
                 ret
-_koreanInvalid:
-                ld      de,0x5450
+_koreanLeadFound:
+                or      a
                 ret
 
-; The renderer adds three pixels, giving an 8-pixel Korean advance.
-getKoreanRightMargin:
-                ld      a,0x05
-                ld      (vRightMargin),a
+composeKoreanGlyph:
+                ld      a,d
+                ld      hl,kTokenLeadTable
+                ld      b,0x4b
+                xor     a
+                ld      c,a
+                ld      a,d
+_decodeKoreanTokenLead:
+                cp      (hl)
+                jr      z,_decodeKoreanTokenFound
+                inc     hl
+                inc     c
+                djnz    _decodeKoreanTokenLead
+                jp      _koreanBlank
+_decodeKoreanTokenFound:
+                ld      a,c
+                srl     a
+                srl     a
+                ld      (vKInitial),a
+
+                ld      a,c
+                and     0x03
+                add     a,a
+                add     a,a
+                add     a,a
+                ld      b,a
+                ld      a,e
+                and     0xe0
+                srl     a
+                srl     a
+                srl     a
+                srl     a
+                srl     a
+                or      b
+                ld      (vKMedial),a
+
+                ld      a,e
+                and     0x1f
+                ld      (vKFinal),a
+
+                ld      a,(vKInitial)
+                cp      0x13
+                jr      nc,_koreanBlank
+                ld      a,(vKMedial)
+                cp      0x15
+                jr      nc,_koreanBlank
+                ld      a,(vKFinal)
+                cp      0x1c
+                jr      nc,_koreanBlank
+
+                xor     a
+                ld      hl,vKanjiBuffer
+                ld      b,0x20
+_clearKoreanBuffer:
+                ld      (hl),a
+                inc     hl
+                djnz    _clearKoreanBuffer
+
+                ld      a,(vKFinal)
+                or      a
+                ld      hl,kInitialProfileNoFinal
+                jr      z,_initialProfileReady
+                ld      hl,kInitialProfileWithFinal
+_initialProfileReady:
+                ld      a,(vKMedial)
+                ld      e,a
+                ld      d,0
+                add     hl,de
+                ld      a,(hl)
+                ld      (vKInitialProfile),a
+
+                ld      a,(vKFinal)
+                or      a
+                ld      a,0x02
+                jr      nz,_medialProfileBaseReady
+                xor     a
+_medialProfileBaseReady:
+                ld      b,a
+                ld      a,(vKInitial)
+                or      a
+                jr      z,_medialProfileReady
+                cp      0x0f
+                jr      z,_medialProfileReady
+                inc     b
+_medialProfileReady:
+                ld      a,b
+                ld      (vKMedialProfile),a
+
+                ld      a,(vKMedial)
+                ld      e,a
+                ld      d,0
+                ld      hl,kFinalProfileByMedial
+                add     hl,de
+                ld      a,(hl)
+                ld      (vKFinalProfile),a
+
+                call    initialComponentAddress
+                call    orComponentToKoreanBuffer
+                call    medialComponentAddress
+                call    orComponentToKoreanBuffer
+                ld      a,(vKFinal)
+                or      a
+                ret     z
+                call    finalComponentAddress
+                jp      orComponentToKoreanBuffer
+
+_koreanBlank:
+                xor     a
+                ld      hl,vKanjiBuffer
+                ld      b,0x20
+_clearInvalidKorean:
+                ld      (hl),a
+                inc     hl
+                djnz    _clearInvalidKorean
+                ret
+
+; HL = initial component address.  Initial cells are 20 bytes wide in the
+; reference table and the component base is 0x2000.
+initialComponentAddress:
+                ld      a,(vKInitialProfile)
+                ld      h,0
+                ld      l,a
+                add     hl,hl
+                add     hl,hl
+                push    hl
+                add     hl,hl
+                add     hl,hl
+                pop     de
+                add     hl,de
+                ld      a,(vKInitial)
+                inc     a
+                ld      e,a
+                ld      d,0
+                add     hl,de
+                call    multiplyCellBy32
+                ld      de,0x2000
+                add     hl,de
+                ret
+
+; HL = medial component address.  Medial cells begin after 8*20 cells.
+medialComponentAddress:
+                ld      hl,0
+                ld      a,(vKMedialProfile)
+                or      a
+                jr      z,_medialProfileOffsetReady
+                ld      de,22
+_medialProfileOffsetLoop:
+                add     hl,de
+                dec     a
+                jr      nz,_medialProfileOffsetLoop
+_medialProfileOffsetReady:
+                ld      a,(vKMedial)
+                inc     a
+                ld      e,a
+                ld      d,0
+                add     hl,de
+                call    multiplyCellBy32
+                ld      de,0x3400
+                add     hl,de
+                ret
+
+; HL = final component address.  Final cells begin after 8*20+4*22 cells.
+finalComponentAddress:
+                ld      hl,0
+                ld      a,(vKFinalProfile)
+                or      a
+                jr      z,_finalProfileOffsetReady
+                ld      de,28
+_finalProfileOffsetLoop:
+                add     hl,de
+                dec     a
+                jr      nz,_finalProfileOffsetLoop
+_finalProfileOffsetReady:
+                ld      a,(vKFinal)
+                ld      e,a
+                ld      d,0
+                add     hl,de
+                call    multiplyCellBy32
+                ld      de,0x3f00
+                add     hl,de
+                ret
+
+multiplyCellBy32:
+                add     hl,hl
+                add     hl,hl
+                add     hl,hl
+                add     hl,hl
+                add     hl,hl
+                ret
+
+; OR one 32-byte 16x16 component into vKanjiBuffer.
+orComponentToKoreanBuffer:
+                ld      de,vKanjiBuffer
+                ld      b,0x20
+_orComponentLoop:
+                ld      a,(hl)
+                ld      c,a
+                ld      a,(de)
+                or      c
+                ld      (de),a
+                inc     hl
+                inc     de
+                djnz    _orComponentLoop
+                ret
+
+; Split interleaved 16x16 rows into the two 16-row screen buffers.
+prepareKoreanBuffers:
+                call    clearBuffers
+                push    ix
+                ld      hl,vKanjiBuffer
+                ld      de,vPrintBuffer
+                ld      ix,vPrintBuffer2
+                ld      b,0x10
+_splitKoreanRows:
+                ld      a,(hl)
+                ld      (de),a
+                inc     hl
+                inc     de
+                ld      a,(hl)
+                ld      (ix+0),a
+                inc     hl
+                inc     ix
+                djnz    _splitKoreanRows
+                pop     ix
                 ret
 
 ; Returns address to char in DE
 convertASCII_toCharAddr:
+                ; The ASCII resource contains printable cells in order:
+                ; 0x20 -> cell 0, ... 0x7F -> cell 0x5F.
                 ld      a,e
+                cp      0x20
+                jr      c,_asciiBlank
+                cp      0x80
+                jr      nc,_asciiBlank
                 sub     0x20
                 ld      e,a
-                cp      0x0
-                jr      nc,_conv_next1
-                cp      0x60
-                jr      c,_conv_next1
-                ld      e,0x0       ; set space as default symbol
- _conv_next1:
+                jr      _asciiIndexReady
+_asciiBlank:
+                xor     a
+                ld      e,a
+_asciiIndexReady:
                 ld      h,0
                 ld      l,e
                 add     hl,hl
                 add     hl,hl
                 add     hl,hl
                 add     hl,hl
+                ld      de,0x1000
+                add     hl,de
                 ld      e,l
                 ld      d,h
-                ld      hl,(vFontAddr)
-                add     hl,de
-                ex      de,hl
                 ret
                 
 copyCharToBuffer:
@@ -341,132 +518,26 @@ copyCharToBuffer:
                 ldir              
                 pop     de                
                 ret 
-                
-getRightMargin:
-                ld      hl,(vRMarginAddr)
-                add     hl,de
-                
-                ld      a,(hl)
-                ld      (vRightMargin),a
-                ret  
-                
-; copying symbol to buffer, filling spaces
-copyToBuffer:
-                ld 		A, (vPrevLeft)
-                CP 		0x10
-                JR 		NC, _setA0
-                CP 		0x8
-                JR 		NC, _copy_next2
-                XOR		A
-                jr      _setA
-_setA0:
+
+prepareASCIIBuffers:
                 call    clearBuffers
-                ld      hl,(vScreenPos)
-                inc     hl
-                ld      (vScreenPos),hl
-                ld		A, 0x01
-                jr      _setA
-_copy_next2:	
-                ld		A, 0x01
-_setA:	
-                ld 		(vGoNext), A
-
-                ld 		A, (vPrevLeft)
-                AND 	0x07
-                ld 		C, A
-                ld 		HL, vRightMargin
-                add 	(HL)
-                add     3
-                ld 		(vPrevLeft), A
-                ld 		E, 0x10
-                ld 		HL, vPrintBuffer
-                ld 		(vDstAddr), HL
-                ld 		HL, vKanjiBuffer
-                ld 		(vSrcAddr), HL
-_printBufferLoop:
-                ld		A, C
-                ld 		D, (HL)
-                AND 	0x80
+                ld      hl,vKanjiBuffer
+                ld      de,vPrintBuffer
+                ld      bc,0x0010
+                ldir
+                ret
                 
-                JR 		NZ, _copy_neg1
-                LD		A, C
-                CALL 	ShiftRight
-                JR 		_copy_next3
-_copy_neg1:
-                ld      A,C
-                neg
-                CALL	ShiftLeft
-_copy_next3:
-                ld 		HL, (vDstAddr)
-                ld		(HL), D
-                inc 	HL
-                ld 		(vDstAddr), HL
-                LD 		HL, (vSrcAddr)
-		        inc 	HL
-		        LD 		(vSrcAddr), HL
-                dec     e
-                ld      a,e
-                cp      0
-                jp 	    nz,_printBufferLoop
-		
-                ld 		A, 0x8
-                sub 	C
-                ld		C, A
-                ld		A, (vRightMargin)
-                CP		C
-                JP 		NC, _copy_next4
-                JP 		_ret
-_copy_next4:	
-                ld		A, 0x01
-                ld 		(vPrintSecond), A
-                ld 		E, 0x10
-                ld 		HL, vPrintBuffer2
-                ld 		(vDstAddr), HL
-                ld 		HL, vKanjiBuffer
-                ld 		(vSrcAddr), HL
-_printBufferLoop2:
-                ld		A, C
-                ld 		D, (HL)
-                AND 	0x80
-                
-                JR 		NZ, _neg2
-                LD		A, C
-                CALL	ShiftLeft
-                JR 		_next5
-_neg2:
-                ld      A,C
-                neg
-                CALL	ShiftRight
-_next5:
-                ld 		HL, (vDstAddr)
-                ld		(HL), D
-                inc 	HL
-                ld 		(vDstAddr), HL
-                LD 		HL, (vSrcAddr)
-		        inc 	HL
-		        LD 		(vSrcAddr), HL
-                dec     e
-                ld      a,e
-                cp      0
-                jp 	    nz,_printBufferLoop2
-_ret:
-                RET
-
-printBuffer:
-_patch2:
-		        ld 		A, (DE)
-		        ld 		(HL), A
-_print1:
-		        inc 	DE
-		        push 	DE
-		        ld		DE, 0x50
-		        add 	HL, DE
-		        pop 	DE
-		        dec 	B
-		        ld 		A, B
-		        CP 		1
-		        RET     Z
-		        JR 		printBuffer  
+; Print exactly 16 raster rows from a prepared screen buffer.
+printBuffer16:
+                ld      a,(de)
+                ld      (hl),a
+                inc     de
+                push    de
+                ld      de,0x50
+                add     hl,de
+                pop     de
+                djnz    printBuffer16
+                ret
 
 clearBuffers:
                 ld      a,0
@@ -511,25 +582,44 @@ _clearBuffers:
                 inc     hl
                 ret
 
-; 8-bit shift in A, B - shift count
-ShiftRight:
-                cp      0
-                ret     Z
-_doshiftright:
-                srl     d
-                dec     a
-                jr ShiftRight
-                
-ShiftLeft:
-                cp      0
-                ret     Z
-_doshiftleft:
-                sla     d
-                dec     a
-                jr ShiftLeft
+; Safe lead bytes for payload high-byte indices 0x00..0x4A.  The excluded
+; values cover the known BASIC string controls and the old E0-E5 token leads.
+kTokenLeadTable:
+                .byte 0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x8B
+                .byte 0x8F,0x90,0x91,0x92,0x94,0x95,0x96,0x97,0x98,0x99
+                .byte 0x9A,0x9B,0x9D,0x9E,0xA0,0xA1,0xA2,0xA3,0xA5,0xAA
+                .byte 0xAB,0xAC,0xAD,0xAE,0xAF,0xB0,0xB1,0xB2,0xB3,0xB4
+                .byte 0xB5,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0xBE
+                .byte 0xBF,0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8
+                .byte 0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF,0xD0,0xD1,0xD2
+                .byte 0xD3,0xD4,0xD5,0xD6,0xD7
+
+; 8x4x4 profile lookup tables from the reference composition source.
+kInitialProfileNoFinal:
+                .byte 0,0,0,0,0,0,0,0,1,3,3,3,1,2,4,4,4,2,1,3,0
+kInitialProfileWithFinal:
+                .byte 5,5,5,5,5,5,5,5,6,7,7,7,6,6,7,7,7,6,6,7,5
+kFinalProfileByMedial:
+                .byte 0,2,0,2,1,2,1,2,3,0,2,1,3,3,1,2,1,3,3,1,1
                 
 
 vKanjiBuffer:
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00    
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00    
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00    
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00 
+                .byte 0x00    
                 .byte 0x00 
                 .byte 0x00 
                 .byte 0x00 

@@ -3,7 +3,11 @@ import csv
 import math
 import subprocess
 
-from .basic_compiler import BasicCompiler
+from .basic_compiler import (
+    BasicCompiler,
+    KOREAN_TOKEN_CONTROL_BYTES,
+    KOREAN_TOKEN_LEADS,
+)
 from .defines import Const, Paths
 from .floppy import FloppyMan
 from .fontgen import FontGen
@@ -82,6 +86,19 @@ class DataImporter:
         )
 
     def basic_applyVWFHandler(self, _patch, _scdata, _line=5000):
+        # The compiler emits self-describing two-byte Hangul tokens whose
+        # lead bytes are KOREAN_TOKEN_LEADS.  The old Ruby patch used the
+        # former E0-E5 namespace; leaving that test here splits every new
+        # Hangul token into two one-byte glyphs before CMD KANJI receives it.
+        token_condition = (
+            "KA>=%d AND KA<=%d" %
+            (min(KOREAN_TOKEN_LEADS), max(KOREAN_TOKEN_LEADS))
+            + "".join(
+                " AND KA<>%d" % value
+                for value in sorted(KOREAN_TOKEN_CONTROL_BYTES)
+                if 0x80 <= value <= 0xD7
+            )
+        )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 1,
             "POKE &HB401,0:POKE &H92DC,1:BN=&HEE83:GOSUB %d" %
@@ -94,7 +111,7 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 7,
-            "IF KA>=224 AND KA<=229 THEN K$=MID$(BM$,K1,2):K1=K1+1",
+            "IF %s THEN K$=MID$(BM$,K1,2):K1=K1+1" % token_condition,
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 10,

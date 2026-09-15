@@ -32,6 +32,7 @@ python_mirrors_tools/Export/Files/
 
 # Korean build tree: local original inputs and generated game data
 korean_mirrors_tools/Temp/
+korean_mirrors_tools/Temp/korean_composite_8x16/
 korean_mirrors_tools/Import/ISO/
 korean_mirrors_tools/Import/Floppy/
 korean_mirrors_tools/Import/Files/
@@ -43,6 +44,18 @@ korean_mirrors_tools/Export/ASM/
 korean_mirrors_tools/Export/BASIC/
 korean_mirrors_tools/Export/Data/
 korean_mirrors_tools/python_tools/__pycache__/
+korean_mirrors_tools/GFX/Composite_8x16/
+korean_mirrors_tools/python_tools/korean_component_editor.py
+korean_mirrors_tools/python_tools/korean_component_editor.bat
+korean_mirrors_tools/python_tools/generate_korean_composite_8x16.py
+korean_mirrors_tools/python_tools/generate_korean_composite_8x16_trial.bat
+Composite_8x16/choseong_19_editable_8x8.png
+Composite_8x16/choseong_19_preview_8x.png
+Composite_8x16/component_cells_mapping.csv
+Composite_8x16/jongseong_28_editable_8x8.png
+Composite_8x16/jongseong_28_preview_8x.png
+Composite_8x16/jungseong_21_editable_8x8.png
+Composite_8x16/jungseong_21_preview_8x.png
 korean_mirrors_tools/Data/*_test.csv
 
 # Versioned Korean 500-glyph test source inputs. Generated outputs remain ignored.

@@ -11,11 +11,20 @@ GLYPH_MAPPING = TOOLS_ROOT / "Data" / "korean_glyphs_20kb_1280_mapping.csv"
 TRANSLATION_TABLE = TOOLS_ROOT / "Import" / "Strings" / "stringsImportK.csv"
 OUTPUT = TOOLS_ROOT / "Data" / "korean_token_table.csv"
 
-TOKEN_LEADS = tuple(range(0xE0, 0xE6))
-SAFE_TRAILS = tuple(range(0x40, 0x7F)) + tuple(range(0x80, 0xFD))
+TOKEN_CONTROL_BYTES = frozenset(
+    {
+        0x0E, 0x13, 0x8D, 0xEC, 0xF1,
+        0x8C, 0xA8, 0xA9, 0xA7, 0xA4, 0xA6, 0xE4,
+        0x9F, 0x8A, 0x93, 0x9C, 0x89, 0x8E, 0xDD,
+    }
+    | set(range(0xE0, 0xE6))
+)
+TOKEN_LEADS = tuple(
+    value for value in range(0x80, 0xE0)
+    if value not in TOKEN_CONTROL_BYTES
+)[:0x4B]
 GLYPH_BYTES = 16
 EXPECTED_GLYPHS = 1093
-FORBIDDEN_TRAILS = set(range(0x00, 0x40)) | {0x7F, 0xFD, 0xFE, 0xFF}
 
 
 def load_glyphs() -> list[dict[str, str]]:
@@ -59,16 +68,22 @@ def validate_translation_set(glyphs: list[dict[str, str]]) -> None:
 
 
 def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
-    capacity = len(TOKEN_LEADS) * len(SAFE_TRAILS)
-    if len(glyphs) > capacity:
-        raise RuntimeError(f"Token capacity {capacity} is smaller than glyph count")
-
     rows: list[dict[str, object]] = []
     for glyph in glyphs:
         index = int(glyph["index"])
-        lead_index, trail_index = divmod(index, len(SAFE_TRAILS))
+        character = glyph["syllable"]
+        syllable_offset = ord(character) - 0xAC00
+        initial_index, remainder = divmod(syllable_offset, 21 * 28)
+        medial_index, final_index = divmod(remainder, 28)
+        payload = (
+            (initial_index << 10)
+            | (medial_index << 5)
+            | final_index
+        )
+        lead_index, token_lo = divmod(payload, 0x100)
+        if lead_index >= len(TOKEN_LEADS):
+            raise RuntimeError(f"Composition token lead overflow for {character}")
         token_hi = TOKEN_LEADS[lead_index]
-        token_lo = SAFE_TRAILS[trail_index]
         token = (token_hi << 8) | token_lo
         offset = index * GLYPH_BYTES
 
@@ -80,6 +95,10 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
                 "token_word": f"0x{token:04X}",
                 "token_hi": f"0x{token_hi:02X}",
                 "token_lo": f"0x{token_lo:02X}",
+                "initial_index": initial_index,
+                "medial_index": medial_index,
+                "final_index": final_index,
+                "composition_payload": f"0x{payload:04X}",
                 "glyph_slot": index,
                 "glyph_offset": offset,
                 "glyph_offset_hex": f"0x{offset:04X}",
@@ -90,8 +109,8 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
     tokens = [row["token_word"] for row in rows]
     if len(set(tokens)) != len(tokens):
         raise RuntimeError("Generated token values are not unique")
-    if any(int(row["token_lo"], 16) in FORBIDDEN_TRAILS for row in rows):
-        raise RuntimeError("Generated table contains a forbidden trail byte")
+    if any(int(row["token_hi"], 16) in TOKEN_CONTROL_BYTES for row in rows):
+        raise RuntimeError("Generated table contains a forbidden lead byte")
 
     return rows
 

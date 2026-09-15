@@ -5,6 +5,19 @@ from .defines import Const, Paths
 from .util import Util
 
 
+KOREAN_TOKEN_CONTROL_BYTES = frozenset(
+    {
+        0x0E, 0x13, 0x8D, 0xEC, 0xF1,
+        0x8C, 0xA8, 0xA9, 0xA7, 0xA4, 0xA6, 0xE4,
+        0x9F, 0x8A, 0x93, 0x9C, 0x89, 0x8E, 0xDD,
+    }
+    | set(range(0xE0, 0xE6))
+)
+KOREAN_TOKEN_LEADS = tuple(
+    value for value in range(0x80, 0xE0)
+    if value not in KOREAN_TOKEN_CONTROL_BYTES
+)[:0x4B]
+
 class BasicCompiler:
     LineLimit = 362
 
@@ -45,30 +58,40 @@ class BasicCompiler:
         tokens = {}
         for index, row in enumerate(rows):
             char = row["character"]
-            glyphIndex = int(row["glyph_slot"])
-            tokenHi = int(row["token_hi"], 16)
-            tokenLo = int(row["token_lo"], 16)
-            trailIndex = index % 188
-            expectedHi = 0xE0 + index // 188
-            expectedLo = (
-                0x40 + trailIndex
-                if trailIndex < 0x3F
-                else 0x41 + trailIndex
-            )
-            if glyphIndex != index:
+            glyph_index = int(row["glyph_slot"])
+            if glyph_index != index:
                 raise RuntimeError(
                     "Korean glyph index mismatch at row %d: %d" %
-                    (index, glyphIndex)
+                    (index, glyph_index)
                 )
-            if (tokenHi, tokenLo) != (expectedHi, expectedLo):
+            if len(char) != 1 or not ("가" <= char <= "힣"):
                 raise RuntimeError(
-                    "Korean token mismatch at row %d: %02X%02X != %02X%02X" %
-                    (index, tokenHi, tokenLo, expectedHi, expectedLo)
+                    "Invalid Korean syllable at row %d: %r" % (index, char)
+                )
+            syllable_offset = ord(char) - 0xAC00
+            initial_index, remainder = divmod(syllable_offset, 21 * 28)
+            medial_index, final_index = divmod(remainder, 28)
+            payload = (
+                (initial_index << 10)
+                | (medial_index << 5)
+                | final_index
+            )
+            lead_index, token_lo = divmod(payload, 0x100)
+            if lead_index >= len(KOREAN_TOKEN_LEADS):
+                raise RuntimeError(
+                    "Korean composition token lead overflow at row %d" % index
+                )
+            token_hi = KOREAN_TOKEN_LEADS[lead_index]
+            if token_hi in KOREAN_TOKEN_CONTROL_BYTES:
+                raise RuntimeError(
+                    "Korean token collides with a control byte at row %d" % index
                 )
             if char in tokens:
                 raise RuntimeError("Duplicate Korean glyph: %s" % char)
-            tokens[char] = (tokenHi, tokenLo)
+            tokens[char] = (token_hi, token_lo)
         return tokens
+
+
 
     def openFile(self, _filename):
         with open(_filename, "r", encoding="utf-8") as handle:
@@ -156,7 +179,7 @@ class BasicCompiler:
         width = 0
         for char in text:
             if char in self.koreanTokens:
-                width += 8
+                width += 16
             elif 0x20 <= ord(char) <= 0x7F:
                 width += self.widthData[ord(char) - 0x20]
             else:
@@ -173,8 +196,8 @@ class BasicCompiler:
         """Encode translated BASIC text and Korean display tokens.
 
         Literal BASIC control-byte fragments remain single bytes.  Hangul
-        syllables use the production E0-E5 two-byte table, and printable
-        ASCII remains one byte for the existing English VWF path.
+        syllables use two-byte self-describing composition tokens, and
+        printable ASCII remains one byte.
         """
         raw_bytes = {0x0E, 0x13, 0x8D, 0xEC, 0xF1}
         encoded = bytearray()
