@@ -1,4 +1,4 @@
-"""Generate the production Korean token table from the finalized glyph order."""
+"""Generate the production Korean token table from current build inputs."""
 
 from __future__ import annotations
 
@@ -7,8 +7,9 @@ from pathlib import Path
 
 
 TOOLS_ROOT = Path(__file__).resolve().parent.parent
-GLYPH_MAPPING = TOOLS_ROOT / "Data" / "korean_glyphs_20kb_1280_mapping.csv"
 TRANSLATION_TABLE = TOOLS_ROOT / "Import" / "Strings" / "stringsImportK.csv"
+HARDCODED_TABLE = TOOLS_ROOT / "Data" / "hardcoded_strings.csv"
+BASIC_PATCH_TABLE = TOOLS_ROOT / "Data" / "patchBasic.csv"
 OUTPUT = TOOLS_ROOT / "Data" / "korean_token_table.csv"
 
 TOKEN_CONTROL_BYTES = frozenset(
@@ -29,54 +30,38 @@ SAFE_TRAILS = tuple(
     for value in tuple(range(0x40, 0x7F)) + tuple(range(0x80, 0xFD))
     if value not in TRAIL_CONTROL_BYTES
 )
-EXPECTED_GLYPHS = 1093
+def _hangul_syllables(text: str) -> set[str]:
+    return {
+        character
+        for character in text
+        if "\uac00" <= character <= "\ud7a3"
+    }
 
 
-def load_glyphs() -> list[dict[str, str]]:
-    with GLYPH_MAPPING.open("r", encoding="utf-8-sig", newline="") as handle:
-        rows = [row for row in csv.DictReader(handle) if row["status"] == "used"]
-
-    if len(rows) != EXPECTED_GLYPHS:
-        raise RuntimeError(
-            f"Expected {EXPECTED_GLYPHS} used glyphs, found {len(rows)}"
-        )
-
-    indices = [int(row["index"]) for row in rows]
-    if indices != list(range(EXPECTED_GLYPHS)):
-        raise RuntimeError("Used glyph indices must be contiguous from 0")
-
-    syllables = [row["syllable"] for row in rows]
-    if len(set(syllables)) != len(syllables):
-        raise RuntimeError("The glyph mapping contains duplicate syllables")
-
-    return rows
-
-
-def validate_translation_set(glyphs: list[dict[str, str]]) -> None:
+def load_required_syllables() -> list[str]:
+    """Collect every Hangul syllable currently emitted by the build."""
+    syllables: set[str] = set()
     with TRANSLATION_TABLE.open("r", encoding="utf-8-sig", newline="") as handle:
-        translations = csv.DictReader(handle, delimiter="\t")
-        translation_syllables = {
-            character
-            for row in translations
-            for character in (row.get("translation") or "")
-            if "\uac00" <= character <= "\ud7a3"
-        }
+        for row in csv.DictReader(handle, delimiter="\t"):
+            syllables.update(_hangul_syllables(row.get("translation") or ""))
 
-    glyph_syllables = {row["syllable"] for row in glyphs}
-    missing = translation_syllables - glyph_syllables
-    extra = glyph_syllables - translation_syllables
-    if missing or extra:
-        raise RuntimeError(
-            "Glyph mapping and translation syllables differ: "
-            f"missing={sorted(missing)!r}, extra={sorted(extra)!r}"
-        )
+    for path in (HARDCODED_TABLE, BASIC_PATCH_TABLE):
+        if not path.is_file():
+            continue
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            for row in csv.DictReader(handle, delimiter=";"):
+                for value in row.values():
+                    syllables.update(_hangul_syllables(value or ""))
+
+    if not syllables:
+        raise RuntimeError("No Hangul syllables were found in build inputs")
+    # Unicode Hangul syllables are arranged in 가나다순 code-point order.
+    return sorted(syllables, key=ord)
 
 
-def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
+def build_table(syllables: list[str]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
-    for glyph in glyphs:
-        index = int(glyph["index"])
-        character = glyph["syllable"]
+    for index, character in enumerate(syllables):
         syllable_offset = ord(character) - 0xAC00
         initial_index, remainder = divmod(syllable_offset, 21 * 28)
         medial_index, final_index = divmod(remainder, 28)
@@ -97,8 +82,8 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
         rows.append(
             {
                 "token_index": index,
-                "character": glyph["syllable"],
-                "unicode": glyph["unicode"],
+                "character": character,
+                "unicode": f"U+{ord(character):04X}",
                 "token_word": f"0x{token:04X}",
                 "token_hi": f"0x{token_hi:02X}",
                 "token_lo": f"0x{token_lo:02X}",
@@ -141,9 +126,8 @@ def write_table(rows: list[dict[str, object]]) -> None:
 
 
 def main() -> None:
-    glyphs = load_glyphs()
-    validate_translation_set(glyphs)
-    rows = build_table(glyphs)
+    syllables = load_required_syllables()
+    rows = build_table(syllables)
     write_table(rows)
     print(f"Created: {OUTPUT}")
     print(f"Tokens:  {len(rows)}")

@@ -37,15 +37,10 @@ class Paths:
     IData_Scripts = IFolder_Strings / "stringsImportK.csv"
     IData_BasicPatch = DATA_PATH / "patchBasic.csv"
     IData_KoreanTokens = DATA_PATH / "korean_token_table.csv"
+    IData_HardcodedStrings = DATA_PATH / "hardcoded_strings.csv"
 
     Original_ISO_DataTrack = EFolder_ISO / "02 MIRR.iso"
     Patched_ISO_DataTrack = IFolder_ISO / "02 MIRR.iso"
-
-    Font_Script = GFX_PATH / "b1-8x16_font.png"
-    Font_UI = GFX_PATH / "rcopt2-8x16_font.png"
-    Font_Menu = GFX_PATH / "menu.png"
-    Font_Korean = GFX_PATH / "korean_glyphs_20kb_1280_8x16_1bpp.png"
-    Font_Korean_Raw = IFolder_Data / "korean_glyphs_20kb_1280.raw"
 
     ASM_Exe = TOOLS_PATH / "vasmz80_std.exe"
     DASM_Exe = TOOLS_PATH / "yazd.exe"

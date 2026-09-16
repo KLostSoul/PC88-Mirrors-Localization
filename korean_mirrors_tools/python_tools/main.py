@@ -8,6 +8,7 @@ from .data_importer import DataImporter
 from .defines import Const, Paths
 from .file_streamer import FileStreamer
 from .floppy import FloppyMan
+from .generate_korean_token_table import main as generate_korean_token_table
 from .img_encoder import ImgEncoder
 from .util import Util
 
@@ -181,6 +182,10 @@ def main():
         dataExporter = DataExporter(Paths.Original_ISO_DataTrack)
         dataExporter.export()
     elif opMode == "import":
+        # Rebuild the token table from the current translation inputs before
+        # any BASIC compiler instance loads it. This adds newly used Hangul
+        # syllables automatically and keeps the table in 가나다순 order.
+        generate_korean_token_table()
         _install_composite_resources()
         dataImporter = DataImporter(True)
         _bridge_patch_basic_strings(dataImporter)

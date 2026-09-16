@@ -59,11 +59,8 @@ class BasicCompiler:
         with open(Paths.IData_KoreanTokens, "r", encoding="utf-8-sig",
                   newline="") as handle:
             rows = list(csv.DictReader(handle, delimiter=";"))
-        if len(rows) != 1093:
-            raise RuntimeError(
-                "Korean token table contains %d entries, expected 1093" %
-                len(rows)
-            )
+        if not rows:
+            raise RuntimeError("Korean token table is empty")
 
         tokens = {}
         for index, row in enumerate(rows):

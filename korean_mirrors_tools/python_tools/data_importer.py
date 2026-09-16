@@ -1,6 +1,7 @@
 import ast
 import csv
 import math
+import re
 import subprocess
 
 from .basic_compiler import (
@@ -16,6 +17,17 @@ from .util import Util
 
 
 class DataImporter:
+    REQUIRED_HARDCODED_STRINGS = {
+        "opening_fiction",
+        "output_marker",
+        "save_prompt",
+        "save_slot_prompt",
+        "save_done",
+        "cd_read_prompt",
+        "cd_reading",
+        "asm_save_slot_prompt",
+    }
+
     def __init__(self, _translate=True):
         self.initialize(_translate)
 
@@ -31,12 +43,42 @@ class DataImporter:
             )
 
         self.basicPatch = Util.CSV2hashArray(Paths.IData_BasicPatch)
+        self.loadHardcodedStrings()
         self.diskData = Util.CSV2hashArray(Paths.ICSV_Disks)
         self.scriptData = Util.CSV2hashArray(Paths.ECSV_Scripts)
         self.diskMans = {}
         self.enableTranslation = _translate
         self.asciiWidths = ASCII_WIDTHS
         self.createDiskMans()
+
+    def loadHardcodedStrings(self):
+        rows = Util.CSV2hashArray(Paths.IData_HardcodedStrings)
+        keys = [row.get("key", "") for row in rows]
+        if len(keys) != len(set(keys)):
+            raise RuntimeError("Duplicate hardcoded string key")
+        missing = self.REQUIRED_HARDCODED_STRINGS - set(keys)
+        if missing:
+            raise RuntimeError(
+                "Missing hardcoded strings: " + ", ".join(sorted(missing))
+            )
+        self.hardcodedStrings = {
+            row["key"]: (
+                row.get("translation", "")
+                if row.get("translation", "") != ""
+                else row.get("source_text", "")
+            )
+            for row in rows
+        }
+
+    def hardcodedText(self, key):
+        if key not in self.hardcodedStrings:
+            raise RuntimeError("Unknown hardcoded string key: " + key)
+        return (
+            self.hardcodedStrings[key]
+            .replace('"', "`")
+            .replace("\r", "")
+            .replace("\n", "\\")
+        )
 
     def createDiskMans(self):
         for d in self.diskData:
@@ -57,9 +99,11 @@ class DataImporter:
         return _offset // 0x800 + Const.CD_Sector_DataStart
 
     def basic_applyVWFHandler_Opening(self, _patch, _scdata):
+        opening_text = self.hardcodedText("opening_fiction")
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 10010,
-            'CMD SCREEN 1:GOSUB 2400:BN=&HD007:BM$="This story is a work of fiction.":GOSUB 5100',
+            'CMD SCREEN 1:GOSUB 2400:BN=&HD007:BM$="%s":GOSUB 5100' %
+            opening_text,
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 5100,
@@ -145,7 +189,8 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 105,
-            'BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$',
+            'BM$="%s":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$' %
+            self.hardcodedText("output_marker"),
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 410,
@@ -163,11 +208,12 @@ class DataImporter:
     def basic_applySavePatch(self, _patch, _scdata, _diskData):
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 10000,
-            'BM$="Save game? (press Y or N)":GOSUB 5000',
+            'BM$="%s":GOSUB 5000' % self.hardcodedText("save_prompt"),
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 10040,
-            'BM$="Select slot (1-9, ESC to exit):":GOSUB 5000',
+            'BM$="%s":GOSUB 5000' %
+            self.hardcodedText("save_slot_prompt"),
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 10049,
@@ -192,7 +238,7 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], 10090,
-            'BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN',
+            'BM$="%s":GOSUB 5100:RETURN' % self.hardcodedText("save_done"),
         )
         for line in [10110, 10120, 10130, 10140, 10150]:
             self.basic_addPatchLine(
@@ -214,8 +260,10 @@ class DataImporter:
             )
             if nscrData["diskNum"] != _diskData["diskNum"]:
                 patchLines = [
-                    'ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100',
-                    'COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000',
+                    'ISET X:COMMON FO:GOSUB 5200:BM$="%s":GOSUB 5100' %
+                    self.hardcodedText("cd_read_prompt"),
+                    'COMMON STOP:CMD SCREEN 1:BM$="%s":GOSUB 5000' %
+                    self.hardcodedText("cd_reading"),
                     "COMMON COPY &H01,%d" %
                     self.convertCDoffset_toAbsolute(
                         int(nscrData["trackCD"], 16)
@@ -353,6 +401,9 @@ class DataImporter:
         self.asmData = Util.CSV2hashArray(Paths.ICSV_ASM)
         for asm in self.asmData:
             asmSource = Paths.IASM_Source / (asm["asmFile"] + ".asm")
+            asmSource = self.prepareEditableASMSource(
+                asmSource, asm["asmFile"]
+            )
             asmBinary = Paths.IASM_Bin / (asm["asmFile"] + ".raw")
             asmList = Paths.IASM_Bin / (asm["asmFile"] + ".lst")
             print("Compiling ASM file %s" % asmSource)
@@ -380,6 +431,67 @@ class DataImporter:
                         "Image size mismatch for %s! %d(orig) != %d(mod)" %
                         (asm["asmFile"], origSize, asmBinary.stat().st_size)
                     )
+
+    def prepareEditableASMSource(self, asmSource, asmName):
+        if asmName != "asmmain":
+            return asmSource
+
+        message = (
+            self.hardcodedStrings["asm_save_slot_prompt"]
+            .replace("\r", "")
+            .replace("\n", "\\")
+        )
+        compiler = BasicCompiler()
+        encoded = compiler._encode_ruby_string_bytes(message)
+        slot_size = 29
+        if len(encoded) > slot_size:
+            raise RuntimeError(
+                "asm_save_slot_prompt uses %d bytes, maximum is %d" %
+                (len(encoded), slot_size)
+            )
+        length_with_sentinel = len(encoded) + 1
+        padded = encoded + [0] * (slot_size - len(encoded))
+
+        source = asmSource.read_text(encoding="utf-8")
+        length_pattern = re.compile(
+            r"(?m)^(\s*)ld\s+a,0x[0-9A-Fa-f]{2}"
+            r"\s*;\s*23 ASCII bytes \+ existing length sentinel\s*$"
+        )
+        source, length_count = length_pattern.subn(
+            lambda match: (
+                f"{match.group(1)}ld      a,0x{length_with_sentinel:02X}"
+                "          ; editable message bytes + existing length sentinel"
+            ),
+            source,
+            count=1,
+        )
+        if length_count != 1:
+            raise RuntimeError("Unable to locate LC053 message length patch")
+
+        byte_lines = []
+        for offset in range(0, slot_size, 8):
+            chunk = padded[offset:offset + 8]
+            prefix = "LC053:  .byte   " if offset == 0 else "        .byte   "
+            byte_lines.append(
+                prefix + ",".join("0x%02X" % value for value in chunk)
+            )
+        block_pattern = re.compile(
+            r"(?ms)^LC053:\s+\.byte.*?(?=^\s*ld\s+d,d\s*$)"
+        )
+        replacement = (
+            "; LBF6A direct VWF message generated from "
+            "Data/hardcoded_strings.csv.\n"
+            + "\n".join(byte_lines)
+            + "\n"
+        )
+        source, block_count = block_pattern.subn(replacement, source, count=1)
+        if block_count != 1:
+            raise RuntimeError("Unable to locate LC053 fixed message slot")
+
+        output = Paths.TEMP_PATH / "editable_asm" / asmSource.name
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(source, encoding="utf-8")
+        return output
 
     def importIntroScript(self):
         introData = [

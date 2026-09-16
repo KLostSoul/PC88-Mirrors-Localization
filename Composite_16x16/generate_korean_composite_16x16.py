@@ -25,7 +25,7 @@ TRIAL_1093_DIR = ROOT / "trial_1093"
 TEST_BUILD_DIR = ROOT / "test_build"
 SYLLABLE_MAPPING_CSV = (
     ROOT.parent / "korean_mirrors_tools" / "Data"
-    / "korean_glyphs_20kb_1280_mapping.csv"
+    / "korean_token_table.csv"
 )
 
 CELL_WIDTH = 16
@@ -207,20 +207,20 @@ def compose(character: str, glyphs: dict[tuple[str, int, str], bytes]) -> bytes:
 
 
 def load_existing_1093_syllables() -> list[tuple[int, str]]:
-    """Load the existing 1,093-syllable list without changing its order."""
+    """Load the legacy 1,093-syllable trial set from the token table."""
     with SYLLABLE_MAPPING_CSV.open("r", encoding="utf-8-sig", newline="") as handle:
-        rows = list(csv.DictReader(handle))
-    used = [row for row in rows if row.get("status") == "used"]
+        rows = list(csv.DictReader(handle, delimiter=";"))
+    used = rows
     if len(used) != 1093:
         raise RuntimeError(
             f"Expected 1,093 used syllables in {SYLLABLE_MAPPING_CSV}, found {len(used)}"
         )
     result: list[tuple[int, str]] = []
     for row in used:
-        character = row.get("syllable", "")
+        character = row.get("character", "")
         if len(character) != 1 or not ("가" <= character <= "힣"):
             raise RuntimeError(f"Invalid syllable in existing mapping: {character!r}")
-        result.append((int(row["index"]), character))
+        result.append((int(row["token_index"]), character))
     return result
 
 

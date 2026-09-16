@@ -52,16 +52,18 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 - 빌더: [`korean_mirrors_tools/python_tools/main.py`](korean_mirrors_tools/python_tools/main.py)
 - 번역: `korean_mirrors_tools/Import/Strings/stringsImportK.csv`
-- 토큰: `korean_mirrors_tools/Data/korean_token_table.csv`의 실제 번역 음절 1,093개
+- 하드코딩 출력 문구: `korean_mirrors_tools/Data/hardcoded_strings.csv`
+- 토큰: `korean_mirrors_tools/Data/korean_token_table.csv`의 실제 빌드 입력 음절 전체
 - 조합 원본: [`Composite_16x16`](Composite_16x16/README.md)의 `han_dkby.fnt`와 ASCII 8×16 템플릿
 - 출력 코드: `korean_mirrors_tools/Import/ASM_Source/vwf.asm`, `asmbasic.asm`, `asmmain.asm`
+- GFX 입력: `Data/i_gfx.csv`에 등록된 교체 그래픽만 유지하며, 구형 8×16 폰트·`Composite_8x16` 시험 자료는 제거했다.
 
 #### 토큰과 조합 방식
 
 - 한글은 2바이트 안전 토큰으로 저장하며, CSV의 실제 토큰 쌍을 단일 기준으로 사용한다.
 - 런타임은 안전한 선두 바이트 75개와 후행 바이트 165개를 역변환해 유니코드 한글 음절 인덱스를 계산한다.
 - 계산한 음절 인덱스를 초성 19·중성 21·종성 28로 분해하고, 8×4×4 벌 선택 규칙으로 컴포넌트 세 개를 16×16 버퍼에 OR 조합한다.
-- 1,093개 완성 음절 RAW를 적재하지 않는다. 번역문에 실제로 쓰이는 1,093개는 토큰표에만 있고, 글리프는 런타임 조합으로 생성된다.
+- 완성 음절 RAW를 적재하지 않는다. 빌드 입력에 실제로 쓰이는 음절만 가나다순 토큰표에 기록하고, 글리프는 런타임 조합으로 생성된다. 번역문에 새 음절이 추가되면 저장·빌드 시 토큰표가 자동 재생성된다.
 
 #### 확장 RAM과 CD 배치
 
@@ -87,6 +89,8 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기·편집기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 
 ## 문서
+
+- [문서 목차](docs/README.md)
 
 - [영문 소스 구조 분석](docs/english-source-structure-map.md)
 - [영문 VWF·문자열·스크립트 실측 분석](docs/english-vwf-script-capacity-analysis.md)
