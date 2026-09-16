@@ -36,5 +36,3 @@ ASCII 원본도 함께 보관한다.
 `generate_korean_composite_16x16.py`는 이 원본 셀을 PNG 편집 시트와 RAW로 변환하고, 동일한 8×4×4 규칙으로 시험용 완성 음절을 조합한다. 글리프를 선분으로 새로 그리지 않는다.
 
 `source/asc_serif.fnt`는 ASCII 템플릿 생성에 사용하는 원본이고, 생성된 `source/ascii_8x16_template.fnt`에는 위 한글 글꼴과 짝을 이루는 참조 8×16 ASCII 템플릿(256자, 4,096바이트)을 보관한다. 한글 조합 글리프 소스와 ASCII 소스를 별도 데이터로 유지하며, ASCII 템플릿을 16×16 한글 조합 데이터에 섞지 않는다.
-
-`korean_component_editor.py`에서 초성·중성·종성 벌과 개별 16×16 셀을 편집할 수 있다. 편집 결과는 PNG 시트에 저장되며 시험판 재생성에 반영된다.
