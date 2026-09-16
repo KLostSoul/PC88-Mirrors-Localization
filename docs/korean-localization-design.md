@@ -20,7 +20,7 @@
 | 빌더 | `korean_mirrors_tools/python_tools/main.py` | 전체 빌드 진입점 |
 | 한글 번역 | `korean_mirrors_tools/Import/Strings/stringsImportK.csv` | 전체 번역 입력 |
 | 하드코딩 문구 | `korean_mirrors_tools/Data/hardcoded_strings.csv` | 오프닝·저장·CD 전환 등 BASIC 패치 직접 삽입 문구 |
-| 원문·영문 대응 | `korean_mirrors_tools/Export/Strings/stringsJapaneseEnglish.csv` | 영문 패치 BASIC과 한글 행 연결 |
+| 메뉴·인트로 대응 기준 | 현재 `Import/BASIC/*.bas`의 영문 리터럴·BASIC 행·문자열 위치 | 영문 패치 BASIC과 한글 행 연결 |
 | 조합 토큰 | `korean_mirrors_tools/Data/korean_token_table.csv` | 토큰·음절·조합 정보의 단일 기준 |
 | 조합 글리프 원본 | `Composite_16x16/source/han_dkby.fnt` | 8×4×4 자모 컴포넌트 |
 | ASCII 원본 | `Composite_16x16/source/ascii_8x16_template.fnt` | 256슬롯 ASCII 템플릿 |
@@ -29,9 +29,11 @@
 | 메인 패치 | `korean_mirrors_tools/Import/ASM_Source/asmmain.asm` | 패치 명령과 런타임 연결 |
 | CD 배치표 | `korean_mirrors_tools/Data/i_cddata.csv` | ASM·RAW의 Track 2 위치와 크기 |
 
-`stringsImportK.csv`의 한글 번역은 일본어 원문 대응을 기본으로 하되, 영문 패치에서 줄 번호·문자열 위치가 달라진 메뉴·인트로는 `stringsJapaneseEnglish.csv`, 실제 BASIC 행의 영문 리터럴, 문자열 위치를 함께 사용한다. BASIC 행 번호만으로 문자열을 선택하지 않는다.
+`stringsImportK.csv`가 번역 입력의 단일 기준이다. 영문 패치에서 줄 번호·문자열 위치가 달라진 메뉴·인트로는 현재 `Import/BASIC/*.bas`에 실제로 존재하는 영문 리터럴과 BASIC 행·문자열 위치를 함께 사용해 연결한다. 별도의 `stringsJapaneseEnglish.csv`를 빌드 입력으로 사용하지 않으며, BASIC 행 번호만으로 문자열을 선택하지 않는다.
 
-CSV 번역표를 거치지 않고 Python의 BASIC 패치가 직접 삽입하던 오프닝·저장·CD 전환·출력 마커 7개와 ASM이 VWF에 직접 보내는 저장 슬롯 안내문 1개를 `hardcoded_strings.csv`로 분리했다. 빌더와 로컬 스크립트 편집기가 이 파일을 함께 사용하므로 문구 수정이 실제 컴파일 용량 검사와 정식 빌드에 동일하게 반영된다. ASM 안내문은 기존 29바이트 고정 슬롯 안에서만 변경할 수 있으며, 초과하거나 토큰표에 없는 문자를 사용하면 빌드를 중단한다.
+CSV 번역표를 거치지 않고 직접 삽입되는 오프닝·저장·CD 전환·출력 마커 7개와 ASM이 VWF에 직접 보내는 저장 슬롯 안내문 1개, 메뉴 BASIC의 직접 출력 문구 14개를 `hardcoded_strings.csv`로 관리한다. 빌더와 로컬 스크립트 편집기가 이 파일을 함께 사용하므로 문구 수정이 실제 컴파일 용량 검사와 정식 빌드에 동일하게 반영된다. ASM 안내문은 기존 29바이트 고정 슬롯 안에서만 변경할 수 있으며, 초과하거나 토큰표에 없는 문자를 사용하면 빌드를 중단한다.
+
+`Editor/script_editor.py`의 하드코딩 문구 편집 화면도 같은 `hardcoded_strings.csv`를 읽는다. 편집기에서 메뉴 직접 출력 문구를 수정하면 저장된 번역값이 다음 용량 검사와 전체 빌드에 그대로 사용된다.
 
 ## 3. 한글 토큰과 조합 규칙
 
@@ -139,7 +141,7 @@ ASCII와 한글은 같은 16행 래스터 출력 루틴을 사용한다. 한글�
 1. Composite_16x16/source에서 ASCII·컴포넌트 RAW 설치
 2. 조합 컴포넌트 크기와 ASCII 0x1000바이트 크기 확인
 3. DataImporter 초기화
-4. stringsJapaneseEnglish.csv와 실제 영문 BASIC 리터럴로 메뉴·인트로 문자열 브리지
+4. 실제 영문 BASIC 리터럴·BASIC 행·문자열 위치로 메뉴·인트로 문자열 연결
 5. 반복 대사 19개 행의 폭을 40셀로 패치
 6. 전체 BASIC·ASM·그래픽·플로피·ISO 생성
 7. 생성물 크기·주소·해시·Track 2 구조 검증

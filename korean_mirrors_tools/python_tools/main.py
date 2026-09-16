@@ -1,4 +1,3 @@
-import csv
 import re
 
 from .basic_compiler import BasicCompiler
@@ -13,9 +12,18 @@ from .img_encoder import ImgEncoder
 from .util import Util
 
 
-def _csv_rows(path, delimiter=";"):
-    with path.open("r", encoding="utf-8-sig", newline="") as handle:
-        return list(csv.DictReader(handle, delimiter=delimiter))
+_MENU_DIRECT_HARDCODED_ROWS = (
+    ("menu_skip_loading_hint", "1300"),
+    ("menu_drive2_erase", "1303"),
+    ("menu_load_save_slot", "2030"),
+    ("menu_reload_correct_data", "3020"),
+    ("menu_save_slot_return", "4500"),
+    ("menu_escape_return", "4501"),
+    ("menu_repeat_toggle", "9040"),
+    ("menu_text_speed_values", "9050"),
+    ("menu_text_sound_label", "9060"),
+    ("menu_text_sound_values", "9060"),
+)
 
 
 def _install_composite_resources() -> None:
@@ -43,21 +51,13 @@ def _install_composite_resources() -> None:
         )
 
 
-def _bridge_patch_basic_strings(importer: DataImporter) -> None:
-    """Map Korean rows onto the English-patched menu and intro sources."""
-    bridge_path = Paths.EFolder_Strings / "stringsJapaneseEnglish.csv"
-    bridge = _csv_rows(bridge_path)
-    bridge_by_key = {
-        (
-            row["original_disk_num"],
-            row["script_num"],
-            row["original_basic_line"],
-            row["original_string_num"],
-        ): row
-        for row in bridge
-        if row["patch_disk_num"] in {Const.Const_Intro, Const.Const_Menu}
-    }
+def _map_basic_strings_to_current_sources(importer: DataImporter) -> None:
+    """Map translation rows to the literals in the current BASIC sources.
 
+    The translation input is the sole CSV source.  Menu and intro BASIC files
+    contain the English-patched literals, so their literal at each row's
+    position is used as the compiler lookup key.
+    """
     source_literals = {}
     for script in (Const.Const_Intro, Const.Const_Menu):
         path = Paths.IFolder_Basic / f"{script}.bas"
@@ -69,6 +69,17 @@ def _bridge_patch_basic_strings(importer: DataImporter) -> None:
                 r'"(.*?)"', parts[1]
             )
 
+    rows_by_line = {}
+    for row in importer.stringsData:
+        if row["disk_num"] in {Const.Const_Intro, Const.Const_Menu}:
+            rows_by_line.setdefault(
+                (row["script_num"], row["basic_line"]), []
+            ).append(row)
+
+    hardcoded_rows = {
+        row["key"]: row
+        for row in Util.CSV2hashArray(Paths.IData_HardcodedStrings)
+    }
     bridged = []
     for source in importer.stringsData:
         if source["disk_num"] not in {Const.Const_Intro, Const.Const_Menu}:
@@ -83,42 +94,57 @@ def _bridge_patch_basic_strings(importer: DataImporter) -> None:
         )
 
         if key == (Const.Const_Menu, Const.Const_Menu, "1600", "34"):
-            for text, translation in (
-                (
-                    "The disk in Drive 1 is the Main Disk.",
-                    "드라이브 1의 디스크가 메인 디스크입니다.",
-                ),
-                (
-                    "The disk in Drive 2 is the Game Disk.",
-                    "드라이브 2의 디스크가 게임 디스크입니다.",
-                ),
-            ):
+            for hardcoded_key in ("menu_drive1_status", "menu_drive2_status"):
+                hardcoded = hardcoded_rows[hardcoded_key]
                 bridged.append({
                     **source,
-                    "source_text": text,
-                    "translation": translation,
+                    "source_text": hardcoded["source_text"],
+                    "translation": importer.hardcodedStrings[hardcoded_key],
                 })
             continue
         if key == (Const.Const_Menu, Const.Const_Menu, "1700", "35"):
+            hardcoded = hardcoded_rows["menu_write_names_hint"]
             bridged.append({
                 **source,
-                "source_text": "Don't forget to write their names on them.",
-                "translation": "이름을 적어주세요.",
+                "source_text": hardcoded["source_text"],
+                "translation": importer.hardcodedStrings["menu_write_names_hint"],
             })
             continue
 
-        bridge_row = bridge_by_key.get(key)
-        if bridge_row is not None:
-            patch_key = (
-                source["script_num"],
-                bridge_row["patch_basic_line"],
-            )
-            literals = source_literals.get(patch_key, [])
-            patch_source = bridge_row["english_text"]
-            if patch_source not in literals and literals:
-                patch_source = literals[0]
-            source = {**source, "source_text": patch_source}
+        row_group = rows_by_line.get(
+            (source["script_num"], source["basic_line"]), []
+        )
+        row_position = next(
+            (index for index, row in enumerate(row_group) if row is source),
+            None,
+        )
+        literals = source_literals.get(
+            (source["script_num"], source["basic_line"]), []
+        )
+        if row_position is None or row_position >= len(literals):
+            # Some menu rows only call a shared display routine; they do not
+            # contain a literal in the current BASIC source. Keep those rows
+            # unchanged so hardcoded/shared output handling remains in charge.
+            bridged.append(source)
+            continue
+        source = {**source, "source_text": literals[row_position]}
         bridged.append(source)
+
+    for hardcoded_key, basic_line in _MENU_DIRECT_HARDCODED_ROWS:
+        hardcoded = hardcoded_rows.get(hardcoded_key)
+        if hardcoded is None:
+            raise RuntimeError(f"Missing hardcoded menu string: {hardcoded_key}")
+        bridged.append({
+            "disk_num": Const.Const_Menu,
+            "script_num": Const.Const_Menu,
+            "basic_line": basic_line,
+            "string_num": f"hardcoded:{hardcoded_key}",
+            "source_text": hardcoded["source_text"],
+            "background_pic": "",
+            "portrait_pic": "",
+            "language": "KO",
+            "translation": importer.hardcodedStrings[hardcoded_key],
+        })
 
     importer.stringsData = bridged
 
@@ -188,7 +214,7 @@ def main():
         generate_korean_token_table()
         _install_composite_resources()
         dataImporter = DataImporter(True)
-        _bridge_patch_basic_strings(dataImporter)
+        _map_basic_strings_to_current_sources(dataImporter)
         _apply_repeated_wake_dialog_width(dataImporter)
         dataImporter.importData()
     elif opMode == "custom":
