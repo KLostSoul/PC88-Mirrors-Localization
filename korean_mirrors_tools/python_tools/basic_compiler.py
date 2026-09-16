@@ -28,6 +28,10 @@ ASCII_WIDTHS = [0] * 256
 for _ascii_code in range(0x20, 0x80):
     ASCII_WIDTHS[_ascii_code] = 8
 
+# A translated quote must not be placed literally inside a BASIC string.
+# Keep it as an internal marker until the compiled expression is emitted.
+INTERNAL_ASCII_QUOTE = "\uE000"
+
 class BasicCompiler:
     LineLimit = 600
 
@@ -212,6 +216,8 @@ class BasicCompiler:
         for char in text:
             if char in self.koreanTokens:
                 width += 16
+            elif char == INTERNAL_ASCII_QUOTE:
+                width += 8
             elif 0 <= ord(char) < len(ASCII_WIDTHS):
                 width += ASCII_WIDTHS[ord(char)]
             else:
@@ -219,6 +225,21 @@ class BasicCompiler:
                     "No Korean/ASCII output width for U+%04X" % ord(char)
                 )
         return width
+
+    def _quote_expression_bytes(self):
+        """Return the BASIC expression bytes for a printable double quote."""
+        plus = Const.BasicResWords.index("+") | 0x80
+        chr_word = Const.BasicExtWords.index("CHR$") | 0x80
+        return [
+            plus,
+            0xFF,
+            chr_word,
+            0x28,
+            0x0F,
+            0x22,
+            0x29,
+            plus,
+        ]
 
     def _encode_shift_jis(self, text):
         # Ruby uses replace: "" for invalid/undefined characters here.
@@ -229,7 +250,9 @@ class BasicCompiler:
 
         Literal BASIC control-byte fragments remain single bytes.  Hangul
         syllables use two-byte self-describing composition tokens, and
-        printable ASCII remains one byte.
+        printable ASCII remains one byte.  INTERNAL_ASCII_QUOTE is handled by
+        _encode_string_expression so it never becomes a raw quote inside a
+        BASIC string literal.
         """
         raw_bytes = {0x0E, 0x13, 0x8D, 0xEC, 0xF1}
         encoded = bytearray()
@@ -245,6 +268,53 @@ class BasicCompiler:
                 raise ValueError(
                     "No Korean/ASCII output token for U+%04X" % code
                 )
+        return list(encoded)
+
+    def _encode_string_expression(self, text):
+        """Encode a BASIC string expression containing translated quotes.
+
+        A raw 0x22 inside a BASIC string terminates that string.  Split the
+        literal around the internal quote marker and emit CHR$(34) between
+        the literal pieces instead.
+        """
+        encoded = bytearray()
+        literal = []
+        outside = []
+        in_string = False
+
+        for char in text:
+            if char == '"':
+                if in_string:
+                    literal.append(char)
+                    encoded.extend(self._encode_ruby_string_bytes("".join(literal)))
+                    literal = []
+                    in_string = False
+                else:
+                    if outside:
+                        encoded.extend(self._encode_ruby_string_bytes("".join(outside)))
+                        outside = []
+                    literal = [char]
+                    in_string = True
+                continue
+
+            if char == INTERNAL_ASCII_QUOTE:
+                if not in_string:
+                    raise ValueError("Escaped quote is outside a BASIC string")
+                literal.append('"')
+                encoded.extend(self._encode_ruby_string_bytes("".join(literal)))
+                literal = ['"']
+                encoded.extend(self._quote_expression_bytes())
+                continue
+
+            if in_string:
+                literal.append(char)
+            else:
+                outside.append(char)
+
+        if in_string:
+            raise ValueError("Unterminated BASIC string expression")
+        if outside:
+            encoded.extend(self._encode_ruby_string_bytes("".join(outside)))
         return list(encoded)
 
     def _compile_string(self, token, line, translateStrings):
@@ -263,7 +333,9 @@ class BasicCompiler:
                 trLines = translation.split("\n")
                 lineCount = 0
                 for ind, tr in enumerate(trLines):
-                    prepStr = tr.replace("—", " - ").replace('"', chr(96))
+                    prepStr = tr.replace("—", " - ").replace(
+                        '"', INTERNAL_ASCII_QUOTE
+                    )
                     splitStr = prepStr.split()
                     for word in splitStr:
                         wordLength = self._font_width(word)
@@ -285,7 +357,7 @@ class BasicCompiler:
                             if lineCount > 2:
                                 lineCount = 0
                                 newStr = self.compile_EndString(newStr)
-                                if len(self._encode_ruby_string_bytes(newStr)) >= 0xF0:
+                                if len(self._encode_string_expression(newStr)) >= 0xF0:
                                     raise ValueError("String too long: %s" %
                                                      newStr)
                                 newStr += (
@@ -304,7 +376,7 @@ class BasicCompiler:
                         if lineCount > 2:
                             lineCount = 0
                             newStr = self.compile_EndString(newStr)
-                            if len(self._encode_ruby_string_bytes(newStr)) >= 0xF0:
+                            if len(self._encode_string_expression(newStr)) >= 0xF0:
                                 raise ValueError("String too long: %s" %
                                                  newStr)
                             newStr += (
@@ -320,7 +392,7 @@ class BasicCompiler:
                 newStr += (
                     translation.replace("—", " - ")
                     .replace("\r", "")
-                    .replace('"', chr(96))
+                    .replace('"', INTERNAL_ASCII_QUOTE)
                     .replace("\n", "\\")
                 )
                 newStr = self.compile_EndString(newStr)
@@ -329,7 +401,7 @@ class BasicCompiler:
                 return self._encode_ruby_string_bytes(token)
             return self._encode_shift_jis(token)
 
-        return self._encode_ruby_string_bytes(newStr)
+        return self._encode_string_expression(newStr)
 
     def compile(self, _txtFile, _translateStrings, _debugName):
         if self.patchData is not None:
