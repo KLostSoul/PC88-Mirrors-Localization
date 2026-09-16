@@ -1,0 +1,157 @@
+1620 GOSUB 1800
+1630 CM=2:G1=0:G2=0:CM$(1)=C6$:CM$(2)=C2$
+1640 GOSUB 5400
+1710 IF CN=2 AND G1>3 THEN 1890
+1720 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1880:CM$(2)=C6$:GOTO 1640
+1730 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1870:GOTO 1640
+1740 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1860:GOTO 1640
+1750 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1850:CM$(1)=C1$:GOTO 1640
+1760 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1840:GOTO 1640
+1770 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1830:CM$(1)=C5$:GOTO 1640
+1780 IF CN=1 THEN G1=1:GOSUB 1820:GOTO 1640
+1790 IF CN=2 THEN GOSUB 1810:GOTO 1640
+1800 GOSUB 6310:BM$="Susanna: David, these are Gerd Holly and his wife Harriet. We used to visit\them often when my mother was still with us.":GOSUB 5100
+1810 BM$="Susanna: We were on our way through the countryside and when I thought\about you I wanted to see you again. Would you mind if we stayed for the\night?":GOSUB 5100:RETURN
+1820 GOSUB 6340:BM$="Harriet: You can stay for as many days as you'd like, sweetie. It's just the\two of us here, we could use the company!":GOSUB 5100:RETURN
+1830 GOSUB 6310:BM$="Susanna: Mr. Gerd, are you still studying magic?":GOSUB 5100:RETURN
+1840 GOSUB 6350:BM$="Gerd: I'm nowhere as good as your mother was, but people still come to me\to have their fortunes told, even if they don't always come true. How\about you?":GOSUB 5100:RETURN
+1850 GOSUB 6310:BM$="Susanna: I had to focus on my work, so I pretty much forgot all about it. I'd\like to study it again once I have some free time.":GOSUB 5100:RETURN
+1860 GOSUB 6300:BM$="David: Whoa! You used to know magic?!":GOSUB 5100:RETURN
+1870 GOSUB 6310:BM$="Susanna: My mother was a sorceress, you see. She was pretty famous, so I\used to imitate her. I could never touch lizards and frogs though!":GOSUB 5100:RETURN
+1880 GOSUB 6300:BM$="David: The Susanna from my visions was also a sorceress. If you're her\descendant, you might be able to become a first-rate sorceress yourself.":GOSUB 5100:RETURN
+1890 BM$="Harriet called out from the dining room.":GOSUB 5100
+1900 GOSUB 6340:BM$="Harriet: Dinner's ready. It's simple countryside cooking, but it's definitely\better than what they serve at those fancy restaurants out there!":GOSUB 5100
+1910 BM$="Before they knew it, the table was covered with dishes.":GOSUB 5100
+1920 BM$="Mr. and Mrs. Holly were intently listening to David as he talked about his\life in the music world. Their dinner continued late into the night.":GOSUB 5100
+1930 GOSUB 6310:BM$="Susanna: Why don't we go out for a walk, David? There's no pubs and neon\lights around, only fields... but I guarantee it's the freshest air you'll ever\breathe!":GOSUB 5100
+1935 GOSUB 5615:BM$="David was indeed tired of talking, and wanted to be alone with Susanna, so\he agreed.":GOSUB 5000
+1936 GOSUB 9560:GOSUB 9550:GOSUB 9530:COMMON FO:
+1940 GOSUB 9020:GOSUB 6155:GOSUB 9535:BM$="David and Susanna went for a night stroll.":GOSUB 5100:'
+1950 GOSUB 6200:BM$="As they walked along the path in the field, they could hear the sound of\water flowing through the canal.":GOSUB 5100
+1960 GOSUB 6160:BM$="The canal could be crossed over through a small bridge. David and\Susanna leisurely walked over it.":GOSUB 5100
+1970 GOSUB 2100
+1980 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C1$
+1990 GOSUB 5400
+2030 IF CN=1 AND G2>1 THEN 2200
+2040 IF CN=2 AND G1>1 THEN G2=2:GOSUB 2190:GOTO 1990
+2050 IF CN=1 AND G1>1 THEN GOSUB 2180:GOTO 1990
+2060 IF CN=1 AND G2>0 THEN G1=2:GOSUB 2130:GOTO 1990
+2070 IF CN=2 AND G1>0 THEN G2=1:GOSUB 2120:GOTO 1990
+2080 IF CN=1 THEN G1=1:GOSUB 2110:GOTO 1990
+2090 IF CN=2 THEN GOSUB 2100:GOTO 1990
+2100 GOSUB 9050:GOSUB 6300:BM$="David: Susanna, I... I remember this place. It was in one of my nightmares. We\were attacked by two men, and then they stabbed you, and you fell in the\river...":GOSUB 5100
+2105 GOSUB 6170:BM$="David: ...And now there's two men beyond the bridge. Just like in my\nightmare.":GOSUB 5100:RETURN
+2110 GOSUB 6310:BM$="Susanna: They're getting closer... Do you think the King of the North sent\them?":GOSUB 5100:RETURN
+2120 GOSUB 6300:BM$="David: In my nightmare, there were two men behind us as well. We had\nowhere to run. Susanna, would you mind checking behind us?":GOSUB 5100:RETURN
+2130 COMMON FO:GOSUB 6310:BM$="Susanna: It's too dark to tell, but I don't think there's anyone there. At\least that's different from the nightmare... Watch out. They're\approaching us.":GOSUB 5100
+2140 GOSUB 9030:BM$="The two men approached them, glaring at David. They pulled out knives,\and attempted to stab him.":GOSUB 5100
+2150 GOSUB 6190:BM$="David twisted his body, dodging the knife, and grabbed the man's arm. The\man spun in the air, falling square to the ground.":GOSUB 5100
+2160 BM$="Seeing this, the other man approached David more carefully, while the\first one picked up his knife and got up again.":GOSUB 5100
+2170 GOSUB 9565:BM$="Afraid for their lives, Susanna screamed.":GOSUB 5100
+2180 BM$="Susanna: HELP! SOMEONE, HELP US!":GOSUB 5100:RETURN
+2190 BM$="David: Susanna, go call Mr. Holly!":GOSUB 5100:RETURN
+2200 W2=0:GOSUB 6180:GOSUB 6310:BM$="Susanna: I-I can't! There's two more men on the other side! It's like your\nightmare!":GOSUB 5100
+2230 BM$="David shivered, as he saw two more men running their way.":GOSUB 5100
+3000 COMMON FO:GOSUB 5205:POLL X:ISET X:CMD RUN "NO57"
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 4000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 GOSUB 5205:CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "TEL":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5830:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾚｽﾄ",&H00,&HC00E:GOSUB 5830:RETURN
+6120 GOSUB 5205:GOSUB 9525:GOSUB 9505:CMD LOAD "Kｸﾙﾏ",&H00,&HC00E:GOSUB 5910:RETURN
+6130 GOSUB 5205:CMD LOAD "ﾍﾔﾅｶ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6140 GOSUB 5205:CMD LOAD "ｶﾜ",&H00,&HC00E:GOSUB 5910:RETURN
+6150 GOSUB 5205:GOSUB 9515:CMD LOAD "ﾉｳｶ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6155 GOSUB 5205:CMD LOAD "ﾉｳｶ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6160 GOSUB 5205:GOSUB 9555:CMD LOAD "ﾔﾐﾊｼ",&H00,&HC00E:GOSUB 5820:RETURN
+6170 CMD LOAD "ﾊｼﾋﾄ",&H00,&HC02B:RETURN
+6180 GOSUB 5205:GOSUB 9565:CMD LOAD "ｳｼﾛ",&H00,&HC41D:GOSUB 5820:RETURN
+6190 GOSUB 5205:CMD LOAD "ﾓﾐｱｳ",&H00,&HC009:GOSUB 5820:RETURN
+6200 GOSUB 5205:GOSUB 9554:CMD LOAD "ｶﾜﾔﾐ",&H00,&HC00E:GOSUB 5820:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W5=1:W6=0:WEND LOAD"ｱﾝﾘｰ",AL:RETURN :ELSE RETURN
+6350 IF W6=0 THEN W1=0:W2=0:W5=0:W6=1:WEND LOAD"ｷﾞﾙﾄ",AL:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"11:56"TO"15:19":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"17:30"TO"19:18":COMMON FI:RETURN
+9020 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9030 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9050 RETURN
+9060 RETURN
+9500 ISET X:CMD LOAD "Pﾊﾞｽ":ISET L,&H3000,&H7FB0,0,&H00:RETURN
+9505 ISET X:ISET S,&H1000,1,&H50:ISET P,0,&H00,0,&H0900:RETURN:
+9510 ISET X:CMD LOAD "PBｵﾄ":ISET L,&H3000,&H47E8,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&H30:ISET P,1,&H00,1,&H0400:RETURN:
+9520 ISET X:CMD LOAD "Pｽﾀﾄ":ISET L,&H3000,&H5FD0,2,&H00:RETURN
+9525 ISET X:ISET S,&H2300,0,&H50:ISET P,2,&H00,2,&H0700:GOSUB 5510:RETURN:
+9530 ISET X:CMD LOAD "Pﾑｼ":ISET L,&H3000,&H7FB0,3,&H00:RETURN
+9535 ISET X:ISET S,&H2300,1,&H60:ISET P,3,&H00,3,&H1200:RETURN:
+9540 ISET X:CMD LOAD "Pﾉｯｸ":ISET L,&H3000,&H47E0,4,&H00:RETURN
+9545 ISET X:ISET S,&H2300,0,&HB0:ISET P,4,&H00,4,&H0500:GOSUB 5500:RETURN
+9550 ISET X:CMD LOAD "Pｶﾜ":ISET L,&H3000,&H7FB0,5,&H00:RETURN
+9554 ISET X:ISET S,&H2300,1,&H10:ISET P,5,&H00,5,&H1100:RETURN
+9555 ISET X:ISET S,&H2300,1,&H50:ISET P,5,&H00,5,&H1100:RETURN
+9560 ISET X:CMD LOAD "Sｻｹﾌ":ISET L,&H3000,&H4FE0,6,&H00:RETURN
+9565 ISET X:ISET S,&H2300,0,&H80:ISET P,6,&H00,6,&H0600:GOSUB 5510:GOSUB 9555:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,56:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

@@ -1,0 +1,182 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9005:'
+100 GOSUB 9550:GOSUB 9540:GOSUB 9530:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Clark spoke.":C4$="Vince spoke.":C5$="Connors spoke."
+1000 GOSUB 6100:GOSUB 1200
+1010 CM=2:CM$(1)=C1$:CM$(2)=C2$
+1020 GOSUB 5400
+1150 IF CN=1 AND G2>0 THEN 1250
+1160 IF CN=2 AND G2>0 THEN GOSUB 1240:GOTO 1020
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1220:GOTO 1020
+1180 IF CN=1 THEN G1=1:GOSUB 1210:GOTO 1020
+1190 IF CN=2 THEN GOSUB 1200:GOTO 1020
+1200 GOSUB 6310:BM$="Susanna: I knew it was a set-up! The King of the North lured us here, to the\stone circle!":GOSUB 5100:RETURN
+1210 GOSUB 6300:BM$="David: It's getting dark. There's no houses nearby, and we're too far away\to walk the way back... Damn that Connors! He was in on it!":GOSUB 5100:RETURN
+1220 GOSUB 6310:BM$="Susanna: We can't stay here. We have to go back to the hotel, even if we\have to walk. We might cross a car along the way.":GOSUB 5100
+1230 W2=0:GOSUB 6110:GOSUB 6310:BM$="Just as they started walking, they noticed a car approaching them with\the headlights turned off.":GOSUB 5100
+1240 BM$="Susanna: There's no way that's a tourist coming to see Stonehenge this\late. It has to be northern assassins! David, what should we do?!":GOSUB 5100:RETURN
+1250 GOSUB 6300:BM$="David: We'll never get away by running. Let's hide among the megaliths!":GOSUB 5100
+1260 COMMON FO:GOSUB 9545:GOSUB 6145:BM$="David and Susanna entered the stone circle.":GOSUB 5100
+1265 GOSUB 9010:'
+1270 GOSUB 6120:BM$="They hid in the shadows of the megaliths. The car stopped at the end of\the paved road, and four individuals wearing white robes got out.":GOSUB 5100
+1280 ISET X:GOSUB 9050:BM$="The four white shadows approached the megaliths. David and Susanna\watched them, holding their breath.":GOSUB 5100
+1290 GOSUB 6130:BM$="One of the shadows shouted towards the stone circle.":GOSUB 5100
+1300 BM$="Shadow: David! The northern tribes have concluded that you have\inherited the blood of the Devil King! You may not believe it, but we\northern sorcerers can sense the dark waves that flow in your veins!":GOSUB 5100
+1310 BM$="Shadow: Ask Susanna, the dark sorceress, and she will confirm our words.\Of course, you have no time for that right now... You can ask her in hell!":GOSUB 5100
+1320 BM$="Shadow: Susanna! We have dealt with the dark sorcerers you contacted\before you even reached Bristol! The King of the North shall be here soon\to witness your death with his very eyes.":GOSUB 5100:BM$="You may consider these the last moments of your life!":GOSUB 5100
+1330 W1=0:POLL X:GOSUB 6140:GOSUB 6300:BM$="There was only one shadow in front of them. When David turned his head,\he noticed that the other three had taken place at his left, right, and\back.":GOSUB 5100
+1340 GOSUB 1600
+1350 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1360 GOSUB 5400
+1540 IF CN=2 AND G1>1 THEN 1660
+1550 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1650:GOTO 1360
+1560 IF CN=2 AND G2>0 THEN GOSUB 1640:GOTO 1360
+1570 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1620:GOTO 1360
+1580 IF CN=1 THEN G1=1:GOSUB 1610:GOTO 1360
+1590 IF CN=2 THEN GOSUB 1600:GOTO 1360
+1600 GOSUB 6310:BM$="Susanna: A magical tetragon... David, we're trapped in the stone circle! The\northern spell will prevent us from leaving!":GOSUB 5100:RETURN
+1610 GOSUB 6300:BM$="David: So it's true? You're a sorceress? Why didn't you tell me?!":GOSUB 5100:RETURN
+1620 GOSUB 6310:BM$="Susanna: Just like you've inherited the blood of the Devil King, I've\inherited the blood of Susanna, who served King Hroth. The two of us are\their descendants...":GOSUB 5100
+1630 BM$="Susanna: You've never fallen in love with any woman other than me, have\you? I've been in love with you since I was a child. You were always in my\dreams. Susanna: Before she passed away, my mother taught me the power":GOSUB 5100:BM$="of magic, and told me about the blood of the Devil King.":GOSUB 5100
+1640 BM$="Susanna: That's why I've been trying to protect you from the King of the\North. But I guess you just can't fight fate...":GOSUB 5100:RETURN
+1650 GOSUB 6300:BM$="David: So those pills you gave me for my nightmares...":GOSUB 5100:RETURN
+1660 GOSUB 6310:BM$="Susanna: They were made by dark sorcerers, yes. There are many who've\inherited the blood of the original dark sorcerers, but only few can be\said to be truly powerful.":GOSUB 5100
+1670 BM$="Susanna: We sorcerers can't hope to defeat the King of the North... but it\would be easy for you, if you were to awaken the power of your blood!":GOSUB 5100
+1680 COMMON FO:GOSUB 9020:GOSUB 9515:GOSUB 6150:BM$="At that moment, they heard the sound of a car engine in the distance.\Then, they noticed its headlights approaching.":GOSUB 5100:'
+1690 GOSUB 6135:BM$="After looking towards the car, the white shadow in front of David shouted\at him.":GOSUB 5100
+1700 BM$="Shadow: The King of the North will cast a curse upon you. Though I have\never witnessed it myself, it is said that the agony is unimaginable. This\should be entertaining.":GOSUB 5100
+1710 GOSUB 6160:BM$="The car approached the stone circle, stopping next to the car used by\the northern sorcerers.":GOSUB 5100
+1720 BM$="For a while, nobody came out, as if waiting for something to happen.":GOSUB 5100
+1730 GOSUB 6170:BM$="Eventually, the passenger door opened, and a man came out. The white\shadow who was approaching the car stopped in his tracks...":GOSUB 5100
+1740 BM$="Northern sorcerer: You're not the King of the North. Are you a dark\sorcerer...?":GOSUB 5100
+1750 BM$="The man put a hand in his suit and pulled out a gun, aiming it at the\northern sorcerer.":GOSUB 5100
+1760 BM$="Susanna stared at the man, whose face was clearly illuminated by the\car's headlights.":GOSUB 5100
+1770 GOSUB 6310:BM$="Susanna: That's Clark, one of the detectives employed by the northern\tribesmen. The driver is his assistant, Vince. Do the northern sorcerers\not recognize him...?":GOSUB 5100
+1780 BM$="Susanna: This is our chance, David. The northern sorcerers are\distracted, and the tetragon is broken. Let's get into their car!":GOSUB 5100
+1790 GOSUB 9090:GOSUB 6180:BM$="Susanna pushed David, urging him to run. The white shadows at their sides\chased after them.":GOSUB 5100
+1800 GOSUB 6190:BM$="Noticing this, Clark pointed his gun at the robed men, and pulled the\trigger.":GOSUB 5100
+1810 BM$="The four shadows stopped. Clark kept aiming his gun at them.":GOSUB 5100
+1820 GOSUB 9516:GOSUB 6280:BM$="The lights of yet another car were approaching the site.":GOSUB 5100
+1830 GOSUB 6160:BM$="Vince opened the rear door to let David and Susanna in.":GOSUB 5100
+1840 GOSUB 9555:GOSUB 5510:GOSUB 9505:GOSUB 5510:GOSUB 9516:BM$="Clark fired his gun into the tires of the sorcerers' car, then jumped into\his own car. Vince floored the pedal, and they left at a dangerously high\speed.":GOSUB 5100
+1845 GOSUB 6200:POLL X
+1850 BM$="Almost colliding with the incoming car, they were able to get away from\the megaliths of Stonehenge.":GOSUB 5100
+3000 COMMON FO:GOSUB 5205:ISET X:CMD RUN "NO76"
+3060 FOR I=0 TO 3000:NEXT:LINE(0,0)-(550,83),0,BF:RETURN
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 4000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ｽﾄｶｰ",&H00,&HC00E:GOSUB 5820:RETURN
+6110 GOSUB 5205:GOSUB 9516:CMD LOAD "ｸﾙﾏS",&H00,&HC966:GOSUB 5820:RETURN
+6120 GOSUB 5205:GOSUB 9535:CMD LOAD "ｶｰUP",&H00,&HC00E:GOSUB 5820:RETURN
+6130 GOSUB 5205:CMD LOAD "ｼﾛ",&H00,&HC00C:GOSUB 5820:RETURN
+6135 CMD LOAD "ｼﾛ",&H00,&HC014:RETURN
+6140 GOSUB 5205:CMD LOAD "ｽﾄﾝB":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6145 GOSUB 5205:CMD LOAD "ｽﾄﾝC",&H00,&HC00E:GOSUB 5820:RETURN
+6150 GOSUB 5205:CMD LOAD "ﾗｲﾄS",&H00,&HC963:GOSUB 5820:RETURN
+6160 GOSUB 5205:GOSUB 9535:CMD LOAD "ﾗｲﾄ",&H00,&HC00C:GOSUB 5820:RETURN
+6170 GOSUB 5205:POLL X:ISET X:CMD LOAD "ｼﾛK",&H00,&HC32C:GOSUB 5820:RETURN
+6180 GOSUB 5205:GOSUB 9545:CMD LOAD "ｽﾄﾝA",&H00,&HC00E:GOSUB 5820:RETURN
+6190 GOSUB 5205:GOSUB 9555:CMD LOAD "ｳﾂ",&H00,&HC96C:GOSUB 5820:RETURN
+6200 GOSUB 7000:GOSUB 9560:GOSUB 9510:CMD LOAD "ｶｰﾅｶ",&H00,&HD90C:GOSUB 5820:GOSUB 9080:GOTO 8000
+6280 GOSUB 5205:CMD LOAD "ｸﾙS1",&H00,&HC96C:GOSUB 5820:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+7000 GOSUB 5610:ISET X:CMD LOAD"ｸﾙS1",&H00,&HC000:SET G,&H5000,&HC000,&H13,&H16
+7010 CMD LOAD"ｸﾙS2",&H00,&HC000:SET G,&H51C9,&HC000,&H13,&H1A
+7020 CMD LOAD"ｸﾙS3",&H00,&HC000:SET G,&H5392,&HC000,&H16,&H1D
+7030 CMD LOAD"ｸﾙS4",&H00,&HC000:SET G,&H55A3,&HC000,&H18,&H27
+7040 CMD LOAD"ｸﾙS5",&H00,&HC000:SET G,&H57E4,&HC000,&H1D,&H36
+7050 CMD LOAD"ｸﾙEN",&H00,&HC000:SET G,&H5A9D,&HC000,&H34,&H4C
+7060 CLS 2:RETURN
+8000 ISET X:SET P,&H5000,&HC96C:GOSUB 9000
+8010 SET P,&H51C9,&HC82C:GOSUB 9000
+8020 SET P,&H5392,&HC791:GOSUB 9000
+8030 SET P,&H55A3,&HC656:GOSUB 9000
+8040 SET P,&H57E4,&HC47B:GOSUB 9000
+8050 SET P,&H5A9D,&HC242:GOSUB 9000
+8060 GOSUB 9565:LINE(0,0)-(560,83),0,BF:GOSUB 5510:GOSUB 9515:RETURN
+9000 FOR I=1 TO 80:NEXT:RETURN
+9005 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"15:37"TO"17:29":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7
+9060 POLL X:POLL P,&H00,&H02:POLL P,&H0100,&H02:POLL P,&H0200,&H01:RETURN
+9070 POLL X:POLL P,&H05,&H01:POLL P,&H0105,&H05:RETURN
+9080 POLL X:POLL P,&H08,&H01:POLL P,&H0107,&H05:RETURN
+9090 POLL X:POLL P,&H05,&H05:POLL P,&H0100,&H01:RETURN
+9500 ISET X:CMD LOAD"Pｽﾀﾄ":ISET L,&H3000,&H5FD0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2000,0,&H90:ISET P,0,&H00,0,&H0900:RETURN
+9510 ISET X:CMD LOAD"Pﾊﾞｽ":ISET L,&H3000,&H7FB0,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&H90:ISET P,1,&H00,1,&H0FFF:RETURN
+9516 ISET X:ISET S,&H2000,1,&HF0:ISET P,1,&H00,1,&H0FFF:RETURN
+9530 ISET X:CMD LOAD"PBｵﾄ":ISET L,&H3000,&H47F8,3,&H00:RETURN
+9535 ISET X:ISET S,&H1000,1,&H60:ISET P,3,&H00,3,&H0400:RETURN
+9540 ISET X:CMD LOAD"Pｱﾙｸ":ISET L,&H3000,&H5FFF,4,&H00:RETURN
+9545 ISET X:ISET S,&H2A00,1,&HA0:ISET P,4,&H10,4,&H011F:RETURN
+9550 ISET X:CMD LOAD"Pｳﾂ":ISET L,&H3000,&H7FB0,5,&H00:RETURN
+9555 ISET X:ISET S,&H2300,0,&HF0:ISET P,5,&H30,5,&H0850:RETURN
+9560 ISET X:CMD LOAD"Pﾛｰﾄ":ISET L,&H3000,&H6FFF,0,&H00:RETURN
+9565 ISET X:ISET S,&H5000,0,&HFF:ISET P,0,&H00,0,&H0F00:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,75:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

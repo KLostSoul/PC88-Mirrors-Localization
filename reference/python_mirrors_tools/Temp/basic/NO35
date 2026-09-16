@@ -1,0 +1,187 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998
+100 GOSUB 9540:GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+1000 GOSUB 6100:BM$="After leaving the darkness of Michael's residence, David was blinded by\the sudden sunlight.":GOSUB 5100
+1010 BM$="After a few seconds, he became used to the light. He was now convinced\that his meeting with Michael was not a dream.":GOSUB 5100
+1020 GOSUB 6110:GOSUB 1200
+1030 CM=2:CM$(1)="David spoke.":CM$(2)="Susanna spoke."
+1040 GOSUB 5400
+1130 IF CN=1 AND G2>1 THEN 1255
+1140 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1250:GOTO 1040
+1150 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1240:GOTO 1040
+1160 IF CN=2 AND G2>0 THEN GOSUB 1230:GOTO 1040
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1220:GOTO 1040
+1180 IF CN=1 THEN G1=1:GOSUB 1210:GOTO 1040
+1190 IF CN=2 THEN GOSUB 1200:GOTO 1040
+1200 GOSUB 6340:BM$="Susanna: Should we follow Michael's map?":GOSUB 5100:RETURN
+1210 GOSUB 6300:BM$="David: Of course. But first, there's something I'd like to ask you. Michael\changed his attitude at your words... Could you tell me why?":GOSUB 5100:RETURN
+1220 GOSUB 6340:BM$="Susanna: It's because you're very popular here in Rome. Your presence\here should be all over the newspapers. I don't think there's anyone who\doesn't know who you are, David.":GOSUB 5100
+1230 GOSUB 6340:BM$="Susanna: Somehow, he failed to recognize you. But once I told him who you\were, he figured he could brag to have had David, the famous singer of\Eleno Vision, among his clients.":GOSUB 5100
+1235 BM$="David wasn't fully satisfied with this explanation, but he kept the\conversation going.":GOSUB 5100:RETURN
+1240 GOSUB 6300:BM$="David: Is that so? What about when he used his magic? It was like one of my\dreams... Didn't you feel tired? It was as if he was draining my energy...":GOSUB 5100:RETURN
+1250 GOSUB 6340:BM$="Susanna: I'm okay, but you do look a little pale... Maybe we should go back to\the hotel.":GOSUB 5100:RETURN
+1255 GOSUB 6300:BM$="David: We've come this far. I really want to know who the owner of this\crest is. Look, there's a taxi over there. Let's go.":GOSUB 5100
+1260 GOSUB 6120:BM$="David and Susanna entered the taxi.":GOSUB 5100
+1270 GOSUB 9526:GOSUB 5510:GOSUB 9545:GOSUB 5510:BM$="Clark and Vince saw them leave, and hurried to find a taxi of their own.":GOSUB 5100
+1280 BM$="Just as David's taxi was leaving their sight, they were able to find their\ride.":GOSUB 5100
+1290 GOSUB 6130:GOSUB 1500
+1300 CM=2:G1=0:G2=0:CM$(1)="Clark spoke.":CM$(2)="Vince spoke."
+1310 GOSUB 5400
+1380 IF CN=1 AND G2>4 THEN 1620
+1390 IF CN=2 AND G1>4 THEN G2=5:GOSUB 1610:GOTO 1310
+1400 IF CN=1 AND G2>3 THEN G1=5:GOSUB 1600:GOTO 1310
+1410 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1590:GOTO 1310
+1420 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1580:GOTO 1310
+1430 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1570:GOTO 1310
+1440 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1560:GOTO 1310
+1450 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1550:GOTO 1310
+1460 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1540:GOTO 1310
+1470 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1530:GOTO 1310
+1480 IF CN=1 THEN G1=1:GOSUB 1520:GOTO 1310
+1490 IF CN=2 THEN GOSUB 1500:GOTO 1310
+1500 GOSUB 6320:BM$="Vince: Hello good sir. See that taxi? Could you please follow it?":GOSUB 5100
+1510 BM$="Lucky for them, there were no other taxis on the road, the rest were\private cars.":GOSUB 5100:RETURN
+1520 GOSUB 6310:BM$="Clark: Damn it, another car got in between! Tell him to step on the gas\already! Sheesh, don't they know how to drive in Rome?!":GOSUB 5100:RETURN
+1530 GOSUB 6320:BM$="Vince: Hmm, we're getting away from the hotel. Where do you think they're\headed?":GOSUB 5100:RETURN
+1540 GOSUB 6310:BM$="Clark: The taxi's headed for the River Tiber. They may be headed for the\San Pietro's Basilica in the Vatican City.":GOSUB 5100:RETURN
+1550 GOSUB 6320:BM$="Vince: The Vatican is the smallest country in the world. Some call it the\Land of God, some the Kingdom of the Holy Spirit, others the headquarters\of the Catholic Church.":GOSUB 5100:BM$="There are rumors that the Pope has enough authority to run the world...":GOSUB 5100:RETURN
+1560 GOSUB 6310:BM$="Clark: You sure know a lot of stuff, Vince. The Vatican is just 0.44 square\kilometers, and yet it has over a hundred embassies all over the world. It's\one of the richest countries out there.":GOSUB 5100:RETURN
+1570 GOSUB 6140:GOSUB 6320:BM$="Vince: We just crossed Ponte Sant'Angelo. You're right Chief, we're going\to the San Pietro's Basilica.":GOSUB 5100:RETURN
+1580 GOSUB 6310:BM$="Clark: Hmmm... Weird. They just crossed Piazza San Pietro. If they were\going to the Basilica, this is where they'd get off...":GOSUB 5100:RETURN
+1590 GOSUB 6150:GOSUB 6320:BM$="Vince: They drove past the Vatican Museums. They just keep going, huh?":GOSUB 5100:RETURN
+1600 GOSUB 6310:BM$="Clark: Leonardo da Vinci spent quite some time around these parts,\ostensibly.":GOSUB 5100:RETURN
+1610 GOSUB 6320:BM$="Vince: They turned again. I have no idea where they're going.":GOSUB 5100:RETURN
+1620 GOSUB 6160:GOSUB 9515:GOSUB 6310:BM$="Clark: Well, they finally stopped. They got off, but the taxi's just parked\there. Maybe they told him to wait? Let's stay here and see what they do.":GOSUB 5100
+1630 COMMON FO:GOSUB 6170:BM$="David and Susanna got off the taxi and looked around them.":GOSUB 5100
+1640 GOSUB 1800
+1650 CM=2:G1=0:G2=0:CM$(1)="David spoke.":CM$(2)="Susanna spoke."
+1660 GOSUB 5400
+1730 IF CN=1 AND G2>1 THEN 1870
+1740 IF CN=2 AND G2>1 THEN GOSUB 1860:GOTO 1660
+1750 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1850:GOTO 1660
+1760 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1840:GOTO 1660
+1770 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1820:GOTO 1660
+1780 IF CN=1 THEN G1=1:GOSUB 1810:GOTO 1660
+1790 IF CN=2 THEN GOSUB 1800:GOTO 1660
+1800 GOSUB 6340:BM$="Susanna: Look, David! This is it!":GOSUB 5100:RETURN
+1810 GOSUB 6300:BM$="David: Yes, no doubt about it. This is the castle we saw. Michael's magic was\for real.":GOSUB 5100:RETURN
+1820 GOSUB 6340:BM$="Susanna: Let's see if we can notice the crest anywhere. Michael said their\family passed down the coat of arms in secret, but I can't imagine they'd\build such a grandiose building without sticking the crest somewhere.":GOSUB 5100
+1830 GOSUB 6181:BM$="David and Susanna walked around the building, examining it accurately.":GOSUB 5100:RETURN
+1840 GOSUB 6186:GOSUB 6300:BM$="David: There it is, engraved on the gatepost! It's the same size as the one\on the handkerchief!":GOSUB 5100:RETURN
+1850 GOSUB 6340:BM$="Susanna: You're right! It has no colors, but it's definitely the same design.\It's so small that you wouldn't normally notice it if you weren't looking for\it.":GOSUB 5100
+1860 GOSUB 6340:BM$="Susanna: I'm glad we finally found the crest. Michael also mentioned the\Devil King. I'm sure the old man from your dream is pleased.":GOSUB 5100:RETURN
+1870 GOSUB 6300:BM$="David: Looks like the nameplate reads `Damiel Horkai`.":GOSUB 5100
+1872 BM$="David felt like he heard the name somewhere before, but he couldn't\remember where exactly.":GOSUB 5100
+1875 BM$="David: This is the end of my search. Thank you, Susanna. If it weren't for\you, that old man would have haunted my dreams again tonight. Now I can\go back to the hotel without worry.":GOSUB 5100
+1880 COMMON FO:GOSUB 6176:GOSUB 9526:BM$="David and Susanna entered the taxi again.":GOSUB 5100
+1890 GOSUB 2000
+1900 CM=2:G1=0:G2=0:CM$(1)="Clark spoke.":CM$(2)="Vince spoke."
+1910 GOSUB 5400
+1980 IF CN=1 THEN 2010
+1990 IF CN=2 THEN GOSUB 2000:GOTO 1910
+2000 GOSUB 6320:BM$="Vince: Well, they got on the taxi again. What do we do?":GOSUB 5100:RETURN
+2010 GOSUB 6310:BM$="Clark: I'm getting off to check whatever the hell they were looking at. You\keep following them. We'll regroup at the hotel.":GOSUB 5100
+2020 BM$="Clark got off the taxi, while Vince followed David and Susanna.":GOSUB 5100
+2030 GOSUB 9526:GOSUB 6180:BM$="Clark approached the gatepost David and Susanna were inspecting.":GOSUB 5100
+2040 W2=0:GOSUB 6310:BM$="Clark: Well, this is the same crest drawn on that handkerchief. Did the\fortune teller tell them to come here or something?":GOSUB 5100:COMMON FO:GOSUB 5200
+3000 ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT
+3010 COMMON STOP
+3020 '
+3040 POKE &H9089,2:CMD SET:CMD SCREEN 0:CMD RUN"NO36"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 4500:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ｲﾘｸﾁ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 9020:GOSUB 5820:RETURN
+6110 GOSUB 5205:GOSUB 9535:CMD LOAD "ﾛｼﾞ2",&H00,&HC00E:GOSUB 5820:RETURN
+6120 COMMON FO:GOSUB 5205:GOSUB 9545:CMD LOAD"ﾏﾁﾅｶ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6130 GOSUB 5205:GOSUB 9000:GOSUB 9525:CMD LOAD "ﾀｸｼｰ",&H00,&HC009:GOSUB 5890:RETURN
+6140 IF W3=0 THEN GOSUB 5205:CMD LOAD "ﾋﾛﾊﾞ",&H00,&HC009:GOSUB 5890:RETURN :ELSE RETURN
+6150 IF W3=0 THEN GOSUB 5205:CMD LOAD "ｷﾕﾃﾝ",&H00,&HC009:GOSUB 5890:RETURN :ELSE RETURN
+6160 IF W1=0 THEN GOSUB 5205:CMD LOAD "ﾀｸﾏﾁ",&H00,&HC009:GOSUB 5890:RETURN :ELSE RETURN
+6170 GOSUB 5205:ISET X:CMD LOAD "ｼﾛ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 9010:GOSUB 5890:RETURN
+6175 GOSUB 5205:CMD LOAD "ｼﾛ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6176 GOSUB 5205:CMD LOAD "ｼﾛ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 9030:GOSUB 5890:RETURN
+6180 GOSUB 5205:CMD LOAD "ｼﾛﾓﾝ",&H00,&HC00E:GOSUB 5890:RETURN
+6181 IF SW=0 THEN GOSUB 5205:CMD LOAD "ｼﾛﾓﾝ",&H00,&HC00E:GOSUB 5890:SW=0:RETURN :ELSE RETURN
+6185 IF W1=0 THEN GOSUB 5205:CMD LOAD "ｼﾛﾓﾝ",&H00,&HC00E:GOSUB 5890:RETURN :ELSE RETURN
+6186 IF W1=0 THEN CMD LOAD "ﾓﾝｽｮ",&H00,&HC979:RETURN :ELSE RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"12:45"TO"15:19":COMMON FI:RETURN
+9010 COMMON STOP:COMMON P"06:32"TO"07:59":COMMON FI:RETURN
+9020 COMMON STOP:COMMON P"09:15"TO"11:55":COMMON FIF:RETURN
+9030 COMMON STOP:COMMON P"28:36"TO"29:52":COMMON FIF:RETURN
+9500 ISET X:CMD LOAD "Pｸﾙﾏ":ISET L,&H3000,&H37F8,0,&H00:RETURN
+9505 ISET X:ISET S,&H1000,1,&H40:ISET P,0,&H00,0,&H0200:RETURN:
+9510 ISET X:CMD LOAD "PBｵﾄ":ISET L,&H3000,&H47F8,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&H30:ISET P,1,&H00,1,&H0400:RETURN:
+9520 ISET X:CMD LOAD "Pｽﾀﾄ":ISET L,&H3000,&H5FD0,2,&H00:RETURN
+9525 ISET X:ISET S,&H2300,0,&H60:ISET P,2,&H00,2,&H0800:GOSUB 5510:GOSUB 9505:RETURN:
+9526 ISET X:ISET S,&H2300,0,&H60:ISET P,2,&H00,2,&H0800:RETURN:
+9530 ISET X:CMD LOAD"Pﾛｰﾄ":ISET L,&H3000,&H6FFF,3,&H00:RETURN
+9535 ISET X:ISET S,&H2600,1,&H40:ISET P,3,&H00,3,&H0EFF:RETURN
+9540 ISET X:CMD LOAD"Pﾏﾁ":ISET L,&H3000,&H67C8,4,&H00:RETURN
+9545 ISET X:ISET S,&H2000,1,&H60:ISET P,4,&H00,4,&H0C00:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,35:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

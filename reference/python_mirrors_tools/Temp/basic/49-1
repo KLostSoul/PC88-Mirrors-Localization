@@ -1,0 +1,138 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998
+100 GOSUB 9000:GOSUB 9510:'
+900 C1$="David spoke.":C2$="Andrew spoke.":C3$="Martin spoke.":C4$="Alan spoke.":C5$="Susanna spoke.":C6$="Richard spoke."
+1990 GOSUB 6150:BM$="At around 10pm, David and his friends headed for the Marquee Club.":GOSUB 5100
+2000 GOSUB 6160:
+2010 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)="The owner spoke."
+2020 GOSUB 5400
+2090 IF CN=1 AND G2>3 THEN 2310
+2100 IF CN=2 AND G1>3 THEN G2=4:GOSUB 2300:CM$(1)=C3$:GOTO 2020
+2110 IF CN=1 AND G2>2 THEN G1=4:GOSUB 2290:CM$(2)=C1$:GOTO 2020
+2120 IF CN=2 AND G1>2 THEN G2=3:GOSUB 2280:CM$(1)=C4$:GOTO 2020
+2130 IF CN=1 AND G1>2 THEN GOSUB 2270:GOTO 2020
+2140 IF CN=1 AND G2>1 THEN G1=3:GOSUB 2260:CM$(2)=C2$:GOTO 2020
+2150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 2250:CM$(1)="The owner spoke.":GOTO 2020
+2160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 2240:CM$(2)=C4$:GOTO 2020
+2165 IF CN=2 AND G2>0 THEN GOSUB 2236:GOTO 2020
+2170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 2230:CM$(1)=C3$:GOTO 2020
+2180 IF CN=1 THEN G1=1:GOSUB 2220:GOTO 2020
+2190 IF CN=2 THEN GOSUB 2210:GOTO 2020
+2200 GOSUB 6380:BM$="Owner: Oh my, if it isn't David! I see Alan, Andrew, and Martin are with you.\You've just come back today, haven't you?":GOSUB 5100
+2210 BM$="Owner: It's so good to see you! It's pretty much impossible for Eleno Vision\to play here now, but that just means you've made it big.":GOSUB 5100:RETURN
+2220 GOSUB 6305:BM$="David: We wanted you to be the first to hear about our success. We owe you\a lot. We probably wouldn't be where we are if not for you.":GOSUB 5100:RETURN
+2230 GOSUB 6380:BM$="Owner: I'm glad to hear that. How about we move to the counter? It's still\small and cramped as usual, but we can push some customers away.":GOSUB 5100
+2235 GOSUB 6170:W8=0:GOSUB 6380:BM$="The owner asked some customers to move away, and lined up some chairs\from the dressing room at the counter.":GOSUB 5100
+2236 BM$="Owner: Boy, serve us some scotch... No, not that one! Our finest scotch! It's\my treat, friends. Bottoms up!":GOSUB 5100:RETURN
+2240 GOSUB 6310:BM$="Martin: It's been a while since we've been here! Jimmy's performing\tonight, huh? Guess he's your main performer now.":GOSUB 5100:RETURN
+2250 GOSUB 6320:BM$="Alan: I remember when we used to be the main performers here. The pay\was so low we'd spend most of it on the ride back home.":GOSUB 5100:RETURN
+2260 GOSUB 6380:BM$="Owner: Hey, amateurs should be grateful to even get a chance to play. And\small as it is, getting a pay makes you feel like a professional. Honestly, I'm\a beacon of hope for all you whippersnappers.":GOSUB 5100
+2261 BM$="Before long, the customers around the counter were staring at David.":GOSUB 5100
+2262 GOSUB 6195:BM$="Jimmy, on stage, knew that Eleno Vision was in the club, and that made him\anxious. Once his performance was over, he took the microphone.":GOSUB 5100
+2263 BM$="Jimmy: Ladies and gentlemen, we have some special guests! Eleno Vision is\here!":GOSUB 5100
+2264 BM$="The customers started murmuring, looking around for David and the band.":GOSUB 5100
+2265 BM$="Jimmy: How about you sing for us, David? It might be the last time Eleno\Vision performs here!":GOSUB 5100
+2266 BM$="Jimmy: Please! They all want to hear you sing!":GOSUB 5100
+2267 GOSUB 9515:W8=0:BM$="The guests started clapping, clamoring for Eleno Vision to get on the\stage.":GOSUB 5100
+2268 GOSUB 6170:GOSUB 6380:GOSUB 9505
+2270 BM$="Owner: Jimmy, for Pete's sake... I'm sorry it came to this. Could I ask you to\sing? Just one song, to please the crowd.":GOSUB 5100:RETURN
+2280 GOSUB 6330:BM$="Andrew: Well, you heard him. Are you up for it?":GOSUB 5100:RETURN
+2290 GOSUB 6320:BM$="Alan: I say we owe him this much. Let's do it, David. It'll be like that time in\Italy.":GOSUB 5100:RETURN
+2300 GOSUB 6300:BM$="David: I'm pretty tired... I hope I have the energy for it. Never thought our\first live in London would be at Marquee!":GOSUB 5100:RETURN
+2310 GOSUB 6310:BM$="Martin: We're lucky David's tired. At his best he'd bring down the whole\building!":GOSUB 5100
+2320 BM$="The band went up on the stage.":GOSUB 5100
+2330 GOSUB 6150:BM$="The clapping turned to cheers. That night, the lights of the Marquee Club\stayed lit until morning.":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT
+3010 COMMON STOP
+3020 '
+3040 POKE &H9089,1:CMD SET:CMD SCREEN 0:CMD RUN"NO50"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ｸｳｺｳ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾓﾏﾚﾙ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5850:RETURN
+6120 GOSUB 5205:CMD LOAD "Hﾎﾃﾙ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5850:RETURN
+6140 GOSUB 5205:CMD LOAD "ﾍﾔ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5830:RETURN
+6150 GOSUB 5205:CMD LOAD "ﾏｷﾞｰ",&H00,&HC00E:GOSUB 5820:RETURN
+6160 GOSUB 5205:GOSUB 9505:CMD LOAD "ﾑｶｴﾙ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6170 GOSUB 5205:CMD LOAD "ｶｳﾝﾀ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6180 GOSUB 5205:CMD LOAD "ｼﾞﾑK":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5810:RETURN
+6190 IF W2=0 THEN GOSUB 5205:CMD LOAD "ﾗｲﾌﾞ",&H00,&HC00E:GOSUB 5830:RETURN :ELSE RETURN
+6195 GOSUB 5205:CMD LOAD "ﾗｲﾌﾞ",&H00,&HC00E:GOSUB 5830:RETURN
+6300 IF W1=0 THEN W8=0:W9=0:W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davR",AR:RETURN :ELSE RETURN
+6305 IF W1=0 THEN W8=0:W9=0:W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W9=0:W8=0:W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"marL",AL:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W9=0:W8=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"alnL",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W9=0:W8=0:W3=0:W4=1:W5=0:WEND LOAD"andL",AL:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W9=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6341 IF W6=0 THEN W6=1:W7=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6342 IF W7=0 THEN W7=1:W6=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6350 IF W6=0 THEN W6=1:W7=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6360 IF W7=0 THEN W7=1:W6=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6370 IF W9=0 THEN W9=1:W1=0:W2=0:W3=0:W4=0:W5=0:WEND LOAD"rtdR",AR:RETURN :ELSE RETURN
+6380 IF W8=0 THEN W8=1:W1=0:W2=0:W3=0:W4=0:W5=0:WEND LOAD"ﾏｽﾀｰ",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"11:56"TO"15:19":COMMON FI:RETURN:'
+9505 RETURN
+9510 RETURN
+9515 RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,49:POKE &HE303,1:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

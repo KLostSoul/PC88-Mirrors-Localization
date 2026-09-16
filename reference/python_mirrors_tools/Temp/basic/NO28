@@ -1,0 +1,83 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998
+900 GOSUB 9500:GOSUB 9510:GOSUB 9520
+1000 GOSUB 9000:GOSUB 6000:BM$="`Urgh...!`\That wasn't the hotel. Though it was a solid stone building, it was crumbling\apart, as if it had been bombed.":GOSUB 5100
+1010 BM$="For reasons unknown even to himself, David began to walk.":GOSUB 5100
+2010 GOSUB 6100:BM$="As he reached what appeared to be the entrance, he realized that it was\some kind of ancient building, made of stone and bricks.":GOSUB 5100
+2015 BM$="`...Where am I? There's nothing else I can do but go inside...`":GOSUB 5100
+2020 COMMON FO:GOSUB 6110:BM$="Inside, there were stone pillars, lined up like in a temple; however, the\ceiling and many of the pillars had been destroyed. The night sky was\visible.":GOSUB 5100
+2025 BM$="`...How did I get here? This was supposed to be the hotel!`":GOSUB 5100
+2026 BM$="`There seems to be a way further in. I guess I'll have to follow it...`":GOSUB 5100
+2030 GOSUB 6120:BM$="There was a room in the back of the temple, but it was in ruins. Nobody was\inside.":GOSUB 5100
+2035 BM$="`This place is ancient. Maybe I'm so tired that instead of the hotel I went\inside some historical ruins or something.`":GOSUB 5100
+2036 BM$="`I can see the sky ahead. A little further and I should be out.`":GOSUB 5100
+2040 GOSUB 6130:BM$="The building was in shambles, as if it had been hit by an earthquake. With\many paths blocked by rubble, he was unable to simply walk forward.":GOSUB 5100
+2045 BM$="`I see a clear path ahead. Just a little further. I'm almost there...`":GOSUB 5100
+2050 GOSUB 6140:BM$="He could see what appeared to be a courtyard, or maybe the entrance of\the building.":GOSUB 5100
+2056 BM$="`...I thought I was finally out, but looks like I'm still inside the building. What\ruins are these anyway? I have no idea what I'm doing...`":GOSUB 5100
+2060 GOSUB 6100:BM$="As he stepped through the entrance, he found himself in an ancient\building, made of stone and bricks.":GOSUB 5100
+2065 BM$="`What the - I've been here already! But there's no way I've been going in\circles!`":GOSUB 5100
+2066 BM$="`...I'll just go inside and remove all doubts.`":GOSUB 5100
+2070 GOSUB 6110:BM$="He entered a temple with ruined stone pillars.":GOSUB 5100
+2075 BM$="`See, it's the temple from earlier. I must be in one of my nightmares... I can\see outside the building from there. I'll just climb over the wall, that'll do\the trick.`":GOSUB 5100
+2080 GOSUB 6120:BM$="The night sky was visible beyond the destroyed room.":GOSUB 5100
+2085 BM$="`Yeah, just like I thought. Forget the path, I'm climbing over the wall this\time.`":GOSUB 5100
+2086 GOSUB 9515:BM$="Just as he was about to climb over, David heard a human voice from the\path he ignored.":GOSUB 5100
+2087 BM$="David stopped climbing the wall, and ran through the path, trying to reach\the source of the voice.":GOSUB 5100
+2090 GOSUB 6130:BM$="The path was full of stones and bricks from nearby fallen buildings. He\could hear a man groaning from the building in front of him.":GOSUB 5100
+2230 GOSUB 9515:BM$="`Whoever he is, he's hurt. I need to help him.`":GOSUB 5100
+2240 COMMON FO:BM$="By reflex, David ran towards the source of the voice.":GOSUB 5100
+4999 GOSUB 5200:ISET X:CMD RUN"28-1"
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN
+6000 GOSUB 5205:CMD LOAD "ｺﾛｯｾ",&H00,&HC655:GOSUB 5820:RETURN
+6100 GOSUB 9505:GOSUB 5205:CMD LOAD "ﾐﾁ4",&H00,&HC00C:GOSUB 5820:ISET X:GOSUB 9525:RETURN
+6110 GOSUB 9505:GOSUB 5205:CMD LOAD "ﾐﾁ1":CMD PUT &H3000,1,&H00,&HC00C:GOSUB 5820:ISET X:GOSUB 9010:GOSUB 9525:RETURN
+6120 GOSUB 9505:GOSUB 5205:CMD LOAD "ﾐﾁ2":CMD PUT &H3000,1,&H00,&HC00C:GOSUB 5820:ISET X:GOSUB 9525:RETURN
+6130 GOSUB 9505:GOSUB 5205:CMD LOAD "ﾐﾁ3":CMD PUT &H3000,1,&H00,&HC00C:GOSUB 5820:ISET X:GOSUB 9525:RETURN
+6140 GOSUB 9505:GOSUB 5205:CMD LOAD "ﾐﾁ5",&H00,&HC00C:GOSUB 5820:ISET X:GOSUB 9525:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"06:33"TO"07:59":COMMON FI:RETURN
+9010 IF DX=0 THEN COMMON STOP:COMMON P"29:53"TO"32:04":COMMON FI:DX=1:RETURN :ELSE RETURN
+9500 ISET X:CMD LOAD "Pｱﾙｸ":ISET L,&H3000,&H5FFF,0,&H00:RETURN
+9505 ISET X:ISET S,&H1200,1,&HFF:ISET P,0,&H12,0,&H015F:RETURN:'
+9510 ISET X:CMD LOAD "Pｳﾒｸ":ISET L,&H3000,&H57D8,1,&H00:RETURN
+9515 ISET X:ISET S,&H1100,0,&HFF:ISET P,1,&H00,1,&H0900:RETURN:'
+9520 ISET X:CMD LOAD "Pｶｾﾞ":ISET L,&H3000,&H6FFF,2,&H00:RETURN
+9525 ISET X:ISET S,&H1D00,1,&H5F:ISET P,2,&H00,2,&H0DFF:RETURN:'
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN

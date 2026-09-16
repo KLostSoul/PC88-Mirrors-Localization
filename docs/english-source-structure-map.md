@@ -31,7 +31,7 @@
 
 ### 2.1 Python 포팅 정적 검증 상태
 
-`python_mirrors_tools/python_tools/`는 과거 Ruby 결과와 바이트 단위로 대조했던 Python 포트다. 현재 정식 조합 글리프 한글 패치 빌드에서는 이 트리를 사용하지 않고 `korean_mirrors_tools/python_tools/`만 사용한다. 영문 패치 자체의 기준 소스는 계속 `reference/mirrors_tools/Ruby/`다.
+`reference/python_mirrors_tools/python_tools/`는 과거 Ruby 결과와 바이트 단위로 대조했던 Python 포트다. 현재 정식 조합 글리프 한글 패치 빌드에서는 이 트리를 사용하지 않고 `korean_mirrors_tools/python_tools/`만 사용한다. 영문 패치 자체의 기준 소스는 계속 `reference/mirrors_tools/Ruby/`다.
 
 - Ruby 핵심 구현 11개(`BasicCompiler`, `DataImporter`, `FloppyMan`, `FontGen` 등)에 Python 대응 구현이 있다.
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.
@@ -426,7 +426,7 @@ menu BASIC의 그룹 선택
 
 - 원본 `Mirrors.img`에서 Track 2를 `Export/ISO/02 MIRR.iso`로 추출하고, Python `export`로 44개 2D 플로피 RAW를 생성해 원본 구간과 비교했다.
 - Ruby 포트 기준으로 Python 컴파일러·디컴파일러·이미지/플로피 패커의 차이를 수정한 뒤, 공개 영문 이미지에서 추출한 데이터 트랙 `02 MIRR.iso`를 Python `export`로 다시 처리했다.
-- 과거 재추출 결과는 `python_mirrors_tools/Export/Floppy`의 44개 RAW이며, 각 파일은 409,600바이트였다. 현재 정식 빌드의 플로피 입력·출력 경로는 `korean_mirrors_tools`로 통일한다.
+- 과거 재추출 결과는 `reference/python_mirrors_tools/Export/Floppy`의 44개 RAW이며, 각 파일은 409,600바이트였다. 현재 정식 빌드의 플로피 입력·출력 경로는 `korean_mirrors_tools`로 통일한다.
 - Ruby 2.7.4 기준 재빌드와 Python 재빌드의 비교 결과는 ASM 12개, `Import/Data` 8개, BASIC·이미지 생성 파일 130개, 플로피 RAW 44개, `02 MIRR.iso` 1개 모두 동일했다. 전체 비교에서 차이·누락은 0개다.
 - 최종 `02 MIRR.iso`의 SHA-256은 양쪽 모두 `447d3f23d81897e040919b89b949814977effefe8ac89252dcf4f51553f411c2`이며, 공개 영문 이미지에서 추출한 Track 2 기준 파일과도 일치한다.
 - 이 문서는 영문 패치의 소스·CSV·바이너리 구조를 기록한 정적 분석표이며, 실행 추적이나 에뮬레이터 검증 결과를 포함하지 않는다.

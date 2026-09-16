@@ -1,0 +1,171 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998
+100 GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Andrew spoke.":C3$="Martin spoke.":C4$="Alan spoke.":C5$="Susanna spoke."
+1000 GOSUB 9000:GOSUB 6100:BM$="And so began their first performance in Germany.":GOSUB 5100
+1010 GOSUB 6102:BM$="The crowd was even more excited than it was during their concert in\Italy. The band was getting more and more into it.":GOSUB 5100
+1030 GOSUB 6100:BM$="David's energy reached new peaks. Even Martin, the calmest member of\the band, was yelling. The venue was full of excited energy, both above\and below the stage.":GOSUB 5100
+1040 GOSUB 6320:BM$="Alan: Forget the ballad, David! Let's keep this energy flowing!":GOSUB 5100
+1050 BM$="Alan approached David to talk to him.":GOSUB 5100
+1060 GOSUB 6300:BM$="David: I had the same idea! I'll go tell Andrew!":GOSUB 5100
+1070 BM$="Without skipping a beat, David approached Andrew.":GOSUB 5100
+1080 GOSUB 6330:BM$="Andrew: No way! Things are getting way too hot as it is. We're doing a ballad\next. Go tell Alan!":GOSUB 5100
+1090 GOSUB 6100:BM$="Andrew was seemingly the only member to have kept a modicum of sanity,\perhaps due to his sense of responsibility as problem solver of the band.":GOSUB 5100
+1100 GOSUB 6101:BM$="The audience left their seats and started crowding the stage. Several\women collapsed and were trampled over.":GOSUB 5100
+1110 GOSUB 6100:BM$="The staff pushed the crowd away and helped the women. The concert\continued without any serious injuries.":GOSUB 5100
+1120 COMMON FO:GOSUB 6103:BM$="The band played a ballad. The audience returned to their seats. While the\amount of excitement was still high, it was slowly waning.":GOSUB 5100
+1130 GOSUB 6099:BM$="Seeing some of their fans collapse seemingly woke up the band members\from their trance, who then used every trick to contain the excitement\of their fans and end the concert without incidents.":GOSUB 5100
+1140 COMMON FO:GOSUB 6110:BM$="The band returned to their waiting room, wiping the sweat off their faces.":GOSUB 5100
+1150 GOSUB 1300
+1160 CM=2:CM$(1)=C2$:CM$(2)=C5$
+1170 GOSUB 5400
+1210 IF CN=2 AND G1>3 THEN 1380
+1220 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1370:CM$(2)=C5$:GOTO 1170
+1230 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1360:CM$(1)=C1$:GOTO 1170
+1240 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1350:CM$(2)=C2$:GOTO 1170
+1250 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1340:CM$(1)=C4$:GOTO 1170
+1260 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1330:CM$(2)=C3$:GOTO 1170
+1270 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1320:GOTO 1170
+1280 IF CN=1 THEN G1=1:GOSUB 1310:GOTO 1170
+1290 IF CN=2 THEN GOSUB 1300:GOTO 1170
+1300 GOSUB 6340:BM$="Susanna: Good work, guys. Whew! We almost had to interrupt the concert!":GOSUB 5100:RETURN
+1310 GOSUB 6335:BM$="Andrew: Yeah, I was in a cold sweat. David, Alan - You'll have to try not to\get so carried away next time.":GOSUB 5100:RETURN
+1320 GOSUB 6340:BM$="Susanna: But David needs to do that, or the audience won't get excited. I\know we can't let them get too crazy, but is it really a concert if they're\not having fun?":GOSUB 5100:RETURN
+1330 GOSUB 6330:BM$="Andrew: I mean, even Martin was going crazy tonight. I'm almost afraid to\think of the future.":GOSUB 5100:RETURN
+1340 GOSUB 6310:BM$="Martin: I couldn't help it. That's just what happens when you listen to David\singing.":GOSUB 5100:RETURN
+1350 GOSUB 6320:BM$="Alan: Damn straight. You can't tell me to keep it down. What am I supposed to\do, plug my ears? I'm pretty sure you were into it yourself, Andrew. Are\you saying it's MY fault the audience started collapsing?":GOSUB 5100:RETURN
+1360 GOSUB 6330:BM$="Andrew: I was trying to restrain myself! I'm trying to avoid the worst-case\scenario here! But you have no self-control!":GOSUB 5100:RETURN
+1370 GOSUB 6300:BM$="David: Come on guys, don't fight over this. It was mostly my fault anyway.\From now on I promise to follow your song order, okay Andrew?":GOSUB 5100:RETURN
+1380 GOSUB 6340:BM$="Susanna: Alright, let's get you back to the hotel. You're going to feel\better after a shower.":GOSUB 5100
+1390 GOSUB 6150:BM$="After returning to the hotel and taking a shower, the band was able to\celebrate the success of the concert with some beer.":GOSUB 5100
+1400 BM$="Once the fatigue of the concert caught up to them, they all returned to\their rooms.":GOSUB 5100
+1410 BM$="Tired from all the excitement, David went to bed, forgetting about the\temptation of the visions.":GOSUB 5100
+1420 COMMON FO:GOSUB 6120:BM$="The next day, the band took a bus towards their next concert site: West\Berlin.":GOSUB 5100
+1425 ISET X:GOSUB 6130:BM$="They reached their hotel, aptly called `Berlin`, in the evening.":GOSUB 5100
+1430 GOSUB 6140:BM$="Their concert would be held two days later. The band was chatting in a\luxurious meeting room that Susanna had arranged for them.":GOSUB 5100
+1440 GOSUB 1600
+1450 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C4$
+1460 GOSUB 5400
+1560 IF CN=1 AND G2>0 THEN 1630
+1570 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1620:CM$(1)=C3$:GOTO 1460
+1580 IF CN=1 THEN G1=1:GOSUB 1610:GOTO 1460
+1590 IF CN=2 THEN GOSUB 1600:GOTO 1460
+1600 GOSUB 6320:BM$="Alan: We must be making a killing with this tour. Look at this fancy room!\Remember when we could barely afford business hotels and had to\survive on instant food?":GOSUB 5100:RETURN
+1610 GOSUB 6330:BM$="Andrew: I hope we can keep getting along even as we get famous. The\moment one of us leaves the band, Eleno Vision is over.":GOSUB 5100:RETURN
+1620 GOSUB 6320:BM$="Alan: It's going to be fine. We went through a lot of crap together, you\know? Anyway, how about we check out the Berlin Wall tomorrow? It might\not be there the next time we come to Germany.":GOSUB 5100:RETURN
+1630 GOSUB 6310:BM$="Martin: Oh, I'm definitely going. I've always wanted to see it with my own\eyes.":GOSUB 5100
+1640 GOSUB 9505:BM$="At that moment, there was a knock on the door, and Susanna came in.":GOSUB 5100
+1650 GOSUB 1800
+1660 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C5$
+1670 GOSUB 5400
+1690 IF CN=2 AND G1>4 THEN 1910
+1700 IF CN=1 AND G2>3 THEN G1=5:GOSUB 1900:CM$(2)=C5$:GOTO 1670
+1710 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1890:CM$(1)=C2$:GOTO 1670
+1720 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1880:CM$(2)=C4$:GOTO 1670
+1730 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1870:CM$(1)=C1$:GOTO 1670
+1740 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1860:GOTO 1670
+1750 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1850:GOTO 1670
+1760 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1840:GOTO 1670
+1770 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1830:CM$(1)=C3$:GOTO 1670
+1780 IF CN=1 THEN G1=1:GOSUB 1820:GOTO 1670
+1790 IF CN=2 THEN GOSUB 1810:GOTO 1670
+1800 GOSUB 6340:BM$="Susanna: Oh, you're still up. Listen to this! I just heard there's going to be a\charity magic show at the Bristol Hotel tomorrow night.":GOSUB 5100
+1810 BM$="Susanna: I was able to get five tickets. How about it? There won't be many\guests, so you should be able to relax without being bothered.":GOSUB 5100:RETURN
+1820 GOSUB 6330:BM$="Andrew: There won't be many guests since it's for charity, but I can't\imagine it's going to be very interesting. You can't do elaborate tricks\inside a hotel.":GOSUB 5100:RETURN
+1830 GOSUB 6340:BM$="Susanna: Oh, it won't be simple magic tricks. Apparently it's some kind of\super magic show. Like, ESP. I've never seen it myself, but those who saw it\claim there's no way they're simple tricks.":GOSUB 5100:RETURN
+1840 GOSUB 6310:BM$="Martin: Oh, I've always been interested in ESP. Who's going to perform?":GOSUB 5100:RETURN
+1850 GOSUB 6340:BM$="Susanna: Horgen Krost. Apparently he hates television, so he will only\appear on a live stage.":GOSUB 5100:RETURN
+1860 GOSUB 6310:BM$="Martin: Krost? I've read about him. They say he's the Man with the Third\Eye, and that he has psychic powers. Since he can't use those power to\make money, he pretends they're magic tricks instead.":GOSUB 5100:RETURN
+1870 GOSUB 6340:BM$="Susanna: How about it, David? You don't see actual superpowers every\day!":GOSUB 5100:RETURN
+1880 GOSUB 6300:BM$="David: If we're all going, I'm coming too. I've seen a lot of magic tricks in my\life, but actual psychic powers? That would be a first.":GOSUB 5100:RETURN
+1890 GOSUB 6320:BM$="Alan: Sure, I'm game. I gotta see these so-called psychic powers. Honestly, I\don't really believe in ESP and the like.":GOSUB 5100:RETURN
+1900 GOSUB 6330:BM$="Andrew: It's probably a scam, but it's not like I have anything better to do,\so why not?":GOSUB 5100:RETURN
+1910 GOSUB 6340:BM$="Susanna: Okay then! We're leaving tomorrow evening, at 6 o'clock. I've\never seen an ESPer before, so I'm looking forward to it!":GOSUB 5100
+1920 BM$="The hotel where Eleno Vision was staying wouldn't turn off the lights until\late in the night.":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT
+3010 COMMON STOP
+3020 '
+3040 POKE &H9089,2:CMD SET:CMD SCREEN 0:CMD RUN"NO45"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[M,0,0,0,0,0,0,0,0]:RETURN
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+6000 '
+6099 GOSUB 5205:CMD LOAD"STG5",&H00,&HC652:GOSUB 5910:RETURN
+6100 GOSUB 5205:CMD LOAD"STG5",&H00,&HC652:GOSUB 5820:RETURN
+6101 GOSUB 5205:CMD LOAD"ｶﾝｷ7",&H00,&HC652:GOSUB 5820:RETURN
+6102 GOSUB 5205:CMD LOAD"ﾃﾞ1",&H00,&HC652:GOSUB 5820:RETURN
+6103 GOSUB 5615:CLS 2:CMD LOAD"ﾃﾞ1",&H00,&HC652:GOSUB 9010:GOSUB 5910:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾋｶｴ",&H00,&HC00E:GOSUB 9020:GOSUB 5810:RETURN
+6120 GOSUB 5205:GOSUB 9515:CMD LOAD "ﾄﾞｳﾛ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6130 GOSUB 5205:CMD LOAD "Bﾎﾃﾙ",&H00,&HC00E:GOSUB 5820:RETURN
+6140 GOSUB 5205:CMD LOAD "ﾍﾔ",&H00,&HC00E:GOSUB 9010:GOSUB 5890:RETURN
+6150 GOSUB 5205:CMD LOAD "Hﾚｽﾄ",&H00,&HC00E:GOSUB 5900:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"marL",AL:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"alnL",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"andR",AR:RETURN :ELSE RETURN
+6335 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"andL",AL:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"21:39"TO"25:41":COMMON FI:RETURN
+9010 COMMON STOP:COMMON P"19:22"TO"21:38":COMMON FI:RETURN
+9020 COMMON STOP:COMMON P"25:42"TO"27:05":COMMON FI:RETURN
+9030 COMMON STOP:COMMON P"27:06"TO"28:35":COMMON FI:RETURN
+9040 COMMON STOP:COMMON P"17:29"TO"19:21":COMMON FI:RETURN
+9500 ISET X:CMD LOAD "Pﾉｯｸ":ISET L,&H3000,&H47E0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2300,0,&HFF:ISET P,0,&H00,0,&H0500:RETURN:
+9510 ISET X:CMD LOAD "Pﾊﾞｽ":ISET L,&H3000,&H7FB0,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&HFF:ISET P,1,&H00,1,&H0FFF:RETURN:
+9520 RETURN
+9525 RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,44:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

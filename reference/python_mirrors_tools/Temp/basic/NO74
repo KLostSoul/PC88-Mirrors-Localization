@@ -1,0 +1,185 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Clark spoke.":C4$="Vince spoke.":C5$="Connors spoke."
+1000 GOSUB 6105:GOSUB 8030:BM$="That night, Connors made a phone call to David's apartment.":GOSUB 5100
+1010 GOSUB 6100:GOSUB 6315:BM$="Once she learned who it was, Susanna answered the phone on David's\behalf.":GOSUB 5100
+1020 GOSUB 1200
+1030 CM=2:CM$(1)=C2$:CM$(2)="Connors spoke."
+1040 GOSUB 5400
+1120 IF CN=1 AND G2>2 THEN 1280
+1130 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1270:GOTO 1040
+1140 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1260:GOTO 1040
+1150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1250:GOTO 1040
+1160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1240:GOTO 1040
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1230:GOTO 1040
+1180 IF CN=1 THEN G1=1:GOSUB 1220:GOTO 1040
+1190 IF CN=2 THEN GOSUB 1210:GOTO 1040
+1200 GOSUB 6340:BM$="Connors: Ah, Ms. Susanna... I originally contacted Mr. David because, as his\fan, I wanted to confirm some details with him in person. I never thought\you'd end up threatening to sue...":GOSUB 5100
+1210 BM$="Connors: After our conversation, I contacted that person, and they said\they wanted to meet the two of you. What should I tell them?":GOSUB 5100:RETURN
+1220 GOSUB 6315:BM$="Susanna: Won't you tell us the name and occupation of this mysterious\person? I don't like meeting someone I know nothing of.":GOSUB 5100:RETURN
+1230 GOSUB 6340:BM$="Connors: I'm afraid you'll have to find out once you see them. Besides, I'll be\coming as well. You have nothing to worry about.":GOSUB 5100:RETURN
+1240 GOSUB 6315:BM$="Susanna: ...Alright then. Tell me where and when.":GOSUB 5100:RETURN
+1250 GOSUB 6340:BM$="Connors: They're going to tell us the day of the meeting. I'm supposed to\pick you up at 9 and follow instructions. They're always busy so they can't\really arrange a meeting that easily.":GOSUB 5100:RETURN
+1260 GOSUB 6315:BM$="Susanna: Isn't that strange? They want to meet us but won't even tell us\where... Very sketchy.":GOSUB 5100:RETURN
+1270 GOSUB 6340:BM$="Connors: I'm inclined to agree, but they said there's no point in telling us\more unless you're sure about meeting them. So, what will it be?":GOSUB 5100:RETURN
+1280 GOSUB 6315:BM$="Susanna: Hold on. I can't make the choice for David.":GOSUB 5100
+1290 BM$="David wanted to know more about the Devil King, so he let Susanna know he\agreed.":GOSUB 5100
+1300 BM$="Susanna: We're going. You'd better not be trying anything strange, or\we're going to sue the hell out of you and your mystery friend. Are we\clear?":GOSUB 5100
+1310 COMMON FO:W2=0:GOSUB 6310:GOSUB 9010:BM$="Susanna put down the receiver. She looked worried.":GOSUB 5100:'
+1320 GOSUB 1500
+1330 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1340 GOSUB 5400
+1450 IF CN=2 AND G1>1 THEN 1540
+1460 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1530:GOTO 1340
+1470 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1520:GOTO 1340
+1480 IF CN=1 THEN G1=1:GOSUB 1510:GOTO 1340
+1490 IF CN=2 THEN GOSUB 1500:GOTO 1340
+1500 GOSUB 6310:BM$="Susanna: If this person is a descendant of the King of the North, we'd be\walking right into a trap. This could all be one big set-up...":GOSUB 5100:RETURN
+1510 GOSUB 6300:BM$="David: We'll never learn anything if we keep doubting them. I'm not\convinced I'm a descendant of the Devil King myself... Even if they're the\King of the North, they won't kill us on the spot.":GOSUB 5100:RETURN
+1520 GOSUB 6310:BM$="Susanna: But you heard what King Hroth said... I wish we had a gun. We'll have\to make do with a knife.":GOSUB 5100:RETURN
+1530 GOSUB 6300:BM$="David: If the blood of the Devil King really flows in my veins, then that\power will protect me if we're in danger. I've been having nightmares for\so long, it's a miracle I haven't lost my mind. I need something to go on.":GOSUB 5100:RETURN
+1540 GOSUB 6310:BM$="Susanna: I... see your point. If anything happens, I'll be there for you.":GOSUB 5100
+1550 BM$="David and Susanna were convinced that the person they were going to\meet was a descendant of the King of the North.":GOSUB 5100
+1555 COMMON FO:GOSUB 5205:GOSUB 9525:GOSUB 5500:GOSUB 9020:'
+1560 GOSUB 6120:BM$="The next morning, Connors came to pick them up; David however decided\to take his car as a precaution.":GOSUB 5100
+1570 BM$="Connors told them that they would be going to the Red Lion restaurant in\Salisbury.":GOSUB 5100
+1580 BM$="Before they left, Susanna said she forgot her purse, and rushed back\inside. She came back with her purse a few moments later, and got into\David's car.":GOSUB 5100
+1590 GOSUB 6150:BM$="They took the M3 motorway, and then pulled off into the A30 road for\Salisbury.":GOSUB 5100
+1600 BM$="Salisbury is the home of the famous megalith ruins, Stonehenge. Due to its\fame, it is common to find sightseeing buses from London.":GOSUB 5100
+1610 COMMON FO:GOSUB 6140:GOSUB 9030:BM$="The two cars arrived at the Red Lion restaurant shortly after noon.":GOSUB 5100:'
+1620 GOSUB 6130:GOSUB 6340:BM$="Connors glanced inside the restaurant, and then left to make a phone call.\It would appear that there had been some kind of miscommunication; he\was talking loudly, almost shouting.":GOSUB 5100
+1630 BM$="After he hung up, he approached David and Susanna.":GOSUB 5100
+1635 GOSUB 1800
+1640 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C5$
+1650 GOSUB 5400
+1720 IF CN=1 AND G2>1 THEN 1920
+1730 IF CN=2 AND G2>1 THEN GOSUB 1910:GOTO 1650
+1740 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1880:CM$(1)=C1$:GOTO 1650
+1750 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1870:GOTO 1650
+1760 IF CN=2 AND G2>0 THEN GOSUB 1860:GOTO 1650
+1770 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1840:GOTO 1650
+1780 IF CN=1 THEN G1=1:GOSUB 1830:GOTO 1650
+1790 IF CN=2 THEN GOSUB 1820:GOTO 1650
+1800 GOSUB 6340:BM$="Connors: I thought they would be here already, but they're preparing to\leave just now... We might as well have lunch.":GOSUB 5100
+1810 BM$="A waiter brought them to a table.":GOSUB 5100
+1820 BM$="Connors: I bet he had some urgent business to take care of. They never\break their word once they give it, so...":GOSUB 5100:RETURN
+1830 GOSUB 6315:BM$="Susanna: What do they do for a living? We only know he's someone\important. I kept thinking about it last night, I could barely sleep.":GOSUB 5100:RETURN
+1840 GOSUB 6340:BM$="Connors: They raised me after I lost my parents... I owe them a debt I can\never repay. The least I can do is never break my promise to them. Sorry, I\can't say anything.":GOSUB 5100
+1850 BM$="Connors: I couldn't believe this story either, that's why I sent that letter\to David. Honestly, I didn't think he'd actually show up.":GOSUB 5100
+1860 BM$="Connors: I was surprised when David pretty much confirmed what that\person told me. He saw the Devil King in his dreams... What if everything else\is true as well? The thought alone gives me the shivers...":GOSUB 5100:RETURN
+1870 GOSUB 6315:BM$="Susanna: Let me get this straight. While it's true the audience can get a bit\rowdy during David's concerts, no one actually gets hurt. It's the\opposite of what this person says.":GOSUB 5100:RETURN
+1880 GOSUB 6340:BM$="Connors: I'm aware. I AM an entertainment reporter after all. I suppose it's\a good thing I never published that article in the end.":GOSUB 5100
+1890 GOSUB 6130:BM$="During their lunch, a phone call came for Connors.":GOSUB 5100
+1900 BM$="He left the table to answer it, coming back shortly after.":GOSUB 5100
+1910 W3=0:GOSUB 6340:BM$="Connors: I'm terribly sorry, but it seems their car broke down, and they\won't be able to make it here right away. They said they might be here this\evening... What do you say?":GOSUB 5100:RETURN
+1920 GOSUB 6300:BM$="David: Well, we've waited this long, we might as well keep waiting. Let's take\a room for the night, Susanna.":GOSUB 5100
+1930 BM$="Connors went back to the phone booth.":GOSUB 5100
+1940 COMMON FO:GOSUB 6180:GOSUB 9010:BM$="David and Susanna reserved a room at the Cathedral Hotel, and then\decided to visit Stonehenge.":GOSUB 5100:'
+1950 BM$="Connors would wait in the lobby, in case they contacted him again.":GOSUB 5100
+1960 GOSUB 6160:BM$="There were few tourists at Stonehenge, as it was not the weekend. David\was somewhat disappointed that the watchmen would not let anyone inside\the stone circle.":GOSUB 5100
+1980 ISET X:BM$="Still, the view made him forget how tiring the tour was. He felt as if he and\Susanna were on their honeymoon.":GOSUB 5100
+1990 GOSUB 6170:BM$="The sun was setting, and all the other tourists had left. They returned to\the parking lot, ready to go back to the hotel.":GOSUB 5100
+2000 COMMON FO:GOSUB 6200:GOSUB 9035:BM$="David tried starting the car, but the engine would not start. Thinking the\battery might be dead, David opened the hood... and a chill ran down his\spine.":GOSUB 5100
+2010 BM$="Someone had torn out the wires.":GOSUB 5100
+2020 BM$="David and Susanna stood in front of the car, dumbfounded.":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT
+3010 COMMON STOP
+3020 '
+3040 POKE &H9089,2:CMD SET:CMD SCREEN 0:CMD RUN"NO75"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 CMD LOAD "Dﾍﾔ":CMD PUT &H3000,1,&H00,&HC00E:RETURN
+6105 GOSUB 5205:CMD LOAD "Dﾍﾔ":CMD PUT &H3000,1,&H00,&HC00E
+6110 CMD LOAD "TEL",&H00,&HC975:GOSUB 5890:RETURN
+6120 GOSUB 5205:GOSUB 9535:CMD LOAD "ｸﾙﾏA":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6130 GOSUB 5205:ISET X:CMD LOAD "ﾚｽﾄﾗ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6140 GOSUB 5205:GOSUB 9535:CMD LOAD "ﾗｲｵﾝ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6150 GOSUB 5205:GOSUB 9515:CMD LOAD "ｺｳｿｸ",&H00,&HC00E:GOSUB 5910:RETURN
+6160 GOSUB 5205:GOSUB 9535:CMD LOAD "ｽﾄﾋﾙ",&H00,&HC00E:GOSUB 5910:RETURN
+6170 GOSUB 5205:CMD LOAD "ｽﾄﾖﾙ",&H00,&HC00E:GOSUB 5820:RETURN
+6180 GOSUB 5205:GOSUB 9515:CMD LOAD "ｸﾙﾏS",&H00,&HC00E:GOSUB 5910:RETURN
+6200 GOSUB 5205:CMD LOAD "ﾎﾞﾝ",&H00,&HC00E:GOSUB 5820:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6315 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linL",AL:RETURN :ELSE RETURN
+6340 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｺｰﾅ",AR:RETURN :ELSE RETURN
+8030 OUT &H44,0:OUT &H45,191:OUT &H44,7:OUT &H45,8:OUT &H44,1:OUT &H45,0:FOR L=1 TO 3:FOR I=1 TO 14:OUT &H44,8:OUT &H45,15:FOR S=1 TO 70:NEXT:OUT &H44,8:OUT &H45,0:FOR S=1 TO 100:NEXT:NEXT:FOR S=1 TO 2000:NEXT:NEXT
+8035 FOR L=1 TO 5:OUT &H44,8:OUT &H45,15:FOR S=1 TO 70:NEXT:OUT &H44,8:OUT &H45,0:FOR S=1 TO 100:NEXT:NEXT:OUT &H44,6:OUT &H45,0:RETURN
+9000 COMMON STOP:COMMON P"17:30"TO"19:18":COMMON FI:RETURN
+9010 COMMON STOP:COMMON P"19:22"TO"21:41":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"08:58"TO"11:55":COMMON FI:RETURN:'
+9030 COMMON STOP:COMMON P"25:42"TO"28:51":COMMON FI:RETURN:'
+9035 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7
+9060 POLL X:POLL P,&H05,&H01:POLL P,&H0105,&H05:RETURN
+9500 ISET X:CMD LOAD"Pｽﾀﾄ":ISET L,&H3000,&H5FD0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2000,0,&H90:ISET P,0,&H00,0,&H0900:RETURN
+9510 ISET X:CMD LOAD"Pﾊﾞｽ":ISET L,&H3000,&H7FB0,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&H90:ISET P,1,&H00,1,&H0FFF:RETURN
+9520 ISET X:CMD LOAD"Pﾄﾘ":ISET L,&H3000,&H77B8,2,&H00:RETURN
+9525 ISET X:ISET S,&H4000,1,&HFF:ISET P,2,&H00,2,&H0FFE:RETURN
+9530 ISET X:CMD LOAD"PBｵﾄ":ISET L,&H3000,&H47F8,3,&H00:RETURN
+9535 ISET X:ISET S,&H1000,1,&H50:ISET P,3,&H00,3,&H0400:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,74:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

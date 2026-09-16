@@ -1,0 +1,202 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9570:GOSUB 9560:GOSUB 9550:GOSUB 9540:GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="The shepherd spoke."
+1000 GOSUB 9540:GOSUB 9515:GOSUB 6100:GOSUB 6300:BM$="David: You're right. If I go to St. Radford's Church, I'm only asking to die.\Let's hide in the countryside and try to come up with a plan.":GOSUB 5100
+1010 BM$="David kept away from Stratford, driving north along the M1 motorway,\passing through London during the night.":GOSUB 5100
+1020 GOSUB 5825:BM$="The sun started rising just as they crossed Manchester.":GOSUB 5100
+1030 GOSUB 1200
+1040 CM=2:CM$(1)=C1$:CM$(2)=C2$
+1050 GOSUB 5400
+1100 IF CN=1 AND G2>2 THEN 1300
+1110 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1290:GOTO 1050
+1120 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1280:GOTO 1050
+1130 IF CN=2 AND G2>1 THEN GOSUB 1270:GOTO 1050
+1140 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1260:GOTO 1050
+1150 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1250:GOTO 1050
+1160 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1240:GOTO 1050
+1170 IF CN=1 AND G1>0 THEN GOSUB 1230:GOTO 1050
+1180 IF CN=1 THEN G1=1:GOSUB 1210:GOTO 1050
+1190 IF CN=2 THEN GOSUB 1200:GOTO 1050
+1200 GOSUB 6310:BM$="Susanna: You must be tired. Look, the sun is rising. Would you like me to\drive?":GOSUB 5100:RETURN
+1210 GOSUB 6300:BM$="David: I heard when the sky gets brighter you start relaxing and feeling\tired... Yes, let's switch before we have an accident.":GOSUB 5100
+1220 GOSUB 9555:BM$="David stopped the car and let Susanna take the wheel.":GOSUB 5100
+1225 GOSUB 6110:GOSUB 6310:BM$="Susanna was driving the car.":GOSUB 5100
+1230 GOSUB 6300:BM$="David: Either we lost the northern tribesmen or they're plotting\something... We'd better keep our eyes open.":GOSUB 5100:RETURN
+1240 GOSUB 6310:BM$="Susanna: Yes... though, I don't think they'd dare attack us in broad daylight.":GOSUB 5100:RETURN
+1250 GOSUB 6300:BM$="David: The King of the North... Not even my worst nightmares could prepare\me for this...":GOSUB 5100:RETURN
+1260 GOSUB 6310:BM$="Susanna: I used to think my mother was just telling me stories, but now I\know it's all real... Though I admit, it was still hard to believe.":GOSUB 5100
+1270 BM$="Susanna: The northern tribes were more prepared than us. I should have\trusted her words more, and confided in you earlier...":GOSUB 5100:RETURN
+1280 GOSUB 6300:BM$="David: It's like we're living in another world... The real world feels like a\dream now...":GOSUB 5100:RETURN
+1290 GOSUB 6310:BM$="Susanna: Then I wish we could wake up and leave the King of the North\behind... David, you must be tired. Why don't you sleep for a while? I'll wake\you up once we're in Haworth.":GOSUB 5100:RETURN
+1300 GOSUB 6300:BM$="David: You're right. Who knows what might happen tonight. I'd better catch\a few Zs...":GOSUB 5100
+1320 GOSUB 6120:BM$="David leaned back on his seat and closed his eyes, trying to relax.\Meanwhile, Susanna kept driving through the countryside.":GOSUB 5100
+1330 BM$="Eventually, the fields turned to meadows. A winding road went up and down\the hills.":GOSUB 5100
+1340 GOSUB 6140:BM$="The car entered the wilderness of Haworth. A flock of sheep was visible\throughout its thick grasslands.":GOSUB 5100
+1350 COMMON FO:GOSUB 5205:GOSUB 9565:GOSUB 9525:GOSUB 9010:GOSUB 6130:BM$="Suddenly, Susanna shrieked, and slammed the brakes. David woke up, and\looked outside the window. A group of shepherds were surrounding their\car.":GOSUB 5100:'
+1360 W1=0:GOSUB 1600
+1370 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C1$
+1380 GOSUB 5400
+1480 IF CN=2 AND G1>3 THEN 1720
+1490 IF CN=1 AND G1>3 THEN GOSUB 1710:GOTO 1380
+1500 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1700:GOTO 1380
+1510 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1690:GOTO 1380
+1520 IF CN=1 AND G1>2 THEN GOSUB 1680:GOTO 1380
+1530 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1670:CM$(2)=C2$:GOTO 1380
+1540 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1660:GOTO 1380
+1550 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1650:GOTO 1380
+1560 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1640:GOTO 1380
+1570 IF CN=1 AND G1>0 THEN GOSUB 1630:GOTO 1380
+1580 IF CN=1 THEN G1=1:GOSUB 1610:CM$(1)=C3$:GOTO 1380
+1590 IF CN=2 THEN GOSUB 1600:GOTO 1380
+1600 GOSUB 6300:BM$="David: What's going on?! Who are these people?!":GOSUB 5100:RETURN
+1610 GOSUB 6310:BM$="Susanna: I don't know! They jumped in front of the car, I almost hit them...":GOSUB 5100
+1620 BM$="One of the shepherds approached David.":GOSUB 5100
+1630 BM$="Shepherd: You must be David. You're not allowed in these hills. Leave!":GOSUB 5100:RETURN
+1640 GOSUB 6300:BM$="David: Why not?! I'm not going to enter your lands, I'm just crossing the\road! Besides, how did you even know I was in this car?!":GOSUB 5100:RETURN
+1650 BM$="Shepherd: God said you would understand if I told you... The hills of Haworth\belong to the King of the North.":GOSUB 5100:RETURN
+1660 GOSUB 6300:BM$="David: What?! The King of the North?! Then you're all northern tribesmen!!":GOSUB 5100:RETURN
+1670 BM$="Shepherd: We're just shepherds. I'm simply repeating the words of our God,\the King of the North. I'm not the only one who heard them - everyone in\our village did.":GOSUB 5100
+1680 BM$="Shepherd: He told us that if we let you pass, you would become the Devil\King, and in order to challenge God you would call down a dark storm that\will turn these lands into an arid wasteland. Without grass, we won't be":GOSUB 5100:BM$="able to feed our sheep.":GOSUB 5100:RETURN
+1690 GOSUB 6310:BM$="Susanna: The King of the North is deceiving you. He's no god, he's a\sorcerer!":GOSUB 5100:RETURN
+1700 BM$="Shepherd: Don't you dare call our God a sorcerer! We know you! YOU are a\sorceress! Everyone in the village knew about your mother!":GOSUB 5100
+1710 BM$="Shepherd: It's said that when her mother became a witch, blood gushed out\of her body, and she died in terrible agony. That must have been a\punishment from our God, the King of the North!":GOSUB 5100:RETURN
+1720 BM$="The shepherds' eyes were filled with hatred. They raised their hoes,\ready to destroy the car.":GOSUB 5100
+1730 COMMON FO:BM$="Susanna: David, they're under a northern spell! They'll kill us! But if we go\back, we'll be running into the northern tribesmen...":GOSUB 5100
+1740 GOSUB 9020:BM$="Susanna: I... I'm flooring the pedal. Hang tight!":GOSUB 5100:'
+1750 BM$="Susanna revved the engine and stepped on the gas pedal, pushing the\shepherds out of the way.":GOSUB 5100
+1760 GOSUB 6150:BM$="Rather than moving out of the way, they stood their ground, throwing\their makeshift weapons towards the car.":GOSUB 5100
+1770 GOSUB 9050:GOSUB 6170:BM$="The windscreen shattered, and Susanna was forced to slam on the brakes.":GOSUB 5100
+1780 BM$="Susanna: David! Get out of the car and run!":GOSUB 5100
+1790 GOSUB 6160:BM$="When David opened the car door, the shepherds turned into medieval\knights and attacked him.":GOSUB 5100
+1800 GOSUB 5205:GOSUB 5615:GOSUB 9505:BM$="David: AAAHHH!!":GOSUB 5000:GOSUB 5500
+1810 GOSUB 9525:BM$="Terrified, David fell back inside the car.":GOSUB 5100
+1815 GOSUB 9900:GOSUB 9550:GOSUB 9540:GOSUB 9510:POLL X:COMMON FO:GOSUB 9555
+1820 GOSUB 9030:W2=0:GOSUB 6190:GOSUB 2000:'
+1830 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1840 GOSUB 5400
+1930 IF CN=2 AND G1>1 THEN 2110
+1940 IF CN=1 AND G1>1 THEN GOSUB 2100:GOTO 1840
+1950 IF CN=1 AND G2>0 THEN G1=2:GOSUB 2050:GOTO 1840
+1960 IF CN=2 AND G1>0 THEN G2=1:GOSUB 2040:GOTO 1840
+1970 IF CN=1 AND G1>0 THEN GOSUB 2030:GOTO 1840
+1980 IF CN=1 THEN G1=1:GOSUB 2010:GOTO 1840
+1990 IF CN=2 THEN GOSUB 2000:GOTO 1840
+2000 GOSUB 6310:BM$="Susanna: David! David, wake up! It's just a dream!":GOSUB 5100:RETURN
+2010 GOSUB 6300:BM$="David: A... dream...?":GOSUB 5100
+2020 BM$="David looked out of the window. Having braked suddenly, the car had\raised a cloud of dust. Once the dust had settled, he could see that they\were surrounded by meadows, and that they were driving toward a hill.":GOSUB 5100
+2030 BM$="David: That hill... It was in my dream. The shepherds there almost killed us,\under the influence of the King of the North... What if this is another\warning from King Hroth?":GOSUB 5100:RETURN
+2040 GOSUB 6310:BM$="Susanna: A warning... So you're saying that there are shepherds waiting to\kill us?":GOSUB 5100:RETURN
+2050 GOSUB 6300:BM$="David: In my dream you were driving... Let me take the wheel now.":GOSUB 5100
+2060 GOSUB 9545:GOSUB 9515:BM$="After swapping seats, David drove the car slowly towards the hill.":GOSUB 5100
+2070 W1=0:GOSUB 6200:GOSUB 6300:BM$="They reached the top of the hill. The road ahead crossed a wide, flat\prairie.":GOSUB 5100
+2080 GOSUB 6300:BM$="David: It's a bit further. The grassland was very thick, and there was a\flock of sheep... I think it was over there...":GOSUB 5100
+2090 GOSUB 6210:BM$="David stopped the car, looking at the sheep.":GOSUB 5100
+2095 GOSUB 6220:BM$="Then, some shepherds appeared from the flock, noticing their car.":GOSUB 5100
+2100 BM$="David: So it WAS a premonition. Susanna, this road is dangerous. We're\leaving!":GOSUB 5100:RETURN
+2110 GOSUB 6310:BM$="Susanna: But this is the only way to my home. And if we turn back, we might\run into the northern tribesmen.":GOSUB 5100
+2120 BM$="Caught between his dream and reality, David did not know what to do.":GOSUB 5100
+2130 BM$="Susanna: What if your dream was actually an illusion the King of the North\sent to slow us down?":GOSUB 5100
+2140 W2=0:GOSUB 6130:GOSUB 6310:BM$="Susanna: Look! More shepherds are coming! What do we do, David? Do we\keep going? Or do we turn back?":GOSUB 5100
+2150 BM$="David had to make a choice.":GOSUB 5100
+3000 COMMON FO:GOSUB 5205:ISET X:CMD RUN "NO81"
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 9000:NEXT:RETURN
+5510 FOR I=1 TO 4000:NEXT:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+6100 GOSUB 5205:CMD LOAD "ｺｳｿｸ",&H00,&HC00E:GOSUB 5820:RETURN
+6110 GOSUB 5205:GOSUB 9545:GOSUB 9515:CMD LOAD "ﾐﾁ1",&H00,&HC00E:GOSUB 5825:RETURN
+6120 GOSUB 5205:CMD LOAD "ﾊﾀｹ",&H00,&HC00C:GOSUB 5910:RETURN
+6130 GOSUB 5205:CMD LOAD "ｶｺﾑ",&H00,&HC00E:GOSUB 5910:RETURN
+6140 GOSUB 5205:CMD LOAD "ﾋﾂｼﾞ",&H00,&HC00C:GOSUB 5910:RETURN
+6150 GOSUB 5205:GOSUB 9545:GOSUB 9525:CMD LOAD "ﾅｹﾞﾙ",&H00,&HC00C:GOSUB 5910:RETURN
+6160 GOSUB 5205:GOSUB 9535:CMD LOAD "ﾍｲｼ",&H00,&HC00C:GOSUB 5910:RETURN
+6170 GOSUB 9575:LINE (320,65)-(450,90),7
+6171 LINE (320,65)-(100,95),7
+6172 LINE (320,65)-(350,95),7
+6173 LINE (320,65)-(390,10),7
+6174 LINE (320,65)-(230,10),7
+6175 LINE (320,65)-(200,50),7
+6176 LINE (320,65)-(200,99),7
+6180 CMD LOAD "ﾜﾚﾀ",&H00,&HC00C:RETURN
+6190 GOSUB 5205:CMD LOAD "ﾐﾁｵｶ",&H00,&HC00E:GOSUB 5910:RETURN
+6200 GOSUB 5205:CMD LOAD "ﾁｮｸ",&H00,&HC00E:GOSUB 5910:RETURN
+6210 GOSUB 5205:GOSUB 9555:CMD LOAD "ﾋﾂﾐﾁ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5910:RETURN
+6220 CMD LOAD "ｵﾄｺ",&H00,&HC00E:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ﾋﾂｼﾞ",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"19:22"TO"21:41":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"15:37"TO"17:29":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9030 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7
+9060 POLL P,&H00,&H01:POLL P,&H00,&H03:POLL P,&H0208,&H03:RETURN
+9500 ISET X:CMD LOAD"Pﾌｱｸ":ISET L,&H3000,&H7FB0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2500,0,&HFF:ISET P,0,&H0380,0,&H1000:RETURN
+9510 ISET X:CMD LOAD"Pﾊﾞｽ":ISET L,&H3000,&H7FB0,1,&H00:RETURN
+9515 ISET X:ISET S,&H1000,1,&H90:ISET P,1,&H00,1,&H0FFF:RETURN
+9520 ISET X:CMD LOAD"Pﾌﾚｷ":ISET L,&H3000,&H47E8,2,&H00:RETURN
+9525 ISET X:ISET S,&H2300,0,&HFF:ISET P,2,&H00,2,&H0500:RETURN
+9530 ISET X:CMD LOAD"Pｲｸｻ":ISET L,&H3000,&H57D8,3,&H00:RETURN
+9535 ISET X:ISET S,&H1300,1,&HFF:ISET P,3,&H00,3,&H0900:RETURN
+9540 ISET X:CMD LOAD"Pｽﾀﾄ":ISET L,&H3000,&H5FD0,4,&H00:RETURN
+9545 ISET X:ISET S,&H2300,0,&HA0:ISET P,4,&H00,4,&H0900:GOSUB 5510:RETURN
+9550 ISET X:CMD LOAD"PBｵﾄ":ISET L,&H3000,&H47E8,5,&H00:RETURN
+9555 ISET X:ISET S,&H1000,1,&H70:ISET P,5,&H00,5,&H0400:RETURN
+9560 ISET X:CMD LOAD"Sｻｹﾌ":ISET L,&H3000,&H4FE0,6,&H00:RETURN
+9565 ISET X:ISET S,&H2300,0,&HFF:ISET P,6,&H00,6,&H0500:GOSUB 5510:RETURN
+9570 ISET X:CMD LOAD"Pｶﾞﾗ":ISET L,&H3000,&H3FE0,7,&H00:RETURN
+9575 ISET X:ISET S,&H1300,0,&HFF:ISET P,7,&H00,7,&H0100:RETURN
+9900 GOSUB 5610:ISET X:GOSUB 9970:CLS 2:GOSUB 9920
+9910 BM$="David: AHHH! *huff* *huff*":CMD WIDTH &HF0C2,&H20,7:CMD KANJI BM$:GOSUB 5820:GOSUB 9940:RETURN
+9920 ISET X:GOSUB 5610:CMD LOAD"MEU2",&H00,&HC3CD:SET G,&H00,&HC3CD,50,134:CMD LOAD"MEU3",&H00,&HC3CD:SET G,&H0275,&HC3CD,50,134
+9930 CMD LOAD"MEU4",&H00,&HC3CD:SET G,&H04EA,&HC3CD,50,134:SET P,&H00,&HC3CD:RETURN
+9940 FOR I=1 TO 5:SET P,&H00,&HC3CD:GOSUB 9950:SET P,&H0275,&HC3CD:GOSUB 9960:SET P,&H04EA,&HC3CD:GOSUB 9950:SET P,&H0275,&HC3CD:GOSUB 9960:NEXT:SET P,&H04EA,&HC3CD:RETURN
+9950 ISET S,&H2100,0,&HFF:ISET P,3,&H0FFF,3,&H1300:FOR L=1 TO 800:NEXT:ISET X:RETURN
+9960 ISET S,&H2300,0,&HFF:ISET P,3,&H10F0,3,&H12F5:FOR L=1 TO 800:NEXT:ISET X:RETURN
+9970 ISET X:CMD LOAD"Pｲｷ":ISET L,&H3000,&H3FFF,3,&H0FFF:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,80:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

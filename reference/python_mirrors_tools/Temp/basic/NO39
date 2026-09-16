@@ -1,0 +1,219 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998
+100 GOSUB 9510
+900 C1$="David spoke.":C2$="Alan spoke.":C3$="Martin spoke.":C4$="Andrew spoke.":C5$="Susanna spoke.":C6$="The gambler spoke."
+1000 GOSUB 9515:GOSUB 6100:BM$="As David was getting dressed, someone knocked at his door.":GOSUB 5100
+1010 BM$="He opened the door. It was Susanna.":GOSUB 5100
+1020 GOSUB 9000:GOSUB 1200
+1030 CM=2:CM$(1)=C1$:CM$(2)=C5$
+1040 GOSUB 5400
+1044 IF CN=1 AND G2>6 THEN 1400
+1046 IF CN=2 AND G1>6 THEN G2=7:GOSUB 1390:GOTO 1040
+1048 IF CN=1 AND G2>5 THEN G1=7:GOSUB 1380:GOTO 1040
+1050 IF CN=2 AND G1>5 THEN G2=6:GOSUB 1370:GOTO 1040
+1060 IF CN=1 AND G2>4 THEN G1=6:GOSUB 1360:GOTO 1040
+1070 IF CN=2 AND G2>4 THEN GOSUB 1351:GOTO 1040
+1080 IF CN=2 AND G1>4 THEN G2=5:GOSUB 1340:GOTO 1040
+1090 IF CN=1 AND G1>4 THEN GOSUB 1330:GOTO 1040
+1100 IF CN=1 AND G2>3 THEN G1=5:GOSUB 1310:GOTO 1040
+1110 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1300:GOTO 1040
+1120 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1290:GOTO 1040
+1130 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1280:GOTO 1040
+1140 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1270:GOTO 1040
+1145 IF CN=2 AND G2>1 THEN GOSUB 1265:GOTO 1040
+1150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1250:GOTO 1040
+1160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1240:GOTO 1040
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1230:GOTO 1040
+1175 IF CN=1 AND G1>0 THEN GOSUB 1221:GOTO 1040
+1180 IF CN=1 THEN G1=1:GOSUB 1210:GOTO 1040
+1190 IF CN=2 THEN GOSUB 1200:GOTO 1040
+1200 GOSUB 6340:BM$="Susanna: You're back - Oh dear! Your face is all red. You've been drinking,\haven't you?":GOSUB 5100:RETURN
+1210 GOSUB 6300:BM$="David: Just a little.":GOSUB 5100
+1220 BM$="David let Susanna in, closed the door, and kissed her.":GOSUB 5100:RETURN
+1221 GOSUB 6300:BM$="David: I love you, Susanna.":GOSUB 5100:RETURN
+1230 GOSUB 6340:BM$="Susanna: I love you too.\Oh, I brought you some medicine. How are you feeling?":GOSUB 5100:RETURN
+1240 GOSUB 6300:BM$="David: I think I'm okay, but I'll take some, just in case. That nightmare guy\shows up whether I feel well or not.":GOSUB 5100:RETURN
+1250 GOSUB 6340:BM$="Susanna: David, I have to tell you something about your nightmares. Listen\to me, okay?":GOSUB 5100
+1260 GOSUB 6170:BM$="Susanna took the ring out of her pocket and handed it to David.":GOSUB 5100
+1265 GOSUB 6340:BM$="Susanna: I found this ring.":GOSUB 5100:RETURN
+1270 GOSUB 6300:BM$="David: What does this have to do with my nightmares?":GOSUB 5100:RETURN
+1280 GOSUB 6340:BM$="Susanna: It's said that you won't have nightmares if you wear this ring.\Someone at the promoter's office is into exorcisms. I told them that I was\having constant nightmares, and they recommended this item.":GOSUB 5100:RETURN
+1290 GOSUB 6300:BM$="David: Like some kind of dream catcher? Never took you for the\superstitious type.\I can understand pills, but I don't see how a ring would do anything.":GOSUB 5100:RETURN
+1300 GOSUB 6340:BM$="Susanna: Mind over matter, as they say. If you convince yourself that you\won't have nightmares while wearing the ring, then you won't have them.":GOSUB 5100:RETURN
+1310 GOSUB 6300:BM$="David: I suppose it won't hurt to try. Besides, you went through the\trouble of getting it for me. Hmm, will it fit?":GOSUB 5100
+1320 GOSUB 6100:W1=0:BM$="David put on the ring.":GOSUB 5100
+1330 GOSUB 6300:BM$="David: What do you know? It's just my size. I have to admit, it's a pretty\wicked design. It might actually work!":GOSUB 5100:RETURN
+1340 GOSUB 6340:BM$="Susanna: I'm sure it will.":GOSUB 5100
+1350 COMMON FO:GOSUB 9500:BM$="At that moment, the phone rang.":GOSUB 5100:RETURN
+1351 GOSUB 6340:BM$="Susanna: The phone's ringing.":GOSUB 5100:RETURN
+1360 GOSUB 6300:BM$="David: Hey Alan, what's up - Huh? Andrew?\...Okay, I'll call Susanna and we'll meet up in the lobby.":GOSUB 5100:RETURN
+1370 GOSUB 6340:BM$="Susanna: Did something happen to Andrew?":GOSUB 5100:RETURN
+1380 GOSUB 6300:BM$="David: Apparently he lost a whole lot of money playing cards. You see, we\were about to come back here when he met a woman who could speak\English, and...":GOSUB 5100:RETURN
+1390 GOSUB 6340:BM$="Susanna: We'd better go before we have a major problem on our hands.\I'll get the checkbook. We'll meet in the lobby.":GOSUB 5100:RETURN
+1400 GOSUB 9010:GOSUB 6300:BM$="Susanna left the room. David felt uneasy as he thought about Andrew's\situation.":GOSUB 5100
+1410 BM$="He set his eyes on the pills Susanna brought him. He always felt more\confident after taking them, as if everything would go the way he wanted\to. He considered taking them now to quell his anxiety.":GOSUB 5100
+1420 CM=2:CM$(1)="Let's not rely on them.":CM$(2)="They'll help with my anxiety. I'll take some."
+1421 GOSUB 5400
+1422 IF CN=1 THEN GG=1
+1423 IF CN=2 THEN GG=2
+1424 COMMON FO:BM$="David left his room.":GOSUB 5100
+1430 GOSUB 9020:GOSUB 6110:BM$="Alan and Martin were waiting in the lobby.":GOSUB 5100
+1440 GOSUB 1600
+1450 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1460 GOSUB 5400
+1530 IF CN=1 AND G2>1 THEN 1660
+1540 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1650:GOTO 1460
+1550 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1640:GOTO 1460
+1560 IF CN=2 AND G2>0 THEN GOSUB 1630:GOTO 1460
+1570 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1620:CM$(1)=C5$:GOTO 1460
+1580 IF CN=1 THEN G1=1:GOSUB 1610:GOTO 1460
+1590 IF CN=2 THEN GOSUB 1600:GOTO 1460
+1600 GOSUB 6320:BM$="Alan: Did you talk to Susanna?":GOSUB 5100:RETURN
+1610 GOSUB 6305:BM$="David: Yeah, she'll join us in a minute. So, how much money are we talking\about?":GOSUB 5100:RETURN
+1620 GOSUB 6320:BM$="Alan: He said he lost about 20,000 DM (about $32,400). He doesn't have that\much, so he'll have to ask Susanna for a loan...":GOSUB 5100
+1621 BM$="Susanna arrived.":GOSUB 5100:RETURN
+1630 GOSUB 6320:BM$="Alan: Hey, Susanna. So, we've got a problem...":GOSUB 5100:RETURN
+1640 GOSUB 6340:BM$="Susanna: So I've heard. How much did Andrew lose?":GOSUB 5100:RETURN
+1650 GOSUB 6320:BM$="Alan: He told me 20,000 DM, but knowing him he might still be playing, trying\to recoup his losses.":GOSUB 5100:RETURN
+1660 GOSUB 6340:BM$="Susanna: I brought the checkbook. I can pay what he owes, but it'll be\subtracted from Andrew's income. Let's go.":GOSUB 5100
+1665 COMMON FO:GOSUB 6120:BM$="They hailed a cab in front of the hotel and headed towards the\establishment where Andrew was.":GOSUB 5100
+1668 GOSUB 6130:BM$="Once they arrived, they found Andrew playing cards with a well-dressed\gentleman.":GOSUB 5100
+1670 GOSUB 1900
+1680 CM=2:G1=0:G2=0:CM$(1)=C2$:CM$(2)=C4$
+1690 GOSUB 5400
+1790 IF CN=1 AND G2>3 THEN 2010
+1800 IF CN=2 AND G1>3 THEN G2=4:GOSUB 2000:CM$(1)=C2$:GOTO 1690
+1810 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1990:GOTO 1690
+1820 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1980:CM$(1)=C5$:GOTO 1690
+1830 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1970:GOTO 1690
+1840 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1950:GOTO 1690
+1850 IF CN=1 AND G1>1 THEN GOSUB 1941:GOTO 1690
+1860 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1930:GOTO 1690
+1870 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1920:CM$(1)=C6$:GOTO 1690
+1880 IF CN=1 THEN G1=1:GOSUB 1910:GOTO 1690
+1890 IF CN=2 THEN GOSUB 1900:GOTO 1690
+1900 GOSUB 6330:BM$="Andrew: Yo! I've lost a bit more, but my luck is starting to change, I can feel\it! Just give me a few, alright?":GOSUB 5100:RETURN
+1910 GOSUB 6320:BM$="Alan: You shouldn't gamble when you're so drunk, Andrew. Let's go.":GOSUB 5100:RETURN
+1920 GOSUB 6330:BM$="Andrew: Alright, let's make this count! I'm betting 10,000 DM on this. I'm sure\you guys brought Lady Luck herself with you!":GOSUB 5100:RETURN
+1930 GOSUB 6350:BM$="Gambler: Considering how much you've let me earn, I'll gladly allow you to\pick the stakes.\I have to say, you British people are quite the jolly fellows.":GOSUB 5100
+1940 GOSUB 6140:BM$="The man dealt the cards. Andrew had a Three of a Kind.":GOSUB 5100:RETURN
+1941 GOSUB 6350:BM$="Gambler: What it'll be?":GOSUB 5100:RETURN
+1950 GOSUB 6330:BM$="Andrew: I'll change two.":GOSUB 5100
+1960 GOSUB 6150:BM$="Even after changing two cards, he still only had a Three of a Kind.":GOSUB 5100:RETURN
+1970 GOSUB 6160:GOSUB 6350:BM$="Gambler: I have a Full House of 4s and 8s. It appears you now owe me 30,000\DM, Mr. Andrew. Would you like to continue?":GOSUB 5100:RETURN
+1980 GOSUB 6125:GOSUB 6330:BM$="Andrew: No way I'm stopping! I'm gonna win 10 times as much! Right, Susanna?":GOSUB 5100:RETURN
+1990 GOSUB 6340:BM$="Susanna: No, Andrew. Please, stop playing. He is a professional. You'll never\be able to win.":GOSUB 5100:RETURN
+2000 GOSUB 6330:BM$="Andrew: I'm not retreating like a loser. I'm playing until I get it all back.":GOSUB 5100:RETURN
+2010 GOSUB 2200
+2020 IF GG=2 GOTO 2300
+2030 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+2040 GOSUB 5400
+2140 IF CN=1 AND G2>1 THEN 2250
+2150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 2240:CM$(1)=C5$:GOTO 2040
+2160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 2230:CM$(2)=C6$:GOTO 2040
+2170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 2220:CM$(1)=C5$:GOTO 2040
+2180 IF CN=1 THEN G1=1:GOSUB 2210:CM$(2)=C4$:GOTO 2040
+2190 IF CN=2 THEN GOSUB 2200:GOTO 2040
+2200 GOSUB 6320:BM$="Alan: Come on man, we're all worried about you. Let's go.":GOSUB 5100:RETURN
+2210 GOSUB 6305:BM$="David: Andrew, this isn't a game for amateurs. Try to be reasonable.":GOSUB 5100:RETURN
+2220 GOSUB 6330:BM$="Andrew: You're saying that because you're not the one losing money.":GOSUB 5100:RETURN
+2230 GOSUB 6340:BM$="Susanna: Our friend lost 30,000 DM. This check should cover it. Now please,\end this game.":GOSUB 5100:RETURN
+2240 GOSUB 6350:BM$="Gambler: Ah, forgive me. I'm actually a fan of Eleno Vision, but I take\gambling very seriously.":GOSUB 5100:RETURN
+2250 GOSUB 6340:BM$="Susanna: Andrew, just forget this ever happened. You too, guys.":GOSUB 5100
+2260 COMMON FO:BM$="The band took a cab and went back to the hotel.":GOSUB 5100
+2270 GOSUB 5205:ISET X:CMD RUN "NO41"
+2280 '
+2300 BM$="David was fascinated by the stakes at play. The thought of making 10,000\DM in a matter of seconds...":GOSUB 5100
+2310 CM=2:CM$(1)="Switch places with Andrew.":CM$(2)="Don't gamble."
+2340 '
+3000 GOSUB 5400
+3010 IF CN=1 THEN COMMON FO:GOSUB 5205:ISET X:CMD RUN "NO40"
+3020 IF CN=2 GOTO 2030
+3030 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:GOSUB 5825:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾛﾋﾞｰ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5900:RETURN
+6120 GOSUB 5205:CMD LOAD "ﾊﾟﾌﾞ",&H00,&HC00E:GOSUB 5850:RETURN
+6125 IF W4=0 THEN GOSUB 5205:CMD LOAD "ﾐｾﾅｶ",&H00,&HC00E:GOSUB 5860:RETURN :ELSE RETURN
+6130 GOSUB 5205:CMD LOAD "ﾐｾﾅｶ",&H00,&HC00E:GOSUB 9030:GOSUB 5860:RETURN
+6140 IF W8=0 THEN W8=1:CMD LOAD "ｻﾝ",&H00,&HC977:RETURN :ELSE RETURN
+6150 IF W7=0 THEN W7=1:CMD LOAD "ｻﾝS",&H00,&HC977:RETURN :ELSE RETURN
+6160 IF W6=0 THEN CMD LOAD "ﾌﾙﾊｳ",&H00,&HC977:RETURN :ELSE RETURN
+6170 CMD LOAD "ﾕﾋﾞﾜ",&H00,&HCFBB:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:W6=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6305 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:W6=0:WEND LOAD"davR",AR:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:W6=0:WEND LOAD"marL",AL:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:W6=0:WEND LOAD"alnL",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:W6=0:WEND LOAD"andR",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:W6=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6350 IF W6=0 THEN W6=1:W1=0:W2=0:W3=0:W4=0:W5=0:WEND LOAD "ｵﾄｺ",AL:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"19:22"TO"21:38":COMMON FI:RETURN
+9010 COMMON STOP:COMMON P"28:36"TO"29:52":COMMON FI:RETURN
+9020 COMMON STOP:COMMON P"25:42"TO"27:05":COMMON FI:RETURN
+9030 COMMON STOP:COMMON P"32:05"TO"33:12":COMMON FI:RETURN
+9500 OUT &H44,7:OUT &H45,8:OUT &H44,0:OUT &H45,191:OUT &H44,1:OUT &H45,0:FOR L=1 TO 3:FOR I=1 TO 14:OUT &H44,8:OUT &H45,15:FOR S=1 TO 70:NEXT:OUT &H44,8:OUT &H45,0:FOR S=1 TO 100:NEXT:NEXT:FOR S=1 TO 2000:NEXT:NEXT
+9505 FOR L=1 TO 5:OUT &H44,8:OUT &H45,15:FOR S=1 TO 70:NEXT:OUT &H44,8:OUT &H45,0:FOR S=1 TO 100:NEXT:NEXT:OUT &H44,6:OUT &H45,0:RETURN
+9510 ISET X:CMD LOAD "Pﾉｯｸ":ISET L,&H3000,&H47E0,0,&H00:RETURN
+9515 ISET X:ISET S,&H2300,0,&HFF:ISET P,0,&H00,0,&H0500:RETURN:'
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,39:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

@@ -1,0 +1,91 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Jeffs spoke.":C4$="Andrew spoke.":C5$="Alan spoke.":C6$="Martin spoke.":C7$="The chief physician spoke."
+1910 GOSUB 9500:GOSUB 6180:GOSUB 6360:BM$="A few days later, Alan, Andrew, and Martin were talking to the chief\physician of the Heathmary Mental Hospital, in the suburbs of London.":GOSUB 5100
+1920 W4=0:GOSUB 2200
+1930 CM=2:G1=0:G2=0:CM$(1)=C7$:CM$(2)=C4$
+1940 GOSUB 5400
+2100 IF CN=2 AND G1>3 THEN 2290
+2110 IF CN=1 AND G2>2 THEN G1=4:GOSUB 2280:CM$(2)=C6$:GOTO 1940
+2120 IF CN=2 AND G2>2 THEN GOSUB 2270:GOTO 1940
+2130 IF CN=2 AND G1>2 THEN G2=3:GOSUB 2260:CM$(1)=C5$:GOTO 1940
+2140 IF CN=1 AND G2>1 THEN G1=3:GOSUB 2250:CM$(2)=C4$:GOTO 1940
+2150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 2240:CM$(1)=C7$:GOTO 1940
+2160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 2230:CM$(2)=C6$:GOTO 1940
+2170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 2220:CM$(1)=C5$:GOTO 1940
+2180 IF CN=1 THEN G1=1:GOSUB 2210:GOTO 1940
+2190 IF CN=2 THEN GOSUB 2200:GOTO 1940
+2200 GOSUB 6330:BM$="Andrew: Give it to us straight, doctor. Is David ever going to wake up?":GOSUB 5100:RETURN
+2210 GOSUB 6360:BM$="Chief physician: Mr. David lived through something so traumatic that he\was only able to cope by shutting himself in. It would take a shock of similar\magnitude to bring him back.":GOSUB 5100:BM$="At this point, I cannot say when - or if - he will be able to leave our clinic...":GOSUB 5100:RETURN
+2220 GOSUB 6330:BM$="Andrew: Damn it... I can't even imagine what he went through during his\vacation...":GOSUB 5100:RETURN
+2230 GOSUB 6320:BM$="Alan: I saw the photos of the scene... It was straight out of a horror movie. If\they told me it was a picture of Hell, I would believe it.":GOSUB 5100:RETURN
+2240 GOSUB 6310:BM$="Martin: Knock it off, Alan. I lost twenty pounds since I saw the pictures... If it\was me in David's place, I would have died of shock.":GOSUB 5100:RETURN
+2250 GOSUB 6360:BM$="Chief physician: Reportedly, the police found two more bodies in the\castle's courtyard. It's a complete mystery... But tell me, what's going to\happen to Eleno Vision?":GOSUB 5100:RETURN
+2260 GOSUB 6330:BM$="Andrew: Out of business until we find a new vocalist. But I have a feeling\we'll never find someone like David...":GOSUB 5100
+2270 BM$="Andrew: With that said, Eleno Vision won't break up as long as David's alive.\We'll wait until he wakes up and climbs up on the stage again.":GOSUB 5100:RETURN
+2280 GOSUB 6320:BM$="Alan: You said it. I'm a fan of his, too. I feel if we were to disband, we'd never\be able to listen to his songs again.":GOSUB 5100:RETURN
+2290 GOSUB 6310:BM$="Martin: I feel the same way. Come hell or high water, I want to keep Eleno\Vision alive. Anything to hear David sing again.":GOSUB 5100
+2300 BM$="His rage spent, David lost consciousness, and never woke up. Was his mind\unable to cope with the mighty powers of the Devil King? Or had the sight\of Susanna's gruesome death been too much for his heart...?":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100
+3010 COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000
+3020 COMMON COPY &H01,22654
+3040 POKE &H9089,2:CMD SET:CMD SCREEN 0:CMD RUN"END"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+6180 GOSUB 5205:CMD LOAD "ﾋﾞｮｳ",&H00,&HC00E:GOSUB 5890:RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"marL",AL:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"alnL",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"andL",AL:RETURN :ELSE RETURN
+6350 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"ｲﾗｲS",AL:RETURN :ELSE RETURN
+6360 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"ｲｼ",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"25:42"TO"28:35":COMMON FI:RETURN
+9500 ISET X:CMD LOAD "Pﾄﾘ":ISET L,&H3000,&H77B8,0,&H00
+9505 ISET X:ISET S,&H4000,1,&HFF:ISET P,0,&H00,0,&H0FFE:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,70:POKE &HE303,1:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

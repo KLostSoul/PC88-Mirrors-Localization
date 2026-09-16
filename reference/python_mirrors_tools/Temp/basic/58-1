@@ -1,0 +1,187 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9540:GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500:GOSUB 9526
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Clark spoke.":C4$="Vince spoke.":C5$="Lands spoke.":C6$="Emily spoke."
+1340 GOSUB 5615:COMMON FO:BM$="David felt something cold touching his face, but his entire body was\burning, and his head felt like it was splitting apart.":GOSUB 5100
+1345 GOSUB 9010:'
+1350 BM$="Susanna: David, hang in there!":GOSUB 5100
+1360 GOSUB 6130:GOSUB 6310:BM$="Susanna was wiping David's head with a towel. Hearing the scream, she was\joined by a man and a woman shortly after.":GOSUB 5100
+1370 GOSUB 9515:GOSUB 1500
+1380 CM=2:G1=0:G2=0:CM$(1)=C6$:CM$(2)=C2$
+1390 GOSUB 5400
+1400 IF CN=2 AND G1>2 THEN 1680
+1410 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1660:CM$(2)=C1$:GOTO 1390
+1420 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1650:GOTO 1390
+1430 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1640:CM$(2)=C5$:GOTO 1390
+1460 IF CN=2 AND G2>0 THEN GOSUB 1630:GOTO 1390
+1470 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1600:CM$(1)=C2$:GOTO 1390
+1475 IF CN=1 AND G1>0 THEN GOSUB 1590:GOTO 1390
+1480 IF CN=1 THEN G1=1:GOSUB 1530:CM$(1)=C5$:CM$(2)=C6$:GOTO 1390
+1490 IF CN=2 THEN GOSUB 1520:GOTO 1390
+1500 GOSUB 6310:BM$="Susanna: Mr. Lands, I think he has a fever. He needs medicine.":GOSUB 5100
+1510 BM$="The man hurried downstairs.":GOSUB 5100
+1520 BM$="Susanna: There was nothing wrong with him, but all of a sudden he has a\fever... Could it be a spell...? Ms. Emily, please bring me some Shamanese.":GOSUB 5100:RETURN
+1530 GOSUB 6340:BM$="Emily: Shamanese, the sorcerous water? Does that mean that Mr. David is -\Y-Yes, I'll fetch it right away.":GOSUB 5100
+1540 GOSUB 9515:BM$="Emily went downstairs just as Mr. Lands made his return.":GOSUB 5100
+1550 GOSUB 6350:BM$="Lands: I'm glad I bought this medicine kit, thinking you might stay here for a\while. Here, this should bring his fever down.":GOSUB 5100
+1580 BM$="Susanna tried giving David his medicine, but he was gritting his teeth from\the pain, and wouldn't take it.":GOSUB 5100
+1585 GOSUB 9515:BM$="Emily returned, gasping for breath. She brought a small bottle filled with\liquid.":GOSUB 5100
+1590 BM$="Lands: Susanna, are these symptoms...?":GOSUB 5100:RETURN
+1600 GOSUB 6340:BM$="Emily: This is the Shamanese water your mother made. It's a little old, but it\was kept safely in the basement's medicine cabinet.":GOSUB 5100
+1610 GOSUB 9050:BM$="Susanna poured water from the bottle onto a towel. Then she began to\wipe David's body.":GOSUB 5100
+1620 GOSUB 9525:BM$="David's pain seemed to ease up. He opened his mouth, gasping for air.":GOSUB 5100
+1630 POLL X:BM$="Emily: I think he's safe now. David must have been hit by a northern spell...":GOSUB 5100:RETURN
+1640 GOSUB 6310:BM$="Susanna: I agree. Shamanese water is only so effective against northern\sorcery. We need to find out the identity of the King of the North before\they try to kill him again.":GOSUB 5100:RETURN
+1650 GOSUB 6350:BM$="Lands: The dark sorcerers are gathering tonight, but they found no\information about the King of the North. I'm afraid we won't be able to find\him for the time being.":GOSUB 5100:RETURN
+1660 GOSUB 6310:BM$="Susanna: There's still hope. The client of those detectives who've been\following me should be of the northern tribes. If we can catch them and\interrogate them we may be able to find some clues.":GOSUB 5100
+1670 BM$="David called out Susanna's name as he gasped for air. Susanna hurried to\his side as he was regaining consciousness.":GOSUB 5100
+1671 COMMON FO:ISET X:GOSUB 1709:GOSUB 9020:'
+1672 CM=2:G1=0:G2=0:CM$=C2$:CM$(2)=C1$
+1680 GOSUB 5400
+1698 IF CN=2 AND G1>4 THEN 1800
+1699 IF CN=1 AND G2>3 THEN G1=5:GOSUB 1790:GOTO 1680
+1700 IF CN=2 AND G1>3 THEN G2=4:GOSUB 1780:GOTO 1680
+1701 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1770:CM$(2)=C1$:GOTO 1680
+1702 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1760:GOTO 1680
+1703 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1750:CM$(2)=C5$:GOTO 1680
+1704 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1740:GOTO 1680
+1705 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1730:GOTO 1680
+1706 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1720:GOTO 1680
+1707 IF CN=1 THEN G1=1:GOSUB 1710:GOTO 1680
+1708 IF CN=2 THEN GOSUB 1709:GOTO 1680
+1709 GOSUB 6300:BM$="David: ...Susanna... I'm... alive...":GOSUB 5100:RETURN
+1710 GOSUB 6310:BM$="Susanna: David, you're awake! Oh, I'm so glad...":GOSUB 5100:RETURN
+1720 GOSUB 6300:BM$="David: I... had another nightmare... The King of the North was there... I\thought I'd die for real this time...":GOSUB 5100:RETURN
+1730 GOSUB 6310:BM$="Susanna: The King - ?! David, you saw the King of the North?":GOSUB 5100:RETURN
+1740 GOSUB 6300:BM$="David: Yeah, and I hope I never see him again. I'll never forget his face...\He tried to kill me with a spell.":GOSUB 5100:RETURN
+1750 GOSUB 6310:BM$="Susanna: The King of the North himself can use magic? We never knew\about that... So the King of the North of this era is a sorcerer...":GOSUB 5100:RETURN
+1760 GOSUB 6350:BM$="Lands: If he truly is a sorcerer, he'd never show himself openly. Still, he\should have other mages under his command. We must find one of them.":GOSUB 5100:RETURN
+1770 GOSUB 6310:BM$="Susanna: They probably call themselves the Mages of the North. We should\focus our searches on the most famous mages of England.":GOSUB 5100:RETURN
+1780 GOSUB 6300:BM$="David: Susanna, who are these people?":GOSUB 5100:RETURN
+1790 GOSUB 6310:BM$="Susanna: Oh, I haven't introduced them yet. These are Mr. and Mrs. Lands.\They were out for groceries when we arrived.":GOSUB 5100:RETURN
+1800 GOSUB 6300:BM$="David: My name is David. I'm sorry to have caused you this much trouble.":GOSUB 5100
+1810 BM$="After exchanging greetings, David felt tired once again, and closed his\eyes, quickly falling asleep.":GOSUB 5100
+1820 GOSUB 6150:BM$="Susanna lit a candle. The sun went down, and it was dark outside. Mr. and\Mrs. Lands left the room, but Susanna stayed with David.":GOSUB 5100
+1900 COMMON FO:GOSUB 6160:GOSUB 9030:BM$="It was a dark night, and there was no illumination in the wilderness. The few\stars in the sky cast the shadow of the castle on the ground, where Clark\and Vince were lurking.":GOSUB 5100:'
+1910 GOSUB 1967
+1920 CM=2:G1=0:G2=0:CM$(1)=C3$:CM$(2)=C4$
+1930 GOSUB 5400
+1942 IF CN=1 AND G2>2 THEN 2040
+1943 IF CN=2 AND G2>2 THEN GOSUB 2030:GOTO 1930
+1944 IF CN=2 AND G1>2 THEN G2=3:GOSUB 2000:GOTO 1930
+1945 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1990:GOTO 1930
+1946 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1980:GOTO 1930
+1947 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1970:GOTO 1930
+1948 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1969:GOTO 1930
+1949 IF CN=1 THEN G1=1:GOSUB 1968:GOTO 1930
+1950 IF CN=2 THEN GOSUB 1967:GOTO 1930
+1967 GOSUB 6330:BM$="Vince: Are you really going inside the castle, Chief? This is trespassing,\you know!":GOSUB 5100:RETURN
+1968 GOSUB 6320:BM$="Clark: It's only trespassing if you're caught. Three cars went inside the\castle. Don't you wanna know what's going on?":GOSUB 5100:RETURN
+1969 GOSUB 6330:BM$="Vince: Well, yeah, I guess. One thing's for sure: it's not Eleno Vision. I saw a\middle-aged couple. Definitely not part of David's music circle.":GOSUB 5100:RETURN
+1970 GOSUB 6320:BM$="Clark: There's no electricity, so it's only oil lamps and candles in there. At\the very least, they won't be able to see my face clearly.":GOSUB 5100:RETURN
+1980 GOSUB 6330:BM$="Vince: The client told us not to go inside, though. There's definitely\something bad going on. And you heard what our colleagues said about\them...":GOSUB 5100:RETURN
+1990 GOSUB 6320:BM$="Clark: Think about it. The client is a fortune teller, and they're willing to\spend a ton of money on this investigation. That means there's a\mastermind behind this. We've come this far... I'm going in there.":GOSUB 5100:BM$="You stay here and wait for me.":GOSUB 5100:RETURN
+2000 COMMON FO:GOSUB 6330:BM$="Vince: Wait here, alone in the dark...? No way. I'd rather come with you. But\let's not go in TOO deep...":GOSUB 5100
+2010 GOSUB 9010:BM$="The castle gates were not locked, so Clark and Vince could enter without\issue.":GOSUB 5100:'
+2020 W4=0:GOSUB 6170:GOSUB 6330:BM$="Candles were lit over the corridor walls, so they did not need to turn on\their flashlights.":GOSUB 5100
+2030 BM$="Vince: There's no candles in the other corridors. Maybe this is where they\went through.":GOSUB 5100:RETURN
+2040 GOSUB 6320:BM$="Clark: There's only one common room. No point in lighting candles if you're\not going that way.":GOSUB 5100
+2050 W3=0:GOSUB 6180:GOSUB 6320:ISET X:BM$="Clark and Vince turned right, then left. Eventually, they reached a closed\door.":GOSUB 5100
+2060 BM$="Clark: I don't think there's anyone inside. Let's open it... Be ready to run in\case there's someone in there.":GOSUB 5100
+2070 GOSUB 9545:GOSUB 6190:BM$="Clark pushed the door gently. It was not locked, but it made a loud creaking\noise.":GOSUB 5100
+2080 BM$="Clark: I think it leads to the basement. The candles are lit, so someone's\been down there. Let's go.":GOSUB 5100
+3000 GOSUB 5205:ISET X:CMD RUN "NO59"
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 6105:CMD LOAD "ｷﾀ1",&H00,&HC00E:GOSUB 5890:RETURN
+6105 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:RETURN
+6110 GOSUB 5205:CMD LOAD "ｷﾀ2",&H00,&HC00E:GOSUB 5890:RETURN
+6115 GOSUB 5205:CMD LOAD "ｷﾀ2",&H00,&HC00E:GOSUB 5920:RETURN
+6120 GOSUB 5205:CMD LOAD "ｸﾙｼﾑ",&H00,&HC00E:GOSUB 5920:RETURN
+6130 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:GOSUB 5890:RETURN
+6140 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6150 GOSUB 5205:CMD LOAD "ﾛｰｿｸ",&H00,&HC00E:GOSUB 5820:RETURN
+6160 GOSUB 5205:GOSUB 9535:CMD LOAD "ｲﾘｸﾁ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6170 GOSUB 5205:GOSUB 9516:CMD LOAD "ﾛｳｶ1",&H00,&HC00E:GOSUB 5820:RETURN
+6180 GOSUB 5205:CMD LOAD "ﾄﾋﾟﾗ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6190 CMD LOAD "ｱｹﾙ",&H00,&HC025:RETURN
+6300 IF W1=0 THEN W6=0:W7=0:W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6305 IF W1=0 THEN W6=0:W7=0:W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davR",AR:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W6=0:W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W6=0:W5=1:WEND LOAD"ｴﾐﾘｰ",AL:RETURN :ELSE RETURN
+6350 IF W6=0 THEN W6=1:W1=0:W2=0:W3=0:W4=0:W5=0:WEND LOAD"ﾗﾝｽﾞ",AL:RETURN :ELSE RETURN
+6360 IF W7=0 THEN W7=1:W1=0:W2=0:W3=0:W4=0:WEND LOAD"ｷﾀS",AL:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"02:20"TO"03:31":COMMON FI:RETURN:'
+9030 COMMON STOP:COMMON P"11:56"TO"15:19":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7
+9060 POLL P,&H06,&H15:POLL P,&H0106,&H04:RETURN
+9500 ISET X:CMD LOAD "Pﾌｱｸ":ISET L,&H3000,&H7FB0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2500,0,&H50:ISET P,0,&H0380,0,&H1000:RETURN:
+9510 ISET X:CMD LOAD "Pｱﾙｸ":ISET L,&H3000,&H5FFF,1,&H00:RETURN
+9515 ISET X:ISET S,&H2000,1,&H50:ISET P,1,&H10,1,&H011F:GOSUB 5500:GOSUB 9526:RETURN
+9516 ISET X:ISET S,&H1000,1,&H50:ISET P,1,&H10,1,&H011F:RETURN:
+9520 ISET X:CMD LOAD "Pｲｷ":ISET L,&H3000,&H3FFF,2,&H00:RETURN
+9525 ISET X:ISET S,&H1A00,1,&H50:ISET P,2,&H00,2,&H02AF:RETURN:
+9526 ISET X:ISET S,&H2A00,1,&H80:ISET P,2,&H00,2,&H02AF:RETURN:
+9530 ISET X:CMD LOAD "Pﾑｼ":ISET L,&H3000,&H7FB0,3,&H00:RETURN
+9535 ISET X:ISET S,&H2000,1,&H50:ISET P,3,&H00,3,&H1200:RETURN:
+9540 ISET X:CMD LOAD "Pｷﾞｰ":ISET L,&H3000,&H5FD0,4,&H00:RETURN
+9545 ISET X:ISET S,&H2500,0,&HFF:ISET P,4,&H00,4,&H0B00:RETURN:
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,58:POKE &HE303,1:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

@@ -1,0 +1,170 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9550:GOSUB 9540:GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Jeffs spoke.":C4$="Andrew spoke.":C5$="Alan spoke.":C6$="Martin spoke.":C7$="The chief physician spoke."
+1000 GOSUB 6100:GOSUB 6300:BM$="His mind made up, David jumped out of the bed. In the dark room, the\candles flickered.":GOSUB 5100
+1010 GOSUB 1200
+1020 CM=2:CM$(1)=C1$:CM$(2)=C2$
+1030 GOSUB 5400
+1110 IF CN=2 AND G1>3 THEN 1300
+1120 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1290:GOTO 1030
+1130 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1280:GOTO 1030
+1140 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1270:GOTO 1030
+1150 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1260:GOTO 1030
+1160 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1250:GOTO 1030
+1170 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1240:GOTO 1030
+1180 IF CN=1 THEN G1=1:GOSUB 1230:GOTO 1030
+1190 IF CM=2 THEN GOSUB 1220:GOTO 1030
+1200 GOSUB 6340:BM$="Susanna: What's the matter, David? You literally jumped out of the bed...\Did you have another nightmare?":GOSUB 5100
+1210 BM$="David thought his conversation with King Hroth had lasted only a few\minutes, but looking outside the windows he noticed it was night.":GOSUB 5100
+1220 BM$="Susanna: You fell asleep while I was cooking. What did you dream about this\time?":GOSUB 5100:RETURN
+1230 GOSUB 6300:BM$="David: I was scolded by King Hroth, and now I see everything clearly. I feel\that by fighting against my fate, I'd only end up hurting you. If I'm destined\to kill, then so be it.":GOSUB 5100:RETURN
+1240 GOSUB 6340:BM$="Susanna: Are you sure you won't regret it?":GOSUB 5100:RETURN
+1250 GOSUB 6300:BM$="David: I won't. The moment I accepted my destiny, I started feeling the same\way I felt during a concert. Strong. Confident.":GOSUB 5100:RETURN
+1260 GOSUB 6340:BM$="Susanna: I'm happy to hear that. Greg and the others are waiting for us in\the basement.":GOSUB 5100:RETURN
+1270 GOSUB 6300:BM$="David: Greg, you say? Ah, they must have brought Jeffs. What time is it?":GOSUB 5100:RETURN
+1280 GOSUB 6340:BM$="Susanna: It's 10pm. Are you sure you'll be fine? Jeffs is a northern\sorcerer. A moment of weakness, and you could die...":GOSUB 5100:RETURN
+1290 GOSUB 6300:BM$="David: You have to trust me, Susanna. Don't ask me to run away now.":GOSUB 5100:RETURN
+1300 GOSUB 6340:BM$="Susanna: ...I'm sorry. Silly me, having doubts just now that your mind's made\up...":GOSUB 5100
+1310 COMMON FO:GOSUB 6110:GOSUB 6350:GOSUB 9010:BM$="David and Susanna went down, to the basement.":GOSUB 5100:'
+1320 BM$="Inside the room was Jeffs, hands tied behind his back, surrounded by Greg\and the other dark sorcerers. When he saw his face, David thought back to\his dream.":GOSUB 5100
+1330 BM$="`...He looks identical,` he thought. `This is the first time I meet him in person,\but he's just like the man I saw in my dream. How is that possible...?`":GOSUB 5100
+1340 BM$="Jeffs stared at David in disbelief.":GOSUB 5100
+1360 GOSUB 1600
+1370 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C3$
+1380 GOSUB 5400
+1500 IF CN=2 AND G1>2 THEN 1690
+1510 IF CN=1 AND G1>2 THEN GOSUB 1680:GOTO 1380
+1520 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1670:CM$(2)=C1$:GOTO 1380
+1530 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1660:GOTO 1380
+1540 IF CN=1 AND G1>1 THEN GOSUB 1650:GOTO 1380
+1550 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1640:GOTO 1380
+1560 IF CN=2 AND G2>0 THEN GOSUB 1630:GOTO 1380
+1570 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1620:CM$(1)=C2$:GOTO 1380
+1580 IF CN=1 THEN G1=1:GOSUB 1610:GOTO 1380
+1590 IF CN=2 THEN GOSUB 1600:GOTO 1380
+1600 GOSUB 6350:BM$="Jeffs: How are you alive? I'm sure the dagger pierced your heart...":GOSUB 5100:RETURN
+1610 GOSUB 6305:BM$="David: So YOU were behind that nightmare... Susanna, he's a sorcerer. In\fact, I think his sorcery is second only to the King of the North himself.":GOSUB 5100:RETURN
+1620 GOSUB 6350:BM$="Jeffs: Indeed, I am a northern sorcerer. The fact you survived my incubus\curse can only mean you manifested the power of the Devil King. If only I\had confirmed you carried his blood earlier...":GOSUB 5100
+1630 BM$="Jeffs: No matter. The King of the North will succeed where I've failed. Now\tell me Susanna, why have you brought me here?":GOSUB 5100:RETURN
+1640 GOSUB 6340:BM$="Susanna: We want you to tell us the King of the North's whereabouts. We\already know you're not going to tell us willingly, so we're going to cast a\confession spell.":GOSUB 5100
+1650 BM$="Susanna: Besides, your spells are too dangerous. We're going to make sure\you can never cast them again.":GOSUB 5100:RETURN
+1660 GOSUB 6350:BM$="Jeffs: Your spells may have been effective on a pair of detectives, but I\am a northern sorcerer. Do you really believe you will succeed?":GOSUB 5100:RETURN
+1670 GOSUB 6340:BM$="Susanna: You may be a northern sorcerer, but we are the dark sorcerers\who have been guarding the bloodline of the Devil King for generations.\We will NOT fail.":GOSUB 5100
+1680 BM$="Susanna: Take the pills, David. We'll handle the rest.":GOSUB 5100:RETURN
+1690 GOSUB 6300:BM$="David: I don't need them anymore, Susanna. I'm confident that I can bring\out the power of the Devil King just by listening to your incantation.\The moment I stopped fearing the sight of blood, I've started feeling the":GOSUB 5100:BM$="power of the Devil King more and more.":GOSUB 5100
+1700 GOSUB 9050:GOSUB 6120:GOSUB 9535:BM$="Sensing his overwhelming energy, Susanna dropped the pills and began\chanting her spell.":GOSUB 5100
+1705 BM$="Jeffs stared at Susanna, and then scoffed at her.":GOSUB 5100
+1710 BM$="Jeffs: What a fool you are, Susanna. You have failed to notice the change\within my consciousness... As I thought, you dark sorcerers are nothing but\buffoons.":GOSUB 5100
+1720 BM$="David's body was heating up from Susanna's spell; at the same time, he saw\the heat engulfing Jeffs.":GOSUB 5100
+1730 BM$="Susanna ignored Jeffs's taunts and kept chanting.":GOSUB 5100
+1740 GOSUB 6190:BM$="Jeffs: Even by borrowing David's power, your sorcery amounts to nothing!\You will never be able to control my consciousness!":GOSUB 5100
+1750 BM$="Her forehead was beaded with sweat. She was starting to lose her nerve\from her spell's lack of effect.":GOSUB 5100
+1755 GOSUB 9020:'
+1760 BM$="Jeffs: I've had enough. Have a taste of a REAL spell!":GOSUB 5100
+1770 GOSUB 9070:GOSUB 9515:GOSUB 6130:BM$="Jeffs chanted a spell, and Susanna's face turned red, as if she had walked\into an oven.":GOSUB 5100
+1780 GOSUB 9555:BM$="Unable to withstand the pain, Susanna stopped chanting. Gasping for air,\she glared at Jeffs.":GOSUB 5100
+1790 BM$="Susanna: Only the King of the North can repel a dark spell... I'm afraid the\King of the North is possessing him...":GOSUB 5100
+1800 BM$="Jeffs: You've finally realized it. Now, let us put an end to this charade!":GOSUB 5100
+1810 GOSUB 6140:BM$="Susanna: EEEK!!":GOSUB 5100
+1820 BM$="Blood gushed out of Susanna's face, then from her hands, her feet... She\collapsed to the floor.":GOSUB 5100
+1830 BM$="The other dark sorcerers started fleeing in panic, but the spell of the\King of the North spared no one. In a matter of seconds, they were all lying\on the floor, writhing in a pool of their own blood.":GOSUB 5100
+1840 GOSUB 9050:GOSUB 6150:BM$="Crying in anger, David jumped at Jeffs, choking him. With his hands tied\behind his back, he could not resist.":GOSUB 5100
+1850 BM$="His consciousness filled with rage, David was seemingly impervious to the\King of the North's death curse. His fingers gouged Jeffs's throat.":GOSUB 5100
+1860 BM$="Jeffs slumped down to the floor. Unable to speak, his life was leaving his\body.":GOSUB 5100
+1870 GOSUB 6160:BM$="David stared at Jeffs's blood. Then, he pointed his bloodied hand south,\chanting - no, howling a spell.":GOSUB 5100
+1880 GOSUB 9070:BM$="David, now the Devil King, could easily sense the flow of the spell of the\King of the North. His counterspell, fueled by vengeance, followed the\magical waves back to the source.":GOSUB 5100
+1890 GOSUB 6200:BM$="He chanted his spell with all of his might. His figure overlapped with that\of King Hroth, a demon obsessed with vengeance.":GOSUB 5100
+1895 GOSUB 6900:GOSUB 5610
+1900 COMMON FO:GOSUB 9030:GOSUB 6170:BM$="The next day, a large crowd had gathered at St. Radford's Church in\Stratford, south of the castle where these events have occurred. They\were mourning the death of Archbishop Mellis.":GOSUB 5100
+3000 COMMON FO:GOSUB 5205:ISET X:CMD RUN "70-1"
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+6100 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:GOSUB 5820:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾁｶﾋﾄ",&H00,&HC00E:GOSUB 5820:RETURN
+6120 GOSUB 5205:CMD LOAD "ﾘﾝﾁｶ",&H00,&HC00E:GOSUB 5820:RETURN
+6130 GOSUB 5205:CMD LOAD "ﾘﾝ",&H00,&HC018:GOSUB 5880:RETURN
+6140 GOSUB 5205:GOSUB 9525:CMD LOAD "RINｼ",&H00,&HC64C:GOSUB 5880:RETURN
+6150 GOSUB 5205:GOSUB 9505:CMD LOAD "ｲﾗｲｼ",&H00,&HC015:GOSUB 5880:RETURN
+6160 GOSUB 5205:GOSUB 9545:CMD LOAD "ﾕﾋﾞ",&H00,&HC64C:GOSUB 5880:RETURN
+6170 GOSUB 5205:POLL X:GOSUB 9560:CMD LOAD "ｷｮｶｲ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5870:RETURN
+6190 GOSUB 5205:CMD LOAD "ｲﾋﾄﾘ",&H00,&HC010:GOSUB 5820:RETURN
+6200 GOSUB 5205:CMD LOAD "Dﾕﾋﾞ",&H00,&HC00E:GOSUB 5880:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6305 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davR",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6350 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"ｲﾗｲS",AL:RETURN :ELSE RETURN
+6900 KILL S,72,0,568,139,0:FOR I=0 TO 7:KILL ER,0:KILL EL,1:KILL ER,2:NEXT:RETURN
+6910 FOR I=0 TO 7:KILL EL,0:KILL ER,1:KILL EL,2:NEXT:RETURN
+9000 COMMON STOP:COMMON P"10:21"TO"11:55":COMMON FI:RETURN
+9010 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9030 COMMON STOP:COMMON P"08:58"TO"11:55":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7
+9060 :POLL X:POLL P,&H00,&H01:POLL P,&H0100,&H02:POLL P,&H0200,&H01:RETURN
+9070 POLL X:POLL P,&H05,&H01:POLL P,&H0105,&H03:RETURN
+9080 POLL P,&H0D,&H07:POLL P,&H010D,&H01:POLL P,&H0201,&H1111:RETURN
+9090 POLL X:POLL P,&H00,&H01:POLL P,&H0100,&H03:RETURN
+9500 ISET X:CMD LOAD "Pﾌｱｸ":ISET L,&H3000,&H7FB0,0,&H00:RETURN
+9505 ISET X:ISET S,&H2500,0,&HF0:ISET P,0,&H0380,0,&H0900:RETURN
+9510 ISET X:CMD LOAD"Kｼﾞｭ":ISET L,&H3000,&H6FC0,1,&H00:RETURN
+9515 ISET X:ISET S,&H0C00,1,&HA0:ISET P,1,&H00,1,&H0900:RETURN
+9520 ISET X:CMD LOAD"Sｻｹﾌ":ISET L,&H3000,&H4FE0,2,&H00:RETURN
+9525 ISET X:ISET S,&H1A00,0,&HF0:ISET P,2,&H00,2,&H0700:RETURN
+9530 ISET X:CMD LOAD"Sｼﾞｭ":ISET L,&H3000,&H67C8,3,&H00:RETURN
+9535 ISET X:ISET S,&H1A00,1,&HA0:ISET P,3,&H00,3,&H0D00:RETURN
+9540 ISET X:CMD LOAD"Dｼﾞｭ":ISET L,&H3000,&H47E8,4,&H00:RETURN
+9545 ISET X:ISET S,&H0F00,1,&HA0:ISET P,4,&H00,4,&H0450:RETURN
+9550 ISET X:CMD LOAD"Pｲｷ":ISET L,&H3000,&H3FFF,5,&H00
+9555 ISET X:ISET S,&H2300,1,&HA0:ISET P,5,&H00,5,&H02AF:RETURN
+9560 ISET X:CMD LOAD"Pｶﾈ":ISET L,&H3000,&H5FFF,0,&H00
+9565 ISET X:ISET S,&H2300,1,&H50:ISET P,0,&H00,0,&H0A00:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,70:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

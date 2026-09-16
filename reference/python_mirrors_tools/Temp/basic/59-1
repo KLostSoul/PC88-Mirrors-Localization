@@ -1,0 +1,182 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+900 C1$="David spoke.":C2$="Susanna spoke.":C3$="Clark spoke.":C4$="Vince spoke."
+1000 GOSUB 9505:GOSUB 9515
+1740 GOSUB 6140:BM$="As soon as they walked through the door, four men and one woman bowed\to David. They were not greeting him as the lead vocalist of Eleno Vision,\but as the Devil King.":GOSUB 5100
+1750 GOSUB 6160:BM$="Susanna approached the table place in the middle of the room, and the\sorcerers gathered around it.":GOSUB 5100
+1760 GOSUB 1900
+1761 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1762 GOSUB 5400
+1776 IF CN=2 AND G1>10 THEN 2140
+1777 IF CN=1 AND G2>9 THEN G1=11:GOSUB 2130:GOTO 1762
+1778 IF CN=2 AND G1>9 THEN G2=10:GOSUB 2125:CM$(1)=C1$:GOTO 1762
+1779 IF CN=1 AND G2>8 THEN G1=10:GOSUB 2120:CM$(2)=C2$:GOTO 1762
+1780 IF CN=2 AND G1>8 THEN G2=9:GOSUB 2110:GOTO 1762
+1781 IF CN=1 AND G2>7 THEN G1=9:GOSUB 2100:CM$(2)=C4$:GOTO 1762
+1782 IF CN=2 AND G1>7 THEN G2=8:GOSUB 2090:GOTO 1762
+1783 IF CN=1 AND G2>6 THEN G1=8:GOSUB 2080:GOTO 1762
+1784 IF CN=2 AND G2>6 THEN GOSUB 2070:GOTO 1762
+1785 IF CN=2 AND G1>6 THEN G2=7:GOSUB 2060:CM$(1)=C3$:GOTO 1762
+1786 IF CN=1 AND G2>5 THEN G1=7:GOSUB 2050:CM$(2)=C2$:GOTO 1762
+1787 IF CN=2 AND G1>5 THEN G2=6:GOSUB 2040:CM$(1)=C1$:GOTO 1762
+1788 IF CN=1 AND G2>4 THEN G1=6:GOSUB 2030:CM$(2)="Thomas spoke.":GOTO 1762
+1789 IF CN=2 AND G1>4 THEN G2=5:GOSUB 2020:CM$(1)=C2$:GOTO 1762
+1790 IF CN=1 AND G2>3 THEN G1=5:GOSUB 2010:GOTO 1762
+1800 IF CN=2 AND G1>3 THEN G2=4:GOSUB 2000:CM$(1)="Lisa spoke.":GOTO 1762
+1810 IF CN=1 AND G2>2 THEN G1=4:GOSUB 1990:CM$(2)="Rivas spoke.":GOTO 1762
+1820 IF CN=2 AND G1>2 THEN G2=3:GOSUB 1980:CM$(1)="Greg spoke.":GOTO 1762
+1830 IF CN=1 AND G2>1 THEN G1=3:GOSUB 1970:GOTO 1762
+1840 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1960:CM$(1)=C1$:GOTO 1762
+1850 IF CN=1 AND G1>1 THEN GOSUB 1950:GOTO 1762
+1860 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1930:CM$(2)="Burroughs spoke.":GOTO 1762
+1870 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1920:CM$(1)="Lisa spoke.":GOTO 1762
+1880 IF CN=1 THEN G1=1:GOSUB 1910:GOTO 1762
+1890 IF CN=2 THEN GOTO 1762
+1900 GOSUB 6345:BM$="Susanna: David, this is Thomas Simon.":GOSUB 5100
+1901 GOSUB 6355:BM$="Susanna: This is his wife, Lisa.":GOSUB 5100
+1902 GOSUB 6365:BM$="Susanna: These are Burroughs, and...":GOSUB 5100
+1903 GOSUB 6375:BM$="Susanna: Rivas.":GOSUB 5100
+1904 GOSUB 6385:BM$="Susanna: And this is Greg. Each one of them has earned the title of dark\sorcerer.":GOSUB 5100:W2=0
+1905 GOSUB 6310
+1910 GOSUB 6300:BM$="David: My name is David. I'm sorry you had to come all the way here just for\me.":GOSUB 5100:RETURN
+1920 GOSUB 6310:BM$="Susanna: The dark sorcerers live to assist the Devil King. Don't worry\about it, David. Now, let the meeting begin.":GOSUB 5100:RETURN
+1930 GOSUB 6350:BM$="Lisa: David, do you recognize the man in this picture? Have you seen him in\one of your dreams?":GOSUB 5100
+1940 GOSUB 6180:BM$="David looked at the photo. He had never seen him before.":GOSUB 5100
+1945 GOSUB 6355
+1950 BM$="Lisa: This is the man who hired those detectives to follow you and your\colleagues during your tour of Europe.":GOSUB 5100:RETURN
+1960 GOSUB 6360:BM$="Burroughs: Mr. Lands told us about how the King of the North cast a\terrible spell upon you. How did that happen? Where did he come from?":GOSUB 5100:RETURN
+1970 GOSUB 6300:BM$="David: Well, in my nightmare, the castle was surrounded by armed peasants,\yelling at me to leave... and then, the King of the North appeared in my room.":GOSUB 5100:RETURN
+1980 GOSUB 6360:BM$="Burroughs: He must have sent you that nightmare himself, in order to\appear before you and cast his spell. So the nightmare-warding ring was\ineffective against the King of the North...":GOSUB 5100:RETURN
+1990 GOSUB 6380:BM$="Greg: What if next time he sends another nightmare, we also enter the\dream world and fight him?":GOSUB 5100:RETURN
+2000 GOSUB 6370:BM$="Rivas: There's no guarantee we can defeat him with our magic. If we were\to lose, David's life would be forfeit.":GOSUB 5100:RETURN
+2010 GOSUB 6350:BM$="Lisa: The King of the North sent a nightmare, entered it and then cast a\spell from within. None of us are capable of a similar feat. That is, unless\David were to become the Devil King...":GOSUB 5100:RETURN
+2020 GOSUB 6370:BM$="Rivas: Our only choice is to find the King of the North and kill him with our\weapons. First, we must interrogate those detectives we captured, and\find out where their client is.":GOSUB 5100:RETURN
+2030 GOSUB 6310:BM$="Susanna: They've been captured? Have they said the name of their\client?":GOSUB 5100:RETURN
+2040 GOSUB 6340:BM$="Thomas: They wouldn't say, not even with a truth serum. They could be\descendants of the northern tribes. Our only choice is to borrow the\power of the Devil King, and cast a spell to find out.":GOSUB 5100:RETURN
+2050 GOSUB 6300:BM$="David: I'm no sorcerer, I can't cast any spells. I've only ever had\nightmares and visions... Susanna, help me out here.":GOSUB 5100:RETURN
+2060 GOSUB 6310:BM$="Susanna: It'll be fine. Greg, bring them here.":GOSUB 5100
+2065 COMMON FO:BM$="Greg approached a wardrobe in the corner of the room and opened its\door.":GOSUB 5100
+2066 GOSUB 9010:'
+2067 W9=0:GOSUB 6150:BM$="He pulled out Clark and Vince, whose hands were tied behind their backs,\and brought them over.":GOSUB 5100
+2070 GOSUB 6310:BM$="Susanna: I had a feeling it would be you lot. Why won't you tell us the name\of your client? This is a matter of life and death for us.":GOSUB 5100:RETURN
+2080 GOSUB 6320:BM$="Clark: Is this how you repay us for saving your asses? A detective never\reveals the name of his client. I'm a professional!":GOSUB 5100:RETURN
+2090 GOSUB 6310:BM$="Susanna: I'm willing to kill you to find out. We could easily find out using the\powers of the Devil King, but that would leave you crippled for life.":GOSUB 5100:RETURN
+2100 GOSUB 6320:BM$="Clark: The Devil King, huh? We've been hearing that name a lot, but we still\don't know who that is. How about you introduce us? I'm telling you... We\know nothing about this King of the North, or the Devil King business.":GOSUB 5100:RETURN
+2110 GOSUB 6330:BM$="Vince: Chief... I think she's serious. I don't want the Devil King to curse me... I\don't know anything about them, but you know the client. Just tell them.":GOSUB 5100:RETURN
+2120 GOSUB 6320:BM$="Clark: Shut the hell up. I'll never betray a client. It's a matter of pride. Go\ahead and kill me if you want. And don't bother with truth serums, I'm\trained to resist them.":GOSUB 5100:RETURN
+2125 GOSUB 6310:BM$="Susanna: David, we need your help. Please, drink this. It's a sleeping\medicine. Once your blood has been quelled, I'll use a spell to draw out the\power of the Devil King, and get everything we need to know from them.":GOSUB 5100:RETURN
+2130 GOSUB 6300:BM$="David: You mean you can use magic...? Susanna, did you get close to me\because of the blood that flows in my veins...?":GOSUB 5100:RETURN
+2140 GOSUB 6310:BM$="Susanna: No. I got close to you because I love you. I've had dreams about\you ever since I was born. I've loved you all my life. The only reason I've\been hiding the truth was to protect you from the King of the North.":GOSUB 5100
+2150 BM$="Susanna: Besides, what if I told you about the Devil King during our first\meeting? You would have thought I was crazy and stayed away from me.\Please, you have to trust me... Drink this.":GOSUB 5100
+2160 BM$="In truth, David was not particularly surprised by the revelation. It was\true that if not for Susanna, he would have been killed by the King of the\North, or possibly sent to a psychiatric ward.":GOSUB 5100
+2170 BM$="However, he knew that using the spell to force the truth out of the\detectives would cripple them, or even kill them outright.":GOSUB 5100
+2180 BM$="Susanna: They're part of the northern tribes. King Hroth said that the\sight of their blood would awaken the Devil King. You wouldn't have to fear\the King of the North any longer.":GOSUB 5100
+2190 BM$="David believed Susanna's words, but the idea of killing the detectives\made him hesitate.":GOSUB 5100
+2200 CM=2:CM$(1)="He decided to take Susanna's pills.":CM$(2)="He did not want to be involved in murder."
+2210 COMMON FO:GOSUB 5400
+2990 IF CN=2 THEN 3060
+3000 ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100
+3010 COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000
+3020 COMMON COPY &H01,20806
+3040 POKE &H9089,0:CMD SET:CMD SCREEN 0:CMD RUN"NO64"
+3050 '
+3060 ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100
+3070 COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000
+3080 COMMON COPY &H01,20190
+3090 POKE &H9089,0:CMD SET:CMD SCREEN 0:CMD RUN"NO60"
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ﾁｶ",&H00,&HC00E:GOSUB 5820:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾄﾋﾞﾗ",&H00,&HC00E:GOSUB 5820:RETURN
+6120 CMD LOAD "ｵｽ",&H00,&HC023:RETURN
+6130 GOSUB 5205:CMD LOAD "ﾍﾞｯﾄ",&H00,&HC00E:GOSUB 5820:RETURN
+6140 GOSUB 5205:CMD LOAD "ﾁｶｼﾂ",&H00,&HC00E:GOSUB 5820:RETURN
+6150 GOSUB 5205:CMD LOAD "KV",&H00,&HC652:GOSUB 5820:PSET (480,100),1:RETURN
+6160 GOSUB 5205:CMD LOAD "ﾋﾄﾑﾚ",&H00,&HC00B:GOSUB 5820:RETURN
+6165 GOSUB 5610:LINE (0,0)-(400,140),0,BF:CMD LOAD "ﾋﾄﾑﾚ",&H00,&HC00E:GOSUB 5820:RETURN:'
+6170 GOSUB 5205:CMD LOAD "ﾛｳｶ",&H00,&HC00E:GOSUB 5820:RETURN
+6180 WEND LOAD"ｲﾗｲ",AL:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:W6=0:W7=0:W8=0:W9=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:W6=0:W7=0:W8=0:W9=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ｸﾗｰｸ",AL:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"ｳｲﾝｽ",AR:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:W6=0:W7=0:W8=0:W9=0:WEND LOAD"ﾄｰﾏｽ",AL:RETURN :ELSE RETURN
+6345 WEND LOAD"ﾄｰﾏｽ",AL:RETURN
+6350 IF W6=0 THEN W1=0:W2=0:W3=0:W4=0:W5=0:W6=1:W7=0:W8=0:W9=0:WEND LOAD"ﾘｻ",AR:RETURN :ELSE RETURN
+6355 WEND LOAD"ﾘｻ",AR:RETURN
+6360 IF W7=0 THEN W1=0:W2=0:W3=0:W4=0:W5=0:W6=0:W6=0:W1=0:W8=0:W9=0:WEND LOAD"ﾊﾟﾛｳ",AR:RETURN :ELSE RETURN
+6365 WEND LOAD"ﾊﾟﾛｳ",AL:RETURN
+6370 IF W8=0 THEN W1=0:W2=0:W3=0:W4=0:W5=0:W6=0:W7=0:W8=1:W9=0:WEND LOAD"ﾘｰﾊｽ",AL:RETURN :ELSE RETURN
+6375 WEND LOAD"ﾘｰﾊｽ",AR:RETURN
+6380 IF W9=0 THEN W1=0:W2=0:W3=0:W4=0:W5=0:W6=0:W7=0:W8=0:W9=1:WEND LOAD"ｸﾚｯｸ",AL:RETURN :ELSE RETURN
+6385 WEND LOAD"ｸﾚｯｸ",AL:RETURN
+6390 W2=0:WEND LOAD"ｴﾐﾘｰ",AR:RETURN
+9000 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"15:37"TO"17:29":COMMON FI:RETURN:'
+9500 ISET X:CMD LOAD "Pｱﾙｸ":ISET L,&H3000,&H5FFF,0,&H00:RETURN
+9505 ISET X:ISET S,&H1000,1,&H50:ISET P,0,&H10,0,&H011F:GOSUB 5500:ISET X:RETURN:
+9506 ISET X:ISET S,&H1000,1,&H50:ISET P,0,&H10,0,&H011F:RETURN:
+9510 ISET X:CMD LOAD "Pｷﾞｰ":ISET L,&H3000,&H5FD0,1,&H00:RETURN
+9515 ISET X:ISET S,&H2500,0,&HFF:ISET P,1,&H00,1,&H0B00:RETURN:
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,59:POKE &HE303,1:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

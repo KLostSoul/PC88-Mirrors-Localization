@@ -16,19 +16,19 @@ build/
 dist/
 
 # Python build outputs and caches
-python_mirrors_tools/python_tools/__pycache__/
-python_mirrors_tools/__pycache__/
-python_mirrors_tools/Temp/
-python_mirrors_tools/Import/ASM/
-python_mirrors_tools/Import/Files/
-python_mirrors_tools/Import/Floppy/
-python_mirrors_tools/Import/ISO/
-python_mirrors_tools/Import/Data/*.raw
+reference/python_mirrors_tools/python_tools/__pycache__/
+reference/python_mirrors_tools/__pycache__/
+reference/python_mirrors_tools/Temp/
+reference/python_mirrors_tools/Import/ASM/
+reference/python_mirrors_tools/Import/Files/
+reference/python_mirrors_tools/Import/Floppy/
+reference/python_mirrors_tools/Import/ISO/
+reference/python_mirrors_tools/Import/Data/*.raw
 
 # Local data extracted from the original CD
-python_mirrors_tools/Export/ISO/02 MIRR.iso
-python_mirrors_tools/Export/Floppy/
-python_mirrors_tools/Export/Files/
+reference/python_mirrors_tools/Export/ISO/02 MIRR.iso
+reference/python_mirrors_tools/Export/Floppy/
+reference/python_mirrors_tools/Export/Files/
 
 # Korean build tree: local original inputs and generated game data
 Temp/

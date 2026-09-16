@@ -1,0 +1,153 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9520:GOSUB 9510:GOSUB 9500
+900 C1$="David spoke.":C2$="Susanna spoke."
+1000 GOSUB 6100:GOSUB 1070
+1010 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1020 GOSUB 5400
+1030 IF CN=1 AND G2>0 THEN 1100
+1040 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1090:GOTO 1020
+1050 IF CN=1 THEN G1=1:GOSUB 1080:GOTO 1020
+1060 IF CN=2 THEN GOSUB 1070:GOTO 1020
+1070 GOSUB 6310:BM$="Susanna: What a gorgeous room. It has to be the Archbishop's. There's\nobody inside...":GOSUB 5100:RETURN
+1080 GOSUB 6300:BM$="David: The lights are on, so someone must've been in here until recently.\There was no one in the chapel, so they might be somewhere further down\the corridor.":GOSUB 5100:RETURN
+1090 GOSUB 6310:BM$="Susanna: I have a feeling there might be a hidden door that leads to the\basement in this room. After all, this room is very private. Nobody would\see him leave.":GOSUB 5100:RETURN
+1100 GOSUB 6300:BM$="David: It's possible... but I don't see anything that looks like a hidden door.":GOSUB 5100
+1110 BM$="David and Susanna searched the room, but they were unable to find\anything.":GOSUB 5100
+1120 BM$="David: We don't have much time. Let's move on.":GOSUB 5100
+1130 GOSUB 6120:BM$="They left the room and went further down the corridor.":GOSUB 5100
+1140 GOSUB 6130:BM$="They kept walking until the end, where they found a door.":GOSUB 5100
+1150 GOSUB 1240
+1160 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1170 GOSUB 5400
+1180 IF CN=1 AND G2>0 THEN 1320
+1190 IF CN=2 AND G2>0 THEN GOSUB 1310:GOTO 1170
+1200 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1290:GOTO 1170
+1210 IF CN=1 AND G1>0 THEN GOSUB 1280:GOTO 1170
+1220 IF CN=1 THEN G1=1:GOSUB 1250:GOTO 1170
+1230 IF CN=2 THEN GOSUB 1240:GOTO 1170
+1240 GOSUB 6310:BM$="Susanna: This is the last one. If there's anyone in here, they must be\beyond this door. Stay sharp...":GOSUB 5100:RETURN
+1250 GOSUB 6300:BM$="David put his ear to the door, trying to sense the presence of other\people.":GOSUB 5100
+1260 GOSUB 6300:BM$="David: It's fine. I don't think there's anyone inside.":GOSUB 5100
+1270 GOSUB 9515:GOSUB 6140:BM$="He carefully opened the door.":GOSUB 5100
+1280 BM$="David: Stairs... This is the way to the basement.":GOSUB 5100:RETURN
+1290 GOSUB 6310:BM$="Susanna: It's completely dark. It doesn't seem like there's anyone down\there.":GOSUB 5100
+1300 WEND PR:GOSUB 9505:W2=0:BM$="David and Susanna walked down the stairs, lighting the way with a candle.":GOSUB 5100
+1310 GOSUB 6150:ISET X:GOSUB 6310:BM$="Susanna: This is just a storage room. It's no place for an altar.":GOSUB 5100:RETURN
+1320 GOSUB 6300:BM$="David: Guess we won't find anything in here. Let's go back.":GOSUB 5100
+1330 GOSUB 9505:GOSUB 6125:BM$="They walked up the stairs and returned to the corridor.":GOSUB 5100
+1340 GOSUB 1460
+1350 CM=2:G1=0:G2=0:CM$(1)=C1$:CM$(2)=C2$
+1360 GOSUB 5400
+1370 IF CN=1 AND G2>1 THEN 1640
+1380 IF CN=2 AND G2>1 THEN GOSUB 1630:GOTO 1360
+1390 IF CN=2 AND G1>1 THEN G2=2:GOSUB 1600:GOTO 1360
+1400 IF CN=1 AND G1>1 THEN GOSUB 1590:GOTO 1360
+1410 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1530:GOTO 1360
+1420 IF CN=2 AND G2>0 THEN GOSUB 1520:GOTO 1360
+1430 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1480:GOTO 1360
+1440 IF CN=1 THEN G1=1:GOSUB 1470:GOTO 1360
+1450 IF CN=2 THEN GOSUB 1460:GOTO 1360
+1460 GOSUB 6310:BM$="Susanna: We didn't find any stairs to the second floor. I wonder if there's\another door in the chapel?":GOSUB 5100:RETURN
+1470 GOSUB 6300:BM$="David: I didn't notice one. Still, I'd like to check the Archbishop's room\again. There has to be something we missed. There HAS to.":GOSUB 5100:RETURN
+1480 GOSUB 6310:BM$="Susanna: Agreed. If there's a convenient place for those sorcerers to go\in and out unnoticed, it would be that room.":GOSUB 5100
+1490 ISET X:W2=0:GOSUB 6100:GOSUB 6310:BM$="David and Susanna returned to the Archbishop's room.":GOSUB 5100
+1500 BM$="Susanna: Why don't we try pulling books from the bookcase? There might\be a hidden lever.":GOSUB 5100
+1510 BM$="They looked behind every single book, to no avail.":GOSUB 5100
+1520 GOSUB 6310:BM$="Susanna: Wait... Look! The bookcase is moving! Someone's coming back... We\have to hide before they find us!":GOSUB 5100:RETURN
+1530 GOSUB 6300:BM$="David: Under the desk! Quick!":GOSUB 5100
+1540 COMMON FO:WEND PL:GOSUB 9010:BM$="David and Susanna hid under the Archbishop's large desk.":GOSUB 5100:'
+1550 GOSUB 6110:BM$="The bookcase moved sideways. Beyond it was a corridor. The passage was\large enough to allow a single person to pass through.":GOSUB 5100
+1560 GOSUB 6160:GOSUB 6113:BM$="An old man, about 70 years old, came out of the passage. He put a finger\somewhere on the wall inside the room, and the bookcase slid again to\cover the way.":GOSUB 5100
+1570 GOSUB 6105:GOSUB 9525:BM$="Once he walked out of the room, he turned on the ceiling lights, which made\the corridor bright. Then he closed the door... David and Susanna heard\the sound of his footsteps moving away.":GOSUB 5100
+1580 W1=0:GOSUB 6300:BM$="Finally catching their breath, they crawled out from under the desk. They\approached the wall that the old man had touched.":GOSUB 5100
+1590 GOSUB 6300:BM$="David: There was a switch embedded in the wall... Let's go to the basement. I\bet the altar is in there.":GOSUB 5100:RETURN
+1600 GOSUB 6310:BM$="Susanna: The altar might give us some hints as to what sort of magic they\can cast. Let's go.":GOSUB 5100
+1610 GOSUB 6110:BM$="David patted the wall, looking for the switch. Eventually he found it, and\the bookcase started sliding.":GOSUB 5100
+1620 WEND PR:BM$="David and Susanna went inside.":GOSUB 5100
+1630 BM$="Susanna: I knew it. There are stairs going down.":GOSUB 5100:RETURN
+1640 BM$="David: There has to be a different switch to close it, but there's no time to\look for it now.":GOSUB 5100
+1650 COMMON FO:GOSUB 9505:BM$="They went down the stairs.":GOSUB 5100
+1655 GOSUB 9000:'
+1660 GOSUB 6180:ISET X:BM$="Once they reached the end of the staircase, they saw a door at the end.":GOSUB 5100
+1670 GOSUB 9515:GOSUB 5205:GOSUB 5615:BM$="David opened the door and stepped inside.":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:FOR I=0 TO 3000:NEXT
+3010 COMMON STOP
+3020 '
+3040 POKE &H9089,1:CMD SET:CMD SCREEN 0:CMD RUN"NO79"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 4000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5615 CMD COLOR[F,0,0,0,0,0,0,0,511]:RETURN
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ｷﾀﾍﾔ",&H00,&HC00E:GOSUB 5890:RETURN
+6105 CMD LOAD "ｷﾀﾍﾔ",&H00,&HC00E:RETURN
+6110 CMD LOAD "ﾎﾝ",&H00,&HCB65:GOSUB 9516:CG=&HCB65:FOR I=1 TO 6:CMD PUT &H3000,1,&H00,CG:CG=CG+1:GOSUB 6115:NEXT:RETURN
+6113 CMD LOAD "ﾎﾝ",&H00,&HCB6A:GOSUB 9516:CG=&HCB6A:FOR I=1 TO 6:CMD PUT &H3000,1,&H00,CG:CG=CG-1:GOSUB 6115:NEXT:RETURN
+6115 FOR II=0 TO 500:NEXT:RETURN
+6120 GOSUB 5205:GOSUB 9505:CMD LOAD "ﾛｳｶC":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6125 GOSUB 5205:CMD LOAD "ﾛｳｶC":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6130 GOSUB 5205:ISET X:CMD LOAD "ﾄﾞｱ4":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5820:RETURN
+6140 CMD LOAD "ｱｹﾙ4",&H00,&HC024:RETURN
+6150 GOSUB 5205:CMD LOAD "ﾁｶ",&H00,&HC00E:GOSUB 5820:RETURN
+6160 CMD LOAD "ﾋﾄ",&H00,&HC8DC:FOR I=0 TO 3000:NEXT:RETURN
+6180 GOSUB 5205:CMD LOAD "ﾁｶﾄｱ",&H00,&HC00E:GOSUB 5820:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+9000 COMMON STOP:COMMON P"28:36"TO"29:51":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9500 ISET X:CMD LOAD"Pｱﾙｸ":ISET L,&H3000,&H5FFF,0,&H00:RETURN
+9505 ISET X:ISET S,&H1A00,1,&HA0:ISET P,0,&H10,0,&H011F:RETURN
+9510 ISET X:CMD LOAD"Pｷﾞｰ":ISET L,&H3000,&H5FFF,1,&H00:RETURN
+9515 ISET X:ISET S,&H2500,0,&HFF:ISET P,1,&H10,1,&H0B00:RETURN
+9516 ISET X:ISET S,&H4000,0,&HFF:ISET P,1,&H10,1,&H0B00:RETURN
+9520 ISET X:CMD LOAD"Pﾄﾞｱ":ISET L,&H3000,&H3FFF,2,&H00:RETURN
+9525 ISET X:ISET S,&H1300,0,&HA0:ISET P,2,&H00,2,&H0200:RETURN
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,78:POKE &HE303,0:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN

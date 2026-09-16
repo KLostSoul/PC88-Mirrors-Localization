@@ -1,0 +1,179 @@
+1 '
+10 CLEAR ,&H8FFF:DEFINT A-Z
+20 GOSUB 9998:GOSUB 9000:'
+100 GOSUB 9050:GOSUB 9070:GOSUB 9090:GOSUB 9560:GOSUB 9550:GOSUB 9540:GOSUB 9530:GOSUB 9520:GOSUB 9510:GOSUB 9500
+900  C1$="David's consciousness spoke.":C2$="Susanna spoke.":C3$="The Devil King's consciousness spoke."
+1372 GOSUB 6120:BM$="Right then, David grabbed his chest, screaming in pain.":GOSUB 5100
+1375 GOSUB 9565:GOSUB 1500
+1380 CM=2:G1=0:G2=0:CM$(1)=C3$:CM$(2)=C2$
+1390 GOSUB 5400
+1430 IF CN=2 AND G1>1 THEN 1630
+1440 IF CN=1 AND G1>1 THEN GOSUB 1620:GOTO 1390
+1450 IF CN=1 AND G2>0 THEN G1=2:GOSUB 1600:CM$(2)=C1$:GOTO 1390
+1460 IF CN=2 AND G1>0 THEN G2=1:GOSUB 1590:CM$(1)=C3$:GOTO 1390
+1470 IF CN=1 AND G1>0 THEN GOSUB 1580:GOTO 1390
+1480 IF CN=1 THEN G1=1:GOSUB 1530:CM$(2)=C2$:GOTO 1390
+1490 IF CN=2 THEN GOSUB 1520:GOTO 1390
+1500 BM$="David: ARGH! A needle is piercing my heart!!":GOSUB 5100
+1510 BM$="David was writhing in pain.":GOSUB 5100
+1520 BM$="Susanna: David, what's wrong?! Does your chest... Ah! It must be the King of\the North!":GOSUB 5100:RETURN
+1530 BM$="Devil King: What?! The King of the North?! Curses! He struck while David's\consciousness was in control... He might actually kill him!":GOSUB 5100
+1540 BM$="Devil King: Urgh! My blood...?! David's blood, roused by the pain, is taking\over my blood! Am I going to be defeated by the King of the North?!":GOSUB 5100
+1550 BM$="Devil King: Susanna! You must cast a defensive barrier! If you will not,\David's blood will boil and burst out of this body!":GOSUB 5100
+1560 BM$="Seeing David suffering, Susanna had no choice but to obey. She left to\gather the tools she needed to create the barrier.":GOSUB 5100
+1570 BM$="When she returned, she was not sure whether she should actually proceed\or not. What was the point of saving David from the King of the North, only\for his mind to be destroyed by the Devil King...?":GOSUB 5100
+1580 BM$="Devil King: What are you doing, Susanna?! Are you going to stand there and\watch David suffer?!":GOSUB 5100:RETURN
+1590 BM$="Susanna: Even if I cast the barrier, he's going to lose his mind forever. I\wouldn't be saving him - I'd just be exchanging one death for another!":GOSUB 5100:RETURN
+1600 BM$="Devil King: Are you saying it is better for him to go through this torture?\Without his consciousness, he will no longer feel anything, including pain. If\you truly love him, then cast the barrier and spare him the agony!":GOSUB 5100
+1610 GOSUB 6140:BM$="In tears, Susanna drew a magic circle, and started chanting her spell.":GOSUB 5100
+1620 BM$="Devil King: Cease that pathetic whining! You must devote mind and body to\the spell if you wish to spare David from his torment!":GOSUB 5100:RETURN
+1630 BM$="Seeing David squirm in pain, Susanna focused her mind on the spell. Finally,\his expression relaxed.":GOSUB 5100
+1640 GOSUB 9090:GOSUB 6130:BM$="David: The pain is leaving... It must be your barrier... Thanks, Susanna... and\goodbye...":GOSUB 5100
+1650 BM$="David: Devil King! If you want my body, hurry up and take it! At this rate,\Susanna's going to die!":GOSUB 5100
+1660 COMMON FO:POLL X:ISET X:BM$="David's blood went still, and the blood of the Devil King was replacing it\once more. David's consciousness began to fade... He seemed to have\accepted his fate.":GOSUB 5100
+1665 GOSUB 9020:'
+1670 W2=0:GOSUB 6110:GOSUB 6310:BM$="Susanna: David, don't go! What am I going to do without you?!":GOSUB 5100
+1680 GOSUB 6320:BM$="Devil King: ...David is no more. His memories are gone. I no longer require the\barrier. David has truly become the Devil King.":GOSUB 5100
+1690 BM$="Devil King: Susanna, I forgive you for breaking the dark laws. In return, you\must serve as my personal slave. Forever.":GOSUB 5100
+1700 BM$="Susanna's eyes were no longer looking at David. They were looking at\someone who used to be David.":GOSUB 5100
+1710 BM$="Devil King: Pour the blood of the dead northern tribesman onto a plate! I\shall reverse the flow of the spell of the King of the North. He will feel the\agony of his own magic!":GOSUB 5100
+1720 GOSUB 6150:BM$="Without a word, Susanna obeyed the Devil King's order. She poured the\blood of the corpse into a plate.":GOSUB 5100
+1730 BM$="Devil King: You should be ashamed to call yourself a dark sorceress with\your meager knowledge of magic. Observe, Susanna. This is how you cast\the dark spell reversal.":GOSUB 5100
+1740 GOSUB 7000:GOSUB 6160:BM$="David, the Devil King, chanted a spell. Then, he threw the bloody plate\South.":GOSUB 5100
+1745 GOSUB 9070:GOSUB 9545:GOSUB 6170:BM$="The stone wall, hit by the plate, was stained crimson with blood.":GOSUB 5100
+1750 GOSUB 6180:BM$="Then, blood started pouring from the wall.":GOSUB 5100
+1755 GOSUB 6190:BM$="It poured copiously, as if the stone wall itself was alive... Could that have\been the blood of the King of the North?":GOSUB 5100
+1760 GOSUB 9090:GOSUB 6200:BM$="Devil King: The blood of the King of the North has been severed... How\pathetic, to expire from a mere spell reversal. Perhaps time has diluted\his bloodline, weakening his magic. I suppose the same has happened to all":GOSUB 5100:BM$="sorcerers, dark and northern alike.":GOSUB 5100
+1770 GOSUB 6110:W3=0:GOSUB 6320:BM$="Devil King: Susanna, send a summon to all sorcerers in the world! I shall\establish a Dark Kingdom. Any country that will not submit shall be\annihilated with my forbidden arts!":GOSUB 5100
+1780 BM$="Devil King: Rejoice, Susanna! Your beloved David will become the king of\the world!":GOSUB 5100
+1790 GOSUB 9080:GOSUB 6210:BM$="Susanna was not listening to the Devil King. She approached the man that\used to be David... and hurled herself at him, piercing his heart with a\dagger she had been hiding.":GOSUB 5100
+1800 GOSUB 9526:BM$="Susanna: The blood of the King of the North has been severed... I won't let\you disgrace David's body any longer! Brand me as a traitor if you want!\I don't fear your punishment!":GOSUB 5100
+1810 GOSUB 6260:BM$="The Devil King, his chest pierced, slowly pointed a finger towards Susanna.":GOSUB 5100
+1820 GOSUB 9070:GOSUB 6220:BM$="She screamed, as blood started oozing out of her body. She collapsed,\squirming in a pool of her own blood.":GOSUB 5100
+1830 GOSUB 9090:GOSUB 6230:BM$="She did her best to resist the urge of crying in pain. She did not want to\give the Devil King that satisfaction. Now, she could only await death...":GOSUB 5100
+1840 POLL X:COMMON FO:GOSUB 6240:BM$="Shortly after, David's body collapsed, falling onto Susanna's blood.\Agonizing, she crawled towards him.":GOSUB 5100
+1850 GOSUB 9010:BM$="As death was upon them, they managed to grab each other's hand.":GOSUB 5100
+1860 BM$="As their consciousness faded, they had forgotten their pain. They left\this world together, smiling...":GOSUB 5100
+1870 GOSUB 6250:BM$="The next day, a large crowd had gathered at St. Radford's Church in\Stratford, south of the castle where these events have occurred. They\were mourning the death of Archbishop Mellis.":GOSUB 5100
+3000 ISET X:COMMON FO:GOSUB 5200:BM$="Press any key to start reading data from CD-ROM.":GOSUB 5100
+3010 COMMON STOP:CMD SCREEN 1:BM$="Reading data...":GOSUB 5000
+3020 COMMON COPY &H01,22654
+3040 POKE &H9089,2:CMD SET:CMD SCREEN 0:CMD RUN"END"
+3050 '
+4999 '
+5000 GOSUB 5300
+5001 POKE &HB401,0:POKE &H92DC,1:BN=&HED93:GOSUB 5040
+5005 FOR K1=1 TO LEN(BM$):K$=MID$(BM$,K1,1):IF ASC(K$)=92 THEN GOSUB 5044:GOTO 5020:ELSE 5010:
+5010 CMD WIDTH BN,&H60,7:POKE &HB400,1:CMD KANJI K$:KN=KN+1:
+5020 GOSUB 5041:FOR L=1 TO PEEK(&HE3FF):NEXT:NEXT:RETURN
+5040 POKE &HB40B,(BN\256)AND 255:POKE &HB40A,BN AND 255:KN=BN:RETURN
+5041 SZ=PEEK(&HE3FE):IF SZ=0 THEN POLL P,&H0410,&HD214:RETURN
+5042 IF SZ=1 THEN FOR K2=0 TO 2:BEEP 1:BEEP 0:NEXT:RETURN
+5043 RETURN
+5044 BN=BN+&H50*14:GOSUB 5040:POKE &HB401,0:RETURN
+5100 GOSUB 5000:A=&H35D9:CALL A
+5105 BM$=">>>":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$
+5110 I$=INKEY$:IF I$=CHR$(13) THEN GOSUB 5300:RETURN :ELSE 5110
+5200 GOSUB 5610:CLS 2:COLOR=(7,7):RETURN
+5205 GOSUB 5610:CLS 2:RETURN
+5210 FOR I=1 TO 20:FOR S=1 TO 100:NEXT:FOR L=1 TO 10:BEEP 1:BEEP 0:NEXT:NEXT:RETURN
+5300 LINE (0,151)-(639,199),0,BF:RETURN
+5400 GOSUB 5300
+5410 POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H40,7:CMD KANJI CM$(I):BN=BN+&H50*11:NEXT:POKE &H92DC,1
+5420 LINE(110,154+CN*11)-(512,164+CN*11),7,BF,XOR:CN2=CN
+5430 I$=INKEY$:IF I$="" THEN 5430
+5431 IF I$=CHR$(27) THEN GOSUB 10000:GOTO 5400
+5435 IF I$="8" THEN IF CN=0 THEN 5430 :ELSE CN=CN-1:GOTO 5440
+5436 IF I$="2" THEN IF CN=CM-1 THEN 5430 :ELSE CN=CN+1
+5440 LINE(110,154+CN2*11)-(512,164+CN2*11),7,BF,XOR
+5450 IF I$=CHR$(13) THEN CN=CN+1:GOSUB 5300:RETURN :ELSE 5420
+5500 FOR I=1 TO 7000:NEXT:RETURN
+5510 FOR I=1 TO 3000:NEXT:RETURN
+5530 FOR L=1 TO 500:NEXT:RETURN
+5599 '
+5600 CMD COLOR[0,0,0,0,0,0,0,0]:RETURN
+5610 CMD COLOR[F,0,0,0,0,0,0,0,0]:RETURN
+5800 CMD COLOR[F,0,89,169,242,315,380,445,511]:RETURN:'
+5810 CMD COLOR[M,0,73,146,219,292,365,438,511]:RETURN:'
+5820 CMD COLOR[M,0,1,67,132,205,351,431,511]:RETURN:'
+5821 CMD COLOR[M,0,1,67,24,205,351,431,511]:RETURN:'
+5825 CMD COLOR[M,0,67,133,206,279,351,431,511]:RETURN:'
+5830 CMD COLOR[M,0,81,154,227,300,373,446,511]:RETURN:'
+5840 CMD COLOR[M,0,130,195,260,325,390,487,511]:RETURN:'
+5850 CMD COLOR[M,0,131,197,277,414,494,495,511]:RETURN:'
+5860 CMD COLOR[M,0,72,144,224,304,377,444,511]:RETURN:'
+5870 CMD COLOR[M,0,9,82,155,228,301,374,511]:RETURN:'
+5880 CMD COLOR[M,0,8,32,56,184,312,506,511]:RETURN:'
+5890 CMD COLOR[M,0,138,211,284,357,429,502,511]:RETURN:'
+5900 CMD COLOR[M,0,81,155,284,357,430,502,511]:RETURN:'
+5910 CMD COLOR[M,0,130,195,260,341,422,503,511]:RETURN:'
+5920 CMD COLOR[M,0,96,176,248,313,379,445,511]:RETURN:'
+6000 '
+6100 GOSUB 5205:CMD LOAD "ﾀｵﾚﾙ",&H00,&HC00B:GOSUB 5820:RETURN
+6110 GOSUB 5205:CMD LOAD "ﾘﾝﾁｶ",&H00,&HC00E:GOSUB 5820:RETURN
+6120 GOSUB 5205:GOSUB 9515:CMD LOAD "ｸﾙｼﾑ",&H00,&HC00E:GOSUB 5880:RETURN
+6130 CMD LOAD "ﾄﾞｷ",&H00,&HC00E:RETURN
+6140 GOSUB 5205:GOSUB 9505:CMD LOAD "ｷﾀｵｳ",&H00,&HC00E:GOSUB 5880:RETURN
+6150 GOSUB 5205:CMD LOAD "ﾁｻﾗ",&H00,&HC7DF:GOSUB 5821:RETURN
+6160 GOSUB 5205:CMD LOAD "ｶﾍﾞ":CMD PUT &H3000,1,&H00,&HC00C:GOSUB 5821:RETURN
+6170 ISET X:SET P,&H5000,&HC294:RETURN
+6180 ISET X:SET P,&H5349,&HC291:RETURN
+6190 ISET X:SET P,&H570A,&HC28D:RETURN
+6200 ISET X:SET P,&H5B2B,&HC00C:RETURN
+6210 GOSUB 5205:GOSUB 9556:CMD LOAD "ﾅｲﾌ",&H00,&HC00C:GOSUB 5820:RETURN
+6220 GOSUB 5205:GOSUB 9555:CMD LOAD "ﾘﾝﾁ1",&H00,&HC64B:GOSUB 5821:RETURN
+6230 CMD LOAD "ﾘﾝﾁ2",&H00,&HD4B4:RETURN
+6240 CMD LOAD "ﾘﾝﾁ3",&H00,&HCAB4:RETURN
+6250 GOSUB 5205:GOSUB 9570:CMD LOAD "ｷｮｶｲ":CMD PUT &H3000,1,&H00,&HC00E:GOSUB 5890:RETURN
+6260 GOSUB 5205:CMD LOAD "ﾕﾋﾞ",&H00,&HC00E:GOSUB 5820:RETURN
+6300 IF W1=0 THEN W1=1:W2=0:W3=0:W4=0:W5=0:WEND LOAD"davL",AL:RETURN :ELSE RETURN
+6310 IF W2=0 THEN W1=0:W2=1:W3=0:W4=0:W5=0:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+6320 IF W3=0 THEN W1=0:W2=0:W3=1:W4=0:W5=0:WEND LOAD"ﾏｵｳS",AR:RETURN :ELSE RETURN
+6330 IF W4=0 THEN W1=0:W2=0:W3=0:W4=1:W5=0:WEND LOAD"andL",AL:RETURN :ELSE RETURN
+6340 IF W5=0 THEN W1=0:W2=0:W3=0:W4=0:W5=1:WEND LOAD"linR",AR:RETURN :ELSE RETURN
+7000 GOSUB 5610:ISET X:CMD LOAD"ﾁ1",&H00,&HC288:SET G,&H5000,&HC288,&H23,&H64
+7010 CMD LOAD"ﾁ2",&H00,&HC285:SET G,&H5349,&HC285,&H28,&H6E
+7020 CMD LOAD"ﾁ3":CMD PUT &H3000,1,&H00,&HC281:SET G,&H570A,&HC281,&H2C,&H7E
+7030 CMD LOAD"ﾁ4":CMD PUT &H3000,1,&H00,&HC000:SET G,&H5B2B,&HC000,&H34,&H8C
+7040 CLS 2:RETURN
+7099 '
+9000 COMMON STOP:COMMON P"03:45"TO"06:33":COMMON FI:RETURN:'
+9010 COMMON STOP:COMMON P"25:42"TO"28:35":COMMON FI:RETURN:'
+9020 COMMON STOP:COMMON P"15:37"TO"17:29":COMMON FI:RETURN:'
+9050 POLL E,&H07,&H77,&HB7,&HF7:RETURN
+9060 POLL X:POLL P,&H00,&H01:POLL P,&H0100,&H05:RETURN
+9070 POLL X:POLL P,&H05,&H01:POLL P,&H0105,&H0213:RETURN
+9080 POLL P,&H0D,&H07:POLL P,&H010D,&H01:POLL P,&H0201,&H1111:RETURN
+9090 :POLL X:POLL P,&H00,&H01:POLL P,&H0100,&H02:POLL P,&H0200,&H01:RETURN
+9500 ISET X:CMD LOAD "Sｼﾞｭ":ISET L,&H3000,&H67C8,0,&H00:RETURN
+9505 ISET X:ISET S,&H1A00,1,&HA0:ISET P,0,&H00,0,&H0950:RETURN:
+9510 ISET X:CMD LOAD "Pﾌｱｸ":ISET L,&H3000,&H7FB0,1,&H00:RETURN
+9515 ISET X:ISET S,&H2500,0,&HFF:ISET P,1,&H0380,1,&H1000:RETURN:
+9520 ISET X:CMD LOAD "Pﾀｵﾚ":ISET L,&H3000,&H3FF0,2,&H00:RETURN
+9525 ISET X:ISET S,&H2300,0,&HF0:ISET P,2,&H00,2,&H0110:RETURN:
+9526 ISET X:ISET S,&H2300,0,&HF0:ISET P,2,&H00,2,&H60:RETURN
+9530 ISET X:CMD LOAD "Pｱｴｸ":ISET L,&H3000,&H6FC0,3,&H00:RETURN
+9535 ISET X:ISET S,&H1A00,1,&H60:ISET P,3,&H0500,3,&H0A00:RETURN
+9540 ISET X:CMD LOAD "Pﾜﾚﾀ":ISET L,&H3000,&H4FFF,4,&H00:RETURN
+9545 ISET X:ISET S,&H3000,0,&HFF:ISET P,4,&H00,4,&H0300:GOSUB 5510:RETURN
+9550 ISET X:CMD LOAD "Sｻｹﾌ":ISET L,&H3000,&H4FE0,5,&H00:RETURN
+9555 ISET X:ISET S,&H2300,0,&HFF:ISET P,5,&H00,5,&H0750:RETURN:
+9556 ISET X:ISET S,&H2000,0,&HFF:ISET P,5,&H00,5,&H0350:RETURN
+9560 ISET X:CMD LOAD "Pｲｷ":ISET L,&H3000,&H3FFF,6,&H00:RETURN
+9565 ISET X:ISET S,&H2000,1,&HF0:ISET P,6,&H00,6,&H02AF:RETURN:
+9570 ISET X:CMD LOAD "Pｶﾈ":ISET L,&H3000,&H5FFF,0,&H00
+9575 ISET X:ISET S,&H2000,1,&H80:ISET P,0,&H00,0,&H0900:RETURN:
+9998 COLOR 0:CLS:LOCATE 0,17:PRINT"ャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャャ"
+9999 LOCATE 0,18:PRINT"                                                                                                                                                                ":RETURN
+10000 BM$="Save game? (press Y or N)":GOSUB 5000
+10010 S$=INKEY$:IF S$="" THEN 10010
+10015 IF S$="N" OR S$="n" THEN RETURN
+10020 IF S$="Y" OR S$="y" THEN 10040
+10030 GOTO 10010
+10040 BM$="Select slot (1-9, ESC to exit):":GOSUB 5000
+10049 S$=INKEY$:IF S$="" THEN 10049
+10050 IF S$=CHR$(27) THEN RETURN
+10060 TH=VAL(S$):IF TH>=1 AND TH<=9 THEN 10070:ELSE 10049
+10070 POKE &HE302,63:POKE &HE303,1:
+10080 TU=&H31:TU=TU+TH:CMD WRITE &H00,TU,&H01,&HE300
+10090 BM$="Done. Press ENTER to continue.":GOSUB 5100:RETURN
