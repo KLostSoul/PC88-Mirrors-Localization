@@ -44,29 +44,9 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 대조 시 `i_disks.csv` 매핑, 스크립트 순서, 줄 번호·문자열 번호 이동, `−`·`－` 차이와 원문 추출 과정의 `:GOSUB 5100` 꼬리를 함께 처리한다. 기존의 모호한 `english_only` 표기는 사용하지 않고 패치 중복 행은 `patch_duplicate`로 기록한다.
 
-### 한글 조합 글리프 시험
+### 현재 정식 빌드
 
-초기 500자 상주 시험에서 사용자가 메뉴 진입과 한글 출력을 확인했고, 이후 16×16 조합 글리프로 전환했다. 조합 글리프 원본·생성기·편집기는 [`Composite_16x16`](Composite_16x16/README.md)에 기록한다.
-
-- 조합 규칙: 8×4×4 초성·중성·종성 벌
-- 한글 출력: 16×16, ASCII 출력: 8×16
-- ISO·RAW·CloneCD 이미지·원본 Track 2·플로피 추출물·로그·스테이징 결과: Git에서 제외
-
-### 메뉴·NO0·NO1 시험 및 정식 빌드
-
-- 메뉴·NO0·NO1 시험으로 한글 토큰 출력, 줄바꿈, UI 선택문, 영문·한글 혼용, CloneCD 데이터 구성을 확인했다.
-- 시험에서 확인한 출력 기준과 조합 글리프 구성을 정식 전체 빌드에 반영했다.
-- 현재 `korean_mirrors_tools`의 16×16 한글 조합 글리프 정식 빌드가 완성됐으며, ISO·CloneCD의 정적 검증도 완료했다.
-
-### 정식 조합 글리프 전체 빌드
-
-- 정식 빌더는 [`korean_mirrors_tools/python_tools/main.py`](korean_mirrors_tools/python_tools/main.py)다.
-- 조합 글리프 리소스 설치, `stringsImportK.csv` 문자열 브리지, 반복 대사 19개 행의 40셀 폭 적용을 정식 빌드 절차에 포함했다.
-- 정식 `Import/Files`와 검증 완료 시험판의 파일 해시 차이는 0개이며, `Import/Floppy`도 차이가 0개다.
-- 정식 `Import/Data/menu.raw`는 11,257바이트로 시험판과 일치한다.
-- 정식 ISO [`02 MIRR.iso`](korean_mirrors_tools/Import/ISO/02%20MIRR.iso)는 40,550,400바이트로 생성됐다.
-- 정식 CloneCD는 [`IMG`](korean_mirrors_tools/output/Mirrors_Korean_Mirrors_Tools_Full_Build.img), [`CCD`](korean_mirrors_tools/output/Mirrors_Korean_Mirrors_Tools_Full_Build.ccd), [`SUB`](korean_mirrors_tools/output/Mirrors_Korean_Mirrors_Tools_Full_Build.sub)로 생성됐다.
-- Track 2 19,800개 섹터의 EDC/ECC와 ISO 페이로드 일치를 모두 확인했다.
+16×16 한글 조합 글리프 정식 빌드가 완료됐으며, 메뉴·NO0·NO1 시험과 ISO·CloneCD 정적 검증까지 마쳤다. 조합 규칙과 전체 검증 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 자료는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 
 ## 문서
 
