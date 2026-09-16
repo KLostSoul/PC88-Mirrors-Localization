@@ -7,16 +7,16 @@ save_done;Done. Press ENTER to continue.;저장 완료, 엔터를 눌러주세�
 cd_read_prompt;Press any key to start reading data from CD-ROM.;CD-ROM에서 데이터를 읽어오려면 아무 키나 눌러세요.;CD switch prompt
 cd_reading;Reading data...;데이타를 읽는 중..;CD switch progress
 asm_save_slot_prompt;Select save slot (1-3).;저장 공간 선택 (1-3).;ASM direct VWF message (29-byte slot)
-menu_skip_loading_hint;(or insert Main and Game disks to skip loading);(or insert Main and Game disks to skip loading);menu.bas 1300 second literal
-menu_drive2_erase;All data in the disk in Drive 2 will be erased.;All data in the disk in Drive 2 will be erased.;menu.bas 1303
-menu_game_disk_status;The disk in Drive 2 is the Game Disk.;The disk in Drive 2 is the Game Disk.;menu.bas 1600 second literal
-menu_load_save_slot;Select save slot to load (1-9):;Select save slot to load (1-9):;menu.bas 2030
-menu_reload_correct_data;Reload the correct data from CD? (Y/N);Reload the correct data from CD? (Y/N);menu.bas 3020 second literal
-menu_save_slot_return;Press Return after selecting a save slot.;Press Return after selecting a save slot.;menu.bas 4500
-menu_escape_return;Press [ESC] to return to the menu.;Press [ESC] to return to the menu.;menu.bas 4501
+menu_skip_loading_hint;(or insert Main and Game disks to skip loading);(기존 메인, 게임 디스크를 넣으면 생략됩니다);menu.bas 1300 second literal
+menu_drive2_erase;All data in the disk in Drive 2 will be erased.;드라이브 2의 디스크 데이터가 삭제됩니다.;menu.bas 1303
+menu_game_disk_status;The disk in Drive 2 is the Game Disk.;드라이즈 2의 디스크는 게임 디스크입니다.;menu.bas 1600 second literal
+menu_load_save_slot;Select save slot to load (1-9):;불러올 번호를 선택하세요. (1-9):;menu.bas 2030
+menu_reload_correct_data;Reload the correct data from CD? (Y/N);CD에서 정상 데이터를 읽어 옵니까? (Y/N);menu.bas 3020 second literal
+menu_save_slot_return;Press Return after selecting a save slot.;세이브 슬롯을 선택한 후 엔터를 눌러주세요.;menu.bas 4500
+menu_escape_return;Press [ESC] to return to the menu.;메뉴로 돌아가려면 [ESC]를 눌러주세요.;menu.bas 4501
 menu_repeat_toggle;ON     OFF;ON     OFF;menu.bas 9040 second literal
 menu_text_speed_values;1 - 2 - 3;1 - 2 - 3;menu.bas 9050 second literal
-menu_text_sound_label;Text Sound:;Text Sound:;menu.bas 9060 first literal
+menu_text_sound_label;Text Sound:;문자 효과음:;menu.bas 9060 first literal
 menu_text_sound_values;FM    BEEP   OFF;FM    BEEP   OFF;menu.bas 9060 second literal
 menu_drive1_status;The disk in Drive 1 is the Main Disk.;드라이브 1의 디스크가 메인 디스크입니다.;menu mapping 1600
 menu_drive2_status;The disk in Drive 2 is the Game Disk.;드라이브 2의 디스크가 게임 디스크입니다.;menu mapping 1600
