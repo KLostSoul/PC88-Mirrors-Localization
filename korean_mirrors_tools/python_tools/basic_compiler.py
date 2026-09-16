@@ -17,9 +17,19 @@ KOREAN_TOKEN_LEADS = tuple(
     value for value in range(0x80, 0xE0)
     if value not in KOREAN_TOKEN_CONTROL_BYTES
 )[:0x4B]
+KOREAN_TOKEN_TRAIL_CONTROL_BYTES = KOREAN_TOKEN_CONTROL_BYTES | {0x5C}
+KOREAN_TOKEN_TRAILS = tuple(
+    value
+    for value in tuple(range(0x40, 0x7F)) + tuple(range(0x80, 0xFD))
+    if value not in KOREAN_TOKEN_TRAIL_CONTROL_BYTES
+)
+
+ASCII_WIDTHS = [0] * 256
+for _ascii_code in range(0x20, 0x80):
+    ASCII_WIDTHS[_ascii_code] = 8
 
 class BasicCompiler:
-    LineLimit = 362
+    LineLimit = 600
 
     def __init__(self, _stringsData=None, _patchData=None, _widthData=None):
         self.initialize(_stringsData, _patchData, _widthData)
@@ -58,11 +68,11 @@ class BasicCompiler:
         tokens = {}
         for index, row in enumerate(rows):
             char = row["character"]
-            glyph_index = int(row["glyph_slot"])
-            if glyph_index != index:
+            token_index = int(row["token_index"])
+            if token_index != index:
                 raise RuntimeError(
-                    "Korean glyph index mismatch at row %d: %d" %
-                    (index, glyph_index)
+                    "Korean token index mismatch at row %d: %d" %
+                    (index, token_index)
                 )
             if len(char) != 1 or not ("가" <= char <= "힣"):
                 raise RuntimeError(
@@ -76,19 +86,42 @@ class BasicCompiler:
                 | (medial_index << 5)
                 | final_index
             )
-            lead_index, token_lo = divmod(payload, 0x100)
+            csv_payload = int(row["composition_payload"], 16)
+            if csv_payload != payload:
+                raise RuntimeError(
+                    "Korean composition payload mismatch at row %d" % index
+                )
+            csv_token_hi = int(row["token_hi"], 16)
+            csv_token_lo = int(row["token_lo"], 16)
+            token_word = int(row["token_word"], 16)
+            if token_word != (csv_token_hi << 8 | csv_token_lo):
+                raise RuntimeError(
+                    "Korean token word mismatch at row %d" % index
+                )
+            lead_index, trail_index = divmod(
+                syllable_offset, len(KOREAN_TOKEN_TRAILS)
+            )
             if lead_index >= len(KOREAN_TOKEN_LEADS):
                 raise RuntimeError(
                     "Korean composition token lead overflow at row %d" % index
                 )
-            token_hi = KOREAN_TOKEN_LEADS[lead_index]
-            if token_hi in KOREAN_TOKEN_CONTROL_BYTES:
+            expected_hi = KOREAN_TOKEN_LEADS[lead_index]
+            expected_lo = KOREAN_TOKEN_TRAILS[trail_index]
+            if csv_token_hi != expected_hi or csv_token_lo != expected_lo:
+                raise RuntimeError(
+                    "Korean token table mismatch at row %d" % index
+                )
+            if csv_token_hi in KOREAN_TOKEN_CONTROL_BYTES:
                 raise RuntimeError(
                     "Korean token collides with a control byte at row %d" % index
                 )
+            if csv_token_lo not in KOREAN_TOKEN_TRAILS:
+                raise RuntimeError(
+                    "Korean token has an unsafe trail byte at row %d" % index
+                )
             if char in tokens:
                 raise RuntimeError("Duplicate Korean glyph: %s" % char)
-            tokens[char] = (token_hi, token_lo)
+            tokens[char] = (csv_token_hi, csv_token_lo)
         return tokens
 
 
@@ -105,8 +138,10 @@ class BasicCompiler:
 
     def patchStatement(self, _statement):
         _statement[1] = _statement[1].replace("COMMON FM", "COMMON STOP")
-        _statement[1] = _statement[1].replace(
-            "COMMON FP", "COMMON STOP:COMMON FP"
+        _statement[1] = re.sub(
+            r"(?<!COMMON STOP:)COMMON FP",
+            "COMMON STOP:COMMON FP",
+            _statement[1],
         )
 
     def _line_number(self, line):
@@ -180,11 +215,11 @@ class BasicCompiler:
         for char in text:
             if char in self.koreanTokens:
                 width += 16
-            elif 0x20 <= ord(char) <= 0x7F:
-                width += self.widthData[ord(char) - 0x20]
+            elif 0 <= ord(char) < len(ASCII_WIDTHS):
+                width += ASCII_WIDTHS[ord(char)]
             else:
                 raise ValueError(
-                    "No output glyph width for U+%04X" % ord(char)
+                    "No Korean/ASCII output width for U+%04X" % ord(char)
                 )
         return width
 
@@ -326,6 +361,7 @@ class BasicCompiler:
             (\".+?\")
             |(\-)
             |(\,)
+            |(\<\>)
             |(\=)
             |(\:)
             |(\*)
@@ -389,6 +425,18 @@ class BasicCompiler:
                     if token == "DATA":
                         binLine.append(0x84)
                         self.isDataToken = True
+                        continue
+                    if token == "<>" and not self.isDataToken:
+                        # N88-BASIC stores the compound not-equal operator as
+                        # the two reserved-word tokens '<' then '>'.  Leaving
+                        # the source characters as ASCII 3C 3E makes the IF
+                        # parser stop before THEN and raise Error 02.
+                        for operator in token:
+                            token_value = (
+                                Const.BasicResWords.index(operator) | 0x80
+                            )
+                            binLine.append(token_value)
+                            self.checkLineToken(token_value)
                         continue
                     if token in Const.BasicResWords and not self.isDataToken:
                         tokenValue = Const.BasicResWords.index(token) | 0x80

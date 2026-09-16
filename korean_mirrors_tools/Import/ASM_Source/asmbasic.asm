@@ -428,8 +428,8 @@ copyFnt:di
         ei
         ret
         
-fontNumber:
-        .byte   0x01
+reservedFontData:
+        .byte   0x00
         nop
         nop
         nop

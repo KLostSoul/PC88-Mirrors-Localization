@@ -4,13 +4,13 @@ import math
 import subprocess
 
 from .basic_compiler import (
+    ASCII_WIDTHS,
     BasicCompiler,
     KOREAN_TOKEN_CONTROL_BYTES,
     KOREAN_TOKEN_LEADS,
 )
 from .defines import Const, Paths
 from .floppy import FloppyMan
-from .fontgen import FontGen
 from .img_encoder import ImgEncoder
 from .util import Util
 
@@ -35,6 +35,7 @@ class DataImporter:
         self.scriptData = Util.CSV2hashArray(Paths.ECSV_Scripts)
         self.diskMans = {}
         self.enableTranslation = _translate
+        self.asciiWidths = ASCII_WIDTHS
         self.createDiskMans()
 
     def createDiskMans(self):
@@ -101,7 +102,7 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 1,
-            "POKE &HB401,0:POKE &H92DC,1:BN=&HEE83:GOSUB %d" %
+            "A=&HCA4F:CALL A:BN=&HEE83:GOSUB %d" %
             (_line + 40),
         )
         self.basic_addPatchLine(
@@ -148,15 +149,15 @@ class DataImporter:
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 410,
-            "POKE &H92DC,2:BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT:POKE &H92DC,1",
+            "BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT",
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 420,
-            "LINE(110,154+CN*16)-(512,169+CN*16),7,BF,XOR:CN2=CN",
+            "LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN",
         )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 440,
-            "LINE(110,154+CN2*16)-(512,169+CN2*16),7,BF,XOR",
+            "LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR",
         )
 
     def basic_applySavePatch(self, _patch, _scdata, _diskData):
@@ -282,7 +283,7 @@ class DataImporter:
 
             outDir = Paths.IFolder_Files / sc["disk"]
             outDir.mkdir(parents=True, exist_ok=True)
-            comp = BasicCompiler(strings, basicPatch, self.scriptFont[0])
+            comp = BasicCompiler(strings, basicPatch, self.asciiWidths)
             print("Compiling BASIC script " + sc["script"])
             comp.openFile(Paths.EFolder_Basic / sc["script"])
 
@@ -466,15 +467,6 @@ class DataImporter:
     def deleteUnusedData(self):
         self.diskMans["disk52"].freeFile("ﾘﾝR".encode("shift_jis"))
 
-    def generateFonts(self):
-        customFont = FontGen()
-        customFont.generateVWF(Paths.Font_Script, "script")
-        self.scriptFont = customFont.generateVWF(Paths.Font_UI, "ui")
-        customFont.generateVWF(Paths.Font_Menu, "menu")
-        customFont.generateKoreanFixed8x16(
-            Paths.Font_Korean, Paths.Font_Korean_Raw
-        )
-
     def replaceImages(self):
         gfxData = Util.CSV2hashArray(Paths.ICSV_GFX)
         for gfx in gfxData:
@@ -500,7 +492,6 @@ class DataImporter:
 
     def importData(self):
         self.cdImage = list(Paths.Original_ISO_DataTrack.read_bytes())
-        self.generateFonts()
         self.replaceImages()
         self.compileASM()
         self.importIntroScript()

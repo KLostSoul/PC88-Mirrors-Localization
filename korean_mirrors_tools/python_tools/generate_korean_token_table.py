@@ -23,7 +23,12 @@ TOKEN_LEADS = tuple(
     value for value in range(0x80, 0xE0)
     if value not in TOKEN_CONTROL_BYTES
 )[:0x4B]
-GLYPH_BYTES = 16
+TRAIL_CONTROL_BYTES = TOKEN_CONTROL_BYTES | {0x5C}
+SAFE_TRAILS = tuple(
+    value
+    for value in tuple(range(0x40, 0x7F)) + tuple(range(0x80, 0xFD))
+    if value not in TRAIL_CONTROL_BYTES
+)
 EXPECTED_GLYPHS = 1093
 
 
@@ -80,13 +85,15 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
             | (medial_index << 5)
             | final_index
         )
-        lead_index, token_lo = divmod(payload, 0x100)
+        # Encode the contiguous Unicode Hangul syllable index with lead and
+        # trail alphabets that both exclude BASIC/VWF control bytes.
+        # The composition payload is retained as verification metadata only.
+        lead_index, trail_index = divmod(syllable_offset, len(SAFE_TRAILS))
         if lead_index >= len(TOKEN_LEADS):
             raise RuntimeError(f"Composition token lead overflow for {character}")
         token_hi = TOKEN_LEADS[lead_index]
+        token_lo = SAFE_TRAILS[trail_index]
         token = (token_hi << 8) | token_lo
-        offset = index * GLYPH_BYTES
-
         rows.append(
             {
                 "token_index": index,
@@ -99,10 +106,6 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
                 "medial_index": medial_index,
                 "final_index": final_index,
                 "composition_payload": f"0x{payload:04X}",
-                "glyph_slot": index,
-                "glyph_offset": offset,
-                "glyph_offset_hex": f"0x{offset:04X}",
-                "glyph_bytes": GLYPH_BYTES,
             }
         )
 
@@ -111,6 +114,14 @@ def build_table(glyphs: list[dict[str, str]]) -> list[dict[str, object]]:
         raise RuntimeError("Generated token values are not unique")
     if any(int(row["token_hi"], 16) in TOKEN_CONTROL_BYTES for row in rows):
         raise RuntimeError("Generated table contains a forbidden lead byte")
+    if any(int(row["token_lo"], 16) not in SAFE_TRAILS for row in rows):
+        raise RuntimeError("Generated table contains an unsafe trail byte")
+    if any(int(row["token_lo"], 16) in TRAIL_CONTROL_BYTES for row in rows):
+        raise RuntimeError("Generated table contains a forbidden trail byte")
+    if len(SAFE_TRAILS) != 165:
+        raise RuntimeError(
+            f"Safe trail alphabet must contain 165 values, got {len(SAFE_TRAILS)}"
+        )
 
     return rows
 
@@ -137,7 +148,7 @@ def main() -> None:
     print(f"Created: {OUTPUT}")
     print(f"Tokens:  {len(rows)}")
     print(f"Range:   {rows[0]['token_word']} - {rows[-1]['token_word']}")
-    print(f"Glyphs:  0x0000 - 0x{int(rows[-1]['glyph_offset']) + GLYPH_BYTES - 1:04X}")
+    print("Runtime glyphs: composed from the resident 8x4x4 component table")
 
 
 if __name__ == "__main__":

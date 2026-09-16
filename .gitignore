@@ -31,8 +31,8 @@ python_mirrors_tools/Export/Floppy/
 python_mirrors_tools/Export/Files/
 
 # Korean build tree: local original inputs and generated game data
-korean_mirrors_tools/Temp/
-korean_mirrors_tools/Temp/korean_composite_8x16/
+Temp/
+Temp/korean_composite_8x16/
 korean_mirrors_tools/Import/ISO/
 korean_mirrors_tools/Import/Floppy/
 korean_mirrors_tools/Import/Files/
@@ -60,26 +60,26 @@ korean_mirrors_tools/Data/*_test.csv
 
 # Versioned Korean 500-glyph test source inputs. Generated outputs remain ignored.
 !korean_mirrors_tools/Data/i_cddata_korean500_test.csv
-!korean_mirrors_tools/Temp/
-korean_mirrors_tools/Temp/*
-!korean_mirrors_tools/Temp/korean_500_test/
-!korean_mirrors_tools/Temp/korean_500_test/README.md
-!korean_mirrors_tools/Temp/korean_500_test/assets/
-!korean_mirrors_tools/Temp/korean_500_test/assets/font_test/
-!korean_mirrors_tools/Temp/korean_500_test/assets/*.py
-!korean_mirrors_tools/Temp/korean_500_test/assets/*.bas
-!korean_mirrors_tools/Temp/korean_500_test/assets/*.asm
-!korean_mirrors_tools/Temp/korean_500_test/assets/*.csv
-!korean_mirrors_tools/Temp/korean_500_test/assets/*.png
-!korean_mirrors_tools/Temp/korean_500_test/assets/font_test/*.py
-korean_mirrors_tools/Temp/korean_500_test/assets/*.raw
-korean_mirrors_tools/Temp/korean_500_test/assets/__pycache__/
-korean_mirrors_tools/Temp/korean_500_test/assets/font_test/*.png
-korean_mirrors_tools/Temp/korean_500_test/staging_korean_500_test/
-korean_mirrors_tools/Temp/korean_500_test/build/
-korean_mirrors_tools/Temp/korean_500_test/clonecd/
-korean_mirrors_tools/Temp/korean_500_test/compare/
-korean_mirrors_tools/Temp/korean_500_test/logs/
+!Temp/
+Temp/*
+!Temp/korean_500_test/
+!Temp/korean_500_test/README.md
+!Temp/korean_500_test/assets/
+!Temp/korean_500_test/assets/font_test/
+!Temp/korean_500_test/assets/*.py
+!Temp/korean_500_test/assets/*.bas
+!Temp/korean_500_test/assets/*.asm
+!Temp/korean_500_test/assets/*.csv
+!Temp/korean_500_test/assets/*.png
+!Temp/korean_500_test/assets/font_test/*.py
+Temp/korean_500_test/assets/*.raw
+Temp/korean_500_test/assets/__pycache__/
+Temp/korean_500_test/assets/font_test/*.png
+Temp/korean_500_test/staging_korean_500_test/
+Temp/korean_500_test/build/
+Temp/korean_500_test/clonecd/
+Temp/korean_500_test/compare/
+Temp/korean_500_test/logs/
 
 # Reference copy: local extracted inputs only
 reference/mirrors_tools/Export/ISO/

@@ -46,7 +46,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 ### 한글 500자 시험
 
-500자 8×16 글리프를 RAM에 상주시킨 시험에서 사용자가 메뉴 진입과 한글 출력을 확인했다. 시험용 재현 소스는 [`korean_500_test`](korean_mirrors_tools/Temp/korean_500_test/README.md)에 보관한다.
+500자 8×16 글리프를 RAM에 상주시킨 시험에서 사용자가 메뉴 진입과 한글 출력을 확인했다. 시험용 재현 소스는 [`korean_500_test`](Temp/korean_500_test/README.md)에 보관한다.
 
 - Python·BASIC·ASM·토큰표·글리프 PNG·시험 CD 배치표: Git에 기록
 - ISO·RAW·CloneCD 이미지·원본 Track 2·플로피 추출물·로그·스테이징 결과: Git에서 제외
@@ -58,8 +58,8 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - 본문은 16행 프로필과 `&H50*16` 행 이동을 사용해 상단 잘림 없이 출력된다. UI 선택 항목 출력도 `&H60`·`&H50*16`·`CN*16` 기준으로 수정했고, 선택 박스 높이를 16행에 맞췄다.
 - UI 설명문 겹침은 VWF 글리프 문제가 아니라 `menu.bas`의 4000/4001·4500/4501 출력 주소가 14행 간격이었던 것이 원인이었다. 4001·4501의 두 번째 주소를 `&HF710`에서 `&HF7B0`으로 옮겨 16행 간격으로 수정했고, UI5에서 겹침이 사라진 것을 확인했다.
 - 영문 3종 글리프의 실제 사용 셀을 글리프별로 하단 정렬해 마지막 잉크 행 아래에 한 행의 공백을 남긴 검증판을 만들었다. 메뉴·NO0·NO1에서 한글과 영문 출력이 겹치지 않는 것을 사용자가 확인했다.
-- 하단 정렬 글리프를 적용한 최신 검증판은 `korean_mirrors_tools/Temp/english_menu_no0_no1_ui16_validation/`에서 관리한다. CloneCD Track 2 19,800개 섹터의 EDC/ECC와 페이로드 일치를 정적으로 확인했고, `.ccd`·`.sub` 메타데이터는 기준 이미지와 동일하다.
-- 시험 산출물은 `korean_mirrors_tools/Temp/english_menu_no0_no1_test/`에서 관리한다. 이전 `v2` 산출물은 삭제했다.
+- 하단 정렬 글리프를 적용한 최신 검증판은 `Temp/english_menu_no0_no1_ui16_validation/`에서 관리한다. CloneCD Track 2 19,800개 섹터의 EDC/ECC와 페이로드 일치를 정적으로 확인했고, `.ccd`·`.sub` 메타데이터는 기준 이미지와 동일하다.
+- 시험 산출물은 `Temp/english_menu_no0_no1_test/`에서 관리한다. 이전 `v2` 산출물은 삭제했다.
 
 ## 다음 작업
 

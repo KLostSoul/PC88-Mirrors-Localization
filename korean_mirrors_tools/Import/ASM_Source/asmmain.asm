@@ -3578,11 +3578,10 @@ LB516:  out     (0x5C),a        ; '\'
         add     hl,de
         jr      LB512
 
-; -------- PATCH - 2 byte
-
+; Composite VWF bank-0 call gate.  LB420 remains the public entry point used
+; by CMD KANJI, but the former three-font wrapper is not used here.
         ; Referenced from B420
-        ; --- START PROC LB52F ---
-LB52F:  
+LB52F:
         di
         ld      a,0x7b
         out     (0x31),a
@@ -3590,8 +3589,11 @@ LB52F:
         out     (0xe2),a
         xor     a
         out     (0xe3),a
-        
-        call    0x0000    ; Print message
+        call    0x0000            ; single composite VWF in bank 0
+        in      a,(0x32)
+        and     0xbf
+        out     (0x32),a
+        out     (0x5f),a
         xor     a
         out     (0xe2),a
         ld      a,0x79
@@ -3599,17 +3601,6 @@ LB52F:
         ei
         ret
 
-        
-        
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        nop
-       
         ; Referenced from B5DB, B66E, C168
 LB54F:  ld      a,0x26          ; '&'
         ld      (LB416),a
@@ -5480,9 +5471,9 @@ LBF6A:  ld      de,(LB54F+1)    ; reference not aligned to instruction
         ld      (LB54F+1),de    ; reference not aligned to instruction
         ld      a,0x10
         ld      (LB673+1),a     ; reference not aligned to instruction
-        ld      a,0x1E
+        ld      a,0x18          ; 23 ASCII bytes + existing length sentinel
         ld      (LB41C),a
-        ld      de,0xC053
+        ld      de,LC053
         ld      (LB412),de
         push    hl
         call    LB420
@@ -5635,34 +5626,14 @@ LC043:  ld      a,(de)
         pop     hl
         ret
 
-LC04E:  ld      b,c
-        jr      z,LC060+2       ; reference not aligned to instruction
-        add     hl,hl
-        ld      b,c
-        adc     a,c
-        cp      l
-        sub     h
-        call    nc,LC982
-        sub     e
-        ld      l,a
-        sbc     a,b
-        ld      e,(hl)
-        add     a,d
-        or      l
-        add     a,d
-
-        ; Referenced from C04F
-LC060:  call    c,LB780+2       ; reference not aligned to instruction
-        add     a,d
-        xor     c
-        add     a,c
-        jr      nz,LC0B0
-        jr      nz,LC08A
-        jr      nz,LBFEE
-        ld      d,b
-        add     a,c
-        ld      a,h
-        add     a,d
+LC04E:  .byte   0x41,0x28,0x11,0x29,0x41
+; LBF6A sends this fixed message directly to the composite VWF. Keep the
+; 29-byte storage slot at C053-C06F, but use supported ASCII bytes instead of
+; the former Shift-JIS byte stream.
+LC053:  .byte   0x53,0x65,0x6C,0x65,0x63,0x74,0x20,0x73
+        .byte   0x61,0x76,0x65,0x20,0x73,0x6C,0x6F,0x74
+        .byte   0x20,0x28,0x31,0x2D,0x33,0x29,0x2E
+        .byte   0x00,0x00,0x00,0x00,0x00,0x00
         ld      d,d
         add     a,d
         call    z,0x4C83
@@ -7597,7 +7568,27 @@ LCA47:  ld      a,(hl)
         inc     hl
         ret
 
-LCA4F:  nop
+; Composite-VWF renderer-state reset.
+;
+; CD/script transitions own their hardware state.  This routine therefore
+; performs no port I/O and is called only when a BASIC VWF handler starts.
+; Expansion-RAM mapping is handled independently by the LB52F call gate.
+LCA4F:  push    af
+        push    hl
+        xor     a
+        ld      hl,LB400
+        ld      (hl),a
+        inc     hl
+        ld      (hl),a
+        inc     hl
+        ld      (hl),a
+        inc     hl
+        ld      (hl),a
+        ld      (0xB419),a
+        ld      (0x92DF),a
+        pop     hl
+        pop     af
+        ret
         nop
         nop
         nop
@@ -7609,27 +7600,6 @@ LCA4F:  nop
         nop
         nop
         nop
-        nop
-        nop
-        nop
-        nop
-        nop
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
-        rst     0x38
         nop
         nop
         nop

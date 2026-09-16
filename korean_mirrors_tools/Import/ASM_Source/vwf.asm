@@ -1,9 +1,6 @@
         .ORG     0x0000
 
-; Variables
-        .EQU RightMarginTable,0x0F00
 ; Global variables
-        .EQU vFontNumber,     0x92DC
         .EQU vPrintX,         0x92DD
         .EQU vRightMargin,    0x92DF
         
@@ -51,8 +48,8 @@ printMsg:
                 ; New single-bank layout (physical expansion-RAM bank 0):
                 ;   0x1000-0x15FF: printable ASCII 0x20-0x7F, 16 bytes each
                 ;   0x2000-0x4CFF: 8x4x4 Korean component glyphs
-                ; vFontNumber and the three-font margin table are no longer
-                ; used by this renderer.
+                ; No font selector is used.  ASCII and Korean composition
+                ; data are both resident in physical expansion-RAM bank 0.
 
                 ; Referenced from 126B, BF6A, BF76, BF95, C15C
 _v.prPos:       ld		A, (vPrevPrint)
@@ -94,15 +91,16 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 inc     hl
                 ld      (vStrAddr),hl
                 ld      a,e
-                ; Korean composition tokens use the safe lead table below.
-                ; This keeps BASIC control bytes and the old E0-E5 leads out
-                ; of the two-byte token namespace.
+                ; Korean composition tokens use the lead table below.  BASIC
+                ; control handling remains separate from token handling.
                 cp      0x80
                 jr      c,_singleByteSymbol
                 ld      d,a
+                push    hl
                 push    bc
                 call    isKoreanTokenLead
                 pop     bc
+                pop     hl
                 jr      c,_singleByteSymbol
                 ld      e,(hl)
                 dec     c
@@ -125,6 +123,8 @@ _nextSymbol:    ld      hl,(vStrAddr)
                 ld      (vGlyphCells),a
                 jr      _copyBuffersFixed
 _singleByteSymbol:
+                cp      0x5c
+                jp      z,_nextLine
                 cp      0x0d
                 jp      z,_nextLine
                 ld      a,0xA8
@@ -179,8 +179,11 @@ _prepareNextFixed:
                 ld      a,(v32IndepAccess)
                 out     (0x32),a
                 out     (0x5F),a
+                ld      a,(vGlyphCells)
+                ld      e,a
                 ld      a,(vCharsLeft)
-                dec     a
+                sub     e
+                jp      c,_nextLine
                 jp      z,_nextLine
                 ld      (vCharsLeft),a
                 ld      a,(vGlyphCells)
@@ -196,7 +199,7 @@ _prepareNextFixed:
 
                 ; Referenced from 11BE
 _nextLine:      ld      hl,(vStartScreenPos)
-                ld      de,(vLineBreakHeight)                  ; Line break in VRAM units
+                ld      de,0x0500                              ; 16 raster rows * 0x50 bytes
                 add     hl,de
                 ld      (vStartScreenPos),hl
                 ld      (vScreenPos),hl
@@ -218,10 +221,9 @@ _endDraw:       xor     a
 
 ; ------------------ Variables
 vCharsLeft:     .byte   0x00
-vFontAddr:      .byte   0x00
-                .byte   0x00
-vRMarginAddr:   .byte   0x00
-                .byte   0x00
+; Reserved legacy slots.  Keep four bytes to preserve the fixed layout;
+; the composite renderer does not use the former font/margin pointers.
+                .byte   0x00, 0x00, 0x00, 0x00
 vGlyphCells:    .byte   0x01
 vKInitial:      .byte   0x00
 vKMedial:       .byte   0x00
@@ -233,10 +235,11 @@ vKFinalProfile:   .byte 0x00
 ; ------------------ PATCH AREA
 
 
-; Decode the packed token payload: initial(5) | medial(5) | final(5).
-; D:E contains the two token bytes.  The three indices are kept in the
-; variables above while the 8x4x4 component cells are OR-composited into the
-; 32-byte 16x16 buffer.
+; Decode a BASIC-string-safe two-byte token.  Both bytes are selected from
+; tables that exclude BASIC/VWF control values.  Each lead selects a base-165
+; block and the trail-table position supplies the value 0-164.  The result
+; is the contiguous Unicode Hangul syllable index (AC00-D7A3), from which the
+; initial, medial, and final indices are calculated.
 isKoreanTokenLead:
                 ld      a,d
                 ld      hl,kTokenLeadTable
@@ -271,29 +274,68 @@ _decodeKoreanTokenLead:
                 djnz    _decodeKoreanTokenLead
                 jp      _koreanBlank
 _decodeKoreanTokenFound:
-                ld      a,c
-                srl     a
-                srl     a
+                ld      d,c
+                ld      a,e
+                ld      hl,kTokenTrailTable
+                ld      b,0xA5
+                ld      c,0
+_findKoreanTokenTrail:
+                cp      (hl)
+                jr      z,_decodeTrailReady
+                inc     hl
+                inc     c
+                djnz    _findKoreanTokenTrail
+                jp      _koreanBlank
+_decodeTrailReady:
+                ld      hl,0
+                ld      a,d
+                or      a
+                jr      z,_decodeLeadReady
+                ld      b,a
+                ld      de,165
+_decodeLeadLoop:
+                add     hl,de
+                djnz    _decodeLeadLoop
+_decodeLeadReady:
+                ld      e,c
+                ld      d,0
+                add     hl,de
+
+                ; Reject indices beyond the modern Hangul syllable range.
+                ld      de,11172
+                or      a
+                sbc     hl,de
+                jp      nc,_koreanBlank
+                add     hl,de
+
+                ; initial = syllable_index / 588, remainder retained in HL.
+                ld      b,0
+                ld      de,588
+_decodeInitialLoop:
+                or      a
+                sbc     hl,de
+                jr      c,_decodeInitialReady
+                inc     b
+                jr      _decodeInitialLoop
+_decodeInitialReady:
+                add     hl,de
+                ld      a,b
                 ld      (vKInitial),a
 
-                ld      a,c
-                and     0x03
-                add     a,a
-                add     a,a
-                add     a,a
-                ld      b,a
-                ld      a,e
-                and     0xe0
-                srl     a
-                srl     a
-                srl     a
-                srl     a
-                srl     a
-                or      b
+                ; medial = remainder / 28; final = remainder % 28.
+                ld      b,0
+                ld      de,28
+_decodeMedialLoop:
+                or      a
+                sbc     hl,de
+                jr      c,_decodeMedialReady
+                inc     b
+                jr      _decodeMedialLoop
+_decodeMedialReady:
+                add     hl,de
+                ld      a,b
                 ld      (vKMedial),a
-
-                ld      a,e
-                and     0x1f
+                ld      a,l
                 ld      (vKFinal),a
 
                 ld      a,(vKInitial)
@@ -484,15 +526,13 @@ _splitKoreanRows:
 
 ; Returns address to char in DE
 convertASCII_toCharAddr:
-                ; The ASCII resource contains printable cells in order:
-                ; 0x20 -> cell 0, ... 0x7F -> cell 0x5F.
+                ; ASCII uses its byte value directly as a 16-byte cell index:
+                ; address = 0x1000 + ASCII code * 16.
                 ld      a,e
                 cp      0x20
                 jr      c,_asciiBlank
                 cp      0x80
                 jr      nc,_asciiBlank
-                sub     0x20
-                ld      e,a
                 jr      _asciiIndexReady
 _asciiBlank:
                 xor     a
@@ -593,6 +633,24 @@ kTokenLeadTable:
                 .byte 0xBF,0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7,0xC8
                 .byte 0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF,0xD0,0xD1,0xD2
                 .byte 0xD3,0xD4,0xD5,0xD6,0xD7
+
+; Safe trail-byte alphabet.  It excludes 0x5C and every BASIC/VWF control
+; value that can occur inside the old string and pagination machinery.
+kTokenTrailTable:
+                .byte 0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B
+                .byte 0x4C,0x4D,0x4E,0x4F,0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57
+                .byte 0x58,0x59,0x5A,0x5B,0x5D,0x5E,0x5F,0x60,0x61,0x62,0x63,0x64
+                .byte 0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,0x70
+                .byte 0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,0x7B,0x7C
+                .byte 0x7D,0x7E,0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x8B
+                .byte 0x8F,0x90,0x91,0x92,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B
+                .byte 0x9D,0x9E,0xA0,0xA1,0xA2,0xA3,0xA5,0xAA,0xAB,0xAC,0xAD,0xAE
+                .byte 0xAF,0xB0,0xB1,0xB2,0xB3,0xB4,0xB5,0xB6,0xB7,0xB8,0xB9,0xBA
+                .byte 0xBB,0xBC,0xBD,0xBE,0xBF,0xC0,0xC1,0xC2,0xC3,0xC4,0xC5,0xC6
+                .byte 0xC7,0xC8,0xC9,0xCA,0xCB,0xCC,0xCD,0xCE,0xCF,0xD0,0xD1,0xD2
+                .byte 0xD3,0xD4,0xD5,0xD6,0xD7,0xD8,0xD9,0xDA,0xDB,0xDC,0xDE,0xDF
+                .byte 0xE6,0xE7,0xE8,0xE9,0xEA,0xEB,0xED,0xEE,0xEF,0xF0,0xF2,0xF3
+                .byte 0xF4,0xF5,0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC
 
 ; 8x4x4 profile lookup tables from the reference composition source.
 kInitialProfileNoFinal:

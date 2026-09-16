@@ -30,6 +30,6 @@ whole `python_tools` folder can be moved together without changing its path.
 For non-GUI verification or batch conversion:
 
 ```powershell
-python python_tools/nam_3plane_editor.py --split GFX/NAM1.png --output Temp/NAM1_planes
-python python_tools/nam_3plane_editor.py --merge Temp/NAM1_planes/NAM1_plane0_1bpp.png Temp/NAM1_planes/NAM1_plane1_1bpp.png Temp/NAM1_planes/NAM1_plane2_1bpp.png --output Temp/NAM1_merged.png
+python python_tools/nam_3plane_editor.py --split GFX/NAM1.png --output ../Temp/NAM1_planes
+python python_tools/nam_3plane_editor.py --merge ../Temp/NAM1_planes/NAM1_plane0_1bpp.png ../Temp/NAM1_planes/NAM1_plane1_1bpp.png ../Temp/NAM1_planes/NAM1_plane2_1bpp.png --output ../Temp/NAM1_merged.png
 ```

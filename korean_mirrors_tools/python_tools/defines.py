@@ -3,7 +3,7 @@ from pathlib import Path
 
 class Paths:
     MAIN_PATH = Path(__file__).resolve().parent.parent
-    TEMP_PATH = MAIN_PATH / "Temp"
+    TEMP_PATH = MAIN_PATH.parent / "Temp"
     GFX_PATH = MAIN_PATH / "GFX"
     DATA_PATH = MAIN_PATH / "Data"
     EXPORT_PATH = MAIN_PATH / "Export"
