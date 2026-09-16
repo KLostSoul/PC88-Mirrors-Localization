@@ -48,6 +48,8 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 16×16 한글 조합 글리프 정식 빌드가 완료됐다. 시험판의 출력 기준과 조합 글리프 구성을 정식 전체 빌드에 반영했으며, 메뉴·NO0·NO1 시험과 ISO·CloneCD 정적 검증까지 완료했다.
 
+최근 `END`를 포함한 정식 전체 재빌드도 성공했다. 생성된 `02 MIRR.iso`는 40,550,400바이트이며, 컴파일 산출물에 구형 선택 UI 패턴(`&HF0D2`, `&H20`, `*13`)이 남아 있지 않다. 정식 빌드에서 사용하지 않는 구형 보조 코드 `fontgen.py`와 `imgdecode.py`도 제거했다.
+
 #### 입력 자료
 
 - 빌더: [`korean_mirrors_tools/python_tools/main.py`](korean_mirrors_tools/python_tools/main.py)

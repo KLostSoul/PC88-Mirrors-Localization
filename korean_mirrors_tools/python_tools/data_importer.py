@@ -321,7 +321,16 @@ class DataImporter:
             if self.enableTranslation and sc["script"] == "NO0":
                 self.basic_applyVWFHandler(basicPatch, sc, 9000)
                 self.basic_applyVWFHandler_Opening(basicPatch, sc)
-            elif self.enableTranslation and sc["commonPatch"] == "true":
+            elif (
+                self.enableTranslation
+                and (
+                    sc["commonPatch"] == "true"
+                    # END has the standard dialogue/choice routines but is
+                    # marked as a terminal script, so it does not carry the
+                    # commonPatch flag in e_scripts.csv.
+                    or sc["script"] == "END"
+                )
+            ):
                 self.basic_applyVWFHandler(basicPatch, sc)
 
             if sc["allowSave"] == "true":
