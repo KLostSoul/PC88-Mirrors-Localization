@@ -44,9 +44,47 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 대조 시 `i_disks.csv` 매핑, 스크립트 순서, 줄 번호·문자열 번호 이동, `−`·`－` 차이와 원문 추출 과정의 `:GOSUB 5100` 꼬리를 함께 처리한다. 기존의 모호한 `english_only` 표기는 사용하지 않고 패치 중복 행은 `patch_duplicate`로 기록한다.
 
-### 현재 정식 빌드
+### 현재 정식 빌드 구성
 
-16×16 한글 조합 글리프 정식 빌드가 완료됐으며, 메뉴·NO0·NO1 시험과 ISO·CloneCD 정적 검증까지 마쳤다. 조합 규칙과 전체 검증 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 자료는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
+16×16 한글 조합 글리프 정식 빌드가 완료됐다. 시험판의 출력 기준과 조합 글리프 구성을 정식 전체 빌드에 반영했으며, 메뉴·NO0·NO1 시험과 ISO·CloneCD 정적 검증까지 완료했다.
+
+#### 입력 자료
+
+- 빌더: [`korean_mirrors_tools/python_tools/main.py`](korean_mirrors_tools/python_tools/main.py)
+- 번역: `korean_mirrors_tools/Import/Strings/stringsImportK.csv`
+- 토큰: `korean_mirrors_tools/Data/korean_token_table.csv`의 실제 번역 음절 1,093개
+- 조합 원본: [`Composite_16x16`](Composite_16x16/README.md)의 `han_dkby.fnt`와 ASCII 8×16 템플릿
+- 출력 코드: `korean_mirrors_tools/Import/ASM_Source/vwf.asm`, `asmbasic.asm`, `asmmain.asm`
+
+#### 토큰과 조합 방식
+
+- 한글은 2바이트 안전 토큰으로 저장하며, CSV의 실제 토큰 쌍을 단일 기준으로 사용한다.
+- 런타임은 안전한 선두 바이트 75개와 후행 바이트 165개를 역변환해 유니코드 한글 음절 인덱스를 계산한다.
+- 계산한 음절 인덱스를 초성 19·중성 21·종성 28로 분해하고, 8×4×4 벌 선택 규칙으로 컴포넌트 세 개를 16×16 버퍼에 OR 조합한다.
+- 1,093개 완성 음절 RAW를 적재하지 않는다. 번역문에 실제로 쓰이는 1,093개는 토큰표에만 있고, 글리프는 런타임 조합으로 생성된다.
+
+#### 확장 RAM과 CD 배치
+
+- 물리 확장 RAM bank 0 하나만 사용한다. `vFontNumber`, 기존 영문 3종 폰트 선택, bank 1 전환은 정식 조합 글리프 경로에서 사용하지 않는다.
+- RAM `0x0000`부터 VWF 코드, `0x1000`부터 ASCII 8×16 슬롯 표, `0x2000~0x4CFF`에 8×4×4 한글 컴포넌트를 둔다.
+- ASCII 원본은 0x1000바이트, 한글 컴포넌트 원본은 0x2D00바이트이며 0x6000바이트로 0 패딩한 뒤 0x2000바이트씩 세 청크로 나눈다.
+- CD Track 2 배치는 VWF `0x10000`, ASCII `0x11000`, 컴포넌트 청크 `0x12000`, `0x14000`, `0x16000`이다.
+
+#### 출력 경로
+
+- ASCII는 8×16 셀·8픽셀 전진으로 출력한다.
+- 한글은 컴포넌트 세 개를 32바이트 버퍼에 조합하고 16×16으로 출력하며 16픽셀 전진한다.
+- 두 문자 경로 모두 기존 VWF의 16행 화면 출력 루틴을 사용한다. 줄바꿈과 BASIC 제어 바이트는 한글 토큰 소비와 분리한다.
+
+#### 정식 빌드 순서와 검증
+
+1. 조합 ASCII·컴포넌트 RAW를 생성하고 크기를 검사한다.
+2. 영문 패치 BASIC에 `stringsImportK.csv`를 문자열 위치 기준으로 연결한다.
+3. 반복 대사 19개 행의 출력 폭을 40셀로 적용한다.
+4. 전체 BASIC·ASM·디스크 데이터를 컴파일해 ISO를 생성한다.
+5. 시험판과 `Import/Files`·`Import/Floppy`를 해시 대조하고, CloneCD Track 2 19,800개 섹터의 EDC/ECC와 페이로드를 검증한다.
+
+세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기·편집기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 
 ## 문서
 
