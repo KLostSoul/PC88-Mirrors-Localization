@@ -2,6 +2,10 @@
 
 이 작업판은 임의로 그린 글리프가 아니라 다음 기존 완성 자료를 입력으로 사용한다.
 
+원본 GitHub 저장소:
+
+- [iolo/8x4x4-fonts](https://github.com/iolo/8x4x4-fonts)
+
 `source/han_dkby.fnt`
 
 이 FNT는 16×16 셀 360개로 구성된다.
