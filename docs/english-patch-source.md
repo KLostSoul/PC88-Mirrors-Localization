@@ -23,5 +23,3 @@
 ## 재배포 조건
 
 배포본의 `reference/Mirrors_ENG_translation_v1.0/readme.txt` 6절(Disclaimer)에 따르면, 해당 번역은 금전적 대가를 받지 않는 조건에서 `readme.txt`를 함께 포함하면 자유롭게 재배포할 수 있다. 이 조건을 유지하기 위해 원본 `readme.txt`를 패키지에 포함해 보존한다.
-
-이 기록은 영문 패치 자료의 출처를 명확히 하기 위한 것이며, 원본 게임 CD 이미지와 별도 보관 중인 `reference/Original/` 자료의 재배포를 의미하지 않는다.
