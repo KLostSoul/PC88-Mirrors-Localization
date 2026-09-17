@@ -6,6 +6,15 @@
 
 - [iolo/8x4x4-fonts](https://github.com/iolo/8x4x4-fonts)
 
+라이선스 파일:
+
+- [LICENSE-OFL.txt](LICENSE-OFL.txt): 원본 폰트와 파생 글리프
+- [LICENSE-MIT.txt](LICENSE-MIT.txt): 원본 저장소의 생성·변환 소스 고지
+- [../LICENSE-MIT-PROJECT.txt](../LICENSE-MIT-PROJECT.txt): 이 저장소에서 새로 작성한 생성·검증 코드
+
+이 라이선스 고지는 PC-8801 게임 원본, 영문 패치 소스, 한국어 번역문,
+게임 이미지 또는 이 저장소의 다른 외부 자료에 적용되지 않는다.
+
 `source/han_dkby.fnt`
 
 이 FNT는 16×16 셀 360개로 구성된다.

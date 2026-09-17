@@ -5,6 +5,7 @@
 ## 현재 구현의 기준
 
 - [한글 조합 글리프 빌드 설계](korean-localization-design.md) — 현재 정식 빌드의 입력, 토큰, bank 0 배치, VWF, BASIC/CD 검증 기준
+- [한글 조합 글리프 VWF 분석](korean-composite-vwf-analysis.md) — 현재 VWF의 토큰 해석, 8×4×4 조합, bank 0/CD 배치, 출력·호출 경계와 Python 바이트 계약
 - [`Composite_16x16/README.md`](../Composite_16x16/README.md) — 16×16 조합 글리프 원본, 생성기, 편집기, 참고 출처
 
 ## 영문 패치와 원본 구조 분석

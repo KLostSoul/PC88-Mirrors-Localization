@@ -101,6 +101,13 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - [원본 CD 이미지 분석](docs/original-cd-image-analysis.md)
 - [영문 패치 출처](docs/english-patch-source.md)
 
+## 라이선스
+
+- 이 프로젝트에서 새로 작성한 생성기·토큰 도구·편집기 등 프로젝트 자체 소스는 [LICENSE-MIT-PROJECT.txt](LICENSE-MIT-PROJECT.txt)에 따라 MIT 라이선스로 배포한다.
+- Composite_16x16에 포함된 원본 폰트와 그 파생 글리프는 해당 폴더의 [LICENSE-OFL.txt](Composite_16x16/LICENSE-OFL.txt)에 따른다.
+- Composite_16x16에 보관된 원본 생성·변환 소스의 upstream MIT 고지는 [LICENSE-MIT.txt](Composite_16x16/LICENSE-MIT.txt)에 보관한다.
+- Nebulous Group 영문 패치, 원본 게임·이미지·추출물 및 기타 외부 자료는 이 프로젝트의 MIT 라이선스 범위에 포함하지 않는다.
+
 ## 데이터 및 Git 정책
 
 원본 게임 이미지와 원본에서 추출한 Track 2·플로피 RAW는 저장소에 포함하지 않는다. 영문 패치 공개 소스, 한국어 작업 소스, 토큰표, 글리프 원본, 분석문서는 Git에 기록한다. 생성 이미지와 임시 산출물은 `.gitignore` 정책에 따라 제외한다.
