@@ -1,36 +1,147 @@
-# Python tools
+# Python 빌드 도구
 
-현재 정식 빌드 진입점은 [`main.py`](main.py)다. 이 디렉터리의 Python 모듈은 BASIC·ASM·그래픽·플로피·ISO 생성에 사용되며, 조합 글리프 원본은 상위 [`Composite_16x16`](../../Composite_16x16/README.md)에서 읽는다. NAM 편집기(`nam_3plane_editor.py`, `NAM_3Plane_Editor.bat`)는 저장소 상위 `Editor/`로 이동했으며 로컬 편집 도구이므로 Git에서 제외한다. 앞으로 추가하는 모든 에디터도 `Editor/`에 저장한다.
+이 디렉터리는 `korean_mirrors_tools`의 정식 한글 조합 글리프 빌드를 수행하는
+Python 모듈을 담고 있다. 별도의 임시 빌더가 아니라 현재 정식 빌드에서 사용하는
+실제 처리 코드다.
 
-This directory contains manually written Python counterparts for every Ruby
-tool in reference/mirrors_tools/Ruby.
+## 실행
 
-The port preserves the Ruby source's file order, branch order, byte order,
-Shift-JIS handling, and output layout. It does not start an emulator.
-
-## NAM 3-plane editor
-
-`nam_3plane_editor.py` edits the six `NAM*.png` graphics without changing the
-game's 3-plane storage rule. It splits one indexed NAM PNG into Plane 0, 1,
-and 2 1bpp PNGs, lets the user edit them, and merges the three bit values back
-into one indexed PNG for the existing image importer.
-
-The editor supports undo (`Ctrl+Z`), redo (`Ctrl+Y` or `Ctrl+Shift+Z`), and a
-full reset to the state that was loaded into the editor. One mouse drag is one
-undoable edit.
-
-Run the GUI from the repository root:
+저장소 루트(`G:\PC88-Mirror`)에서 다음 명령으로 전체 빌드를 실행한다.
 
 ```powershell
-python Editor/nam_3plane_editor.py
+python -m korean_mirrors_tools.python_tools
 ```
 
-On Windows, double-click `Editor/NAM_3Plane_Editor.bat` to start the editor.
-The batch file finds `nam_3plane_editor.py` in its own folder.
+`main.py`는 현재 `import` 모드로 실행되며 다음 작업을 순서대로 수행한다.
 
-For non-GUI verification or batch conversion:
+1. 번역 입력에 포함된 한글 음절을 수집해 `Data/korean_token_table.csv`를 가나다순으로 재생성한다.
+2. `Composite_16x16/source/`의 ASCII 템플릿과 도깨비 조합 글리프 원본을 빌드 입력용 RAW 데이터로 분할한다.
+3. 그래픽을 PC-88 형식으로 변환한다.
+4. ASM을 컴파일하고 하드코딩 문구를 고정 슬롯에 반영한다.
+5. `intro`, `menu`, 전체 NO 스크립트를 번역·컴파일한다.
+6. 플로피 파일과 2HD 디스크 데이터를 갱신한다.
+7. 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
+
+CloneCD의 `.ccd/.img/.sub` 패키징은 이 Python 모듈의 역할이 아니며, 생성된 ISO를
+별도의 CloneCD 패키징 단계에서 사용한다.
+
+## 입력과 출력
+
+주요 입력은 다음과 같다.
+
+| 경로 | 용도 |
+| --- | --- |
+| `Import/Strings/stringsImportK.csv` | 일본어 원문과 한국어 번역 입력 |
+| `Data/hardcoded_strings.csv` | BASIC 외부에 직접 저장되는 문구 |
+| `Data/patchBasic.csv` | BASIC 행별 패치 |
+| `Data/e_scripts.csv` | 스크립트·디스크·분할 정보 |
+| `Data/i_cddata.csv` | CD 데이터 트랙 배치 정보 |
+| `Data/i_disks.csv` | 플로피와 2HD 디스크 구성 |
+| `Data/i_gfx.csv` | 그래픽 입력·주소·디스크 배치 정보 |
+| `Import/BASIC/` | 컴파일할 BASIC 원본 |
+| `Import/ASM_Source/` | 컴파일할 ASM 원본 |
+| `Composite_16x16/source/` | 8×16 ASCII 템플릿과 16×16 한글 조합 글리프 원본 |
+
+주요 생성물은 다음과 같다.
+
+| 경로 | 용도 |
+| --- | --- |
+| `Data/korean_token_table.csv` | 현재 번역문에 필요한 한글 음절의 토큰·조합 정보 |
+| `Import/Data/composite_ascii.raw` | 256슬롯 ASCII 8×16 글리프 데이터 |
+| `Import/Data/composite_components_0.raw` | 한글 조합 컴포넌트 청크 0 |
+| `Import/Data/composite_components_1.raw` | 한글 조합 컴포넌트 청크 1 |
+| `Import/Data/composite_components_2.raw` | 한글 조합 컴포넌트 청크 2 |
+| `Import/Files/` | 디스크에 삽입할 BASIC·그래픽 파일 |
+| `Import/ASM/` | 컴파일된 ASM RAW와 목록 파일 |
+| `Import/ISO/02 MIRR.iso` | 최종 패치 CD 데이터 트랙 |
+
+## 모듈 설명
+
+### `main.py` / `__main__.py`
+
+전체 빌드의 진입점과 실행 순서를 관리한다. 조합 글리프 원본을 검증하고
+`Import/Data/`에 ASCII RAW와 3개 컴포넌트 청크를 만든다. 메뉴·인트로의 현재
+BASIC 문자열을 번역 입력과 연결하고, 반복 대사와 하드코딩 문구에 필요한 정식
+패치를 적용한다.
+
+### `generate_korean_token_table.py`
+
+`stringsImportK.csv`, `hardcoded_strings.csv`, `patchBasic.csv`에서 실제로 사용되는
+한글 음절을 수집한다. 음절을 가나다순으로 정렬하고, 각 음절의 유니코드 조합값과
+안전한 2바이트 조합 토큰을 계산해 `Data/korean_token_table.csv`에 기록한다.
+새 번역 음절이 추가되면 전체 빌드 시작 시 토큰표도 다시 생성된다.
+
+### `basic_compiler.py`
+
+N88-BASIC 텍스트를 게임이 읽는 바이트 스트림으로 컴파일한다.
+
+- 한국어 2바이트 조합 토큰과 ASCII를 구분해 인코딩한다.
+- 한글은 16픽셀, ASCII는 8픽셀 기준으로 출력 폭을 계산한다.
+- 줄바꿈, `LineLimit`, BASIC 제어어·수치·문자열을 처리한다.
+- 문자열 안의 따옴표와 역슬래시를 BASIC 스트림 규칙에 맞게 변환한다.
+- `splitPoints`가 지정된 스크립트는 0x3000 제한에 맞춰 두 파일로 컴파일한다.
+- 토큰표와 폭표의 불일치, 지원하지 않는 문자를 오류로 처리한다.
+
+### `basic_decompiler.py`
+
+PC-88 BASIC 바이너리를 BASIC 소스와 문자열 위치 정보로 역변환한다. 원본 CD에서
+스크립트를 추출하거나 컴파일 결과를 바이트 단위로 확인할 때 사용한다.
+
+### `data_importer.py`
+
+정식 패치의 핵심 처리 모듈이다. BASIC 번역, ASM 컴파일, 그래픽 교체, 플로피
+파일 갱신, 2HD 디스크 패킹, CD 데이터 트랙 반영을 수행한다. `main.py`가 만든
+토큰표·RAW 데이터와 `Data/`의 배치표를 사용한다.
+
+### `data_exporter.py`
+
+원본 CD 데이터 트랙에서 BASIC·ASM·그래픽·플로피 데이터를 추출한다. 추출한
+BASIC은 `basic_decompiler.py`로 소스화하고, 문자열 위치를 번역 입력 작성에
+사용할 수 있는 형식으로 내보낸다.
+
+### `floppy.py`
+
+PC-88 플로피 RAW/D88 구조를 읽고 파일을 교체·추가한다. 수정된 BASIC과 그래픽을
+디스크 이미지에 다시 배치하고, 최종 2HD 데이터로 패킹한다.
+
+### `img_encoder.py`
+
+PNG 그래픽을 PC-88의 압축된 그래픽 데이터로 변환한다. 단색 1-plane과 일반
+3-plane 그래픽을 모두 지원하며 `Data/i_gfx.csv`의 주소와 디스크 정보를 사용한다.
+
+### `file_streamer.py`
+
+바이트·워드·롱 값의 읽기와 메모리 스트림 처리를 제공하는 공통 저수준 도구다.
+CD, BASIC, ASM, 플로피 처리 모듈에서 공유한다.
+
+### `defines.py` / `util.py`
+
+프로젝트 경로, CD·디스크 크기, BASIC 상수와 바이트 변환·CSV 로딩·JIS/Shift-JIS
+관련 공통 함수를 정의한다.
+
+## 조합 글리프 처리 기준
+
+한글 완성 음절 RAW를 개별적으로 확장 RAM에 적재하지 않는다. 빌드 시 생성된
+토큰표를 BASIC 문자열에 적용하고, 실행 시 조합 VWF가 토큰에서 초성·중성·종성
+조합값을 얻어 `Composite_16x16/source/han_dkby.fnt`의 컴포넌트를 조합한다.
+
+- 한글 글리프: 16×16, 전진 폭 16픽셀
+- ASCII 글리프: 8×16, 전진 폭 8픽셀
+- ASCII 원본: `ascii_8x16_template.fnt`
+- 한글 원본: `han_dkby.fnt`
+- 토큰표: `Data/korean_token_table.csv`
+- 물리 확장 RAM: bank 0 구성
+
+## 관련 도구
+
+그래픽·스크립트 편집기는 이 디렉터리에 두지 않는다. 편집기와 실행 배치 파일은
+저장소 상위 `Editor/`에서 관리하며, `Editor/`는 Git 제외 대상이다.
+
+Python 의존성은 다음으로 설치한다.
 
 ```powershell
-python Editor/nam_3plane_editor.py --split korean_mirrors_tools/GFX/NAM1.png --output Temp/NAM1_planes
-python Editor/nam_3plane_editor.py --merge Temp/NAM1_planes/NAM1_plane0_1bpp.png Temp/NAM1_planes/NAM1_plane1_1bpp.png Temp/NAM1_planes/NAM1_plane2_1bpp.png --output Temp/NAM1_merged.png
+python -m pip install -r korean_mirrors_tools/python_tools/requirements.txt
 ```
+
+전체 설계와 검증 기준은 [`../../docs/korean-localization-design.md`](../../docs/korean-localization-design.md)를
+참조한다.

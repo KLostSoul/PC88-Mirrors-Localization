@@ -38,12 +38,12 @@ korean_mirrors_tools/Import/ISO/
 korean_mirrors_tools/Import/Floppy/
 korean_mirrors_tools/Import/Files/
 korean_mirrors_tools/Import/ASM/
-korean_mirrors_tools/Import/Data/
 korean_mirrors_tools/Export/ISO/*.iso
 korean_mirrors_tools/Export/Floppy/
-korean_mirrors_tools/Export/ASM/
-korean_mirrors_tools/Export/BASIC/
-korean_mirrors_tools/Export/Data/
+
+# Public Korean source snapshots, matching reference/mirrors_tools.
+# Export/ASM, Export/BASIC, Export/Data, and Import/Data are intentionally
+# trackable because they document and reproduce the active build structure.
 korean_mirrors_tools/python_tools/__pycache__/
 korean_mirrors_tools/GFX/Composite_8x16/
 korean_mirrors_tools/python_tools/korean_component_editor.py
