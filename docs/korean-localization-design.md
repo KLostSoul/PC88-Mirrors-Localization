@@ -268,4 +268,4 @@ Git에서 제외하는 것:
 - ISO·IMG·CCD·SUB 등 빌드 산출물
 - 에뮬레이터 로그와 임시 시험 결과
 
-저장소만 clone한 환경에서 빌드하려면 사용자가 보유한 원본 CD에서 필요한 Track 2와 플로피 입력을 먼저 준비해야 한다. 정식 빌드 소스는 `korean_mirrors_tools`이며, legacy Python 포트는 `reference/python_mirrors_tools`에 보관된 참고 자료다.
+저장소를 복제한 뒤 빌드하려면 사용자가 보유한 원본 CD에서 필요한 Track 2와 플로피 입력을 먼저 준비해야 한다. 정식 빌드 소스는 `korean_mirrors_tools`이며, legacy Python 포트는 `reference/python_mirrors_tools`에 보관된 참고 자료다.
