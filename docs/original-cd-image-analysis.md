@@ -1,6 +1,6 @@
 # Mirrors PC-8801 MC 원본 CD 이미지 분석
 
-분석 대상은 reference/Original/Mirrors.img와 같은 세트의 .ccd, .cue, .sub, D88 이미지다. 이 문서는 raw 파일·Track 2 논리 데이터·내장 플로피·D88을 정적으로 비교한 결과다.
+분석 대상은 원본 Mirrors와 같은 세트의 .ccd, .cue, .sub, D88 이미지다. 이 문서는 raw 파일·Track 2 논리 데이터·내장 플로피·D88을 정적으로 비교한 결과다.
 
 ## 1. 분석 대상과 식별값
 
