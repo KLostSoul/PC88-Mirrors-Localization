@@ -76,7 +76,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 4. 전체 BASIC·ASM·디스크 데이터를 컴파일해 ISO를 생성한다.
 5. Track 2와 CloneCD 데이터를 검증한다.
 
-세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기·편집기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
+세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 
 ## 문서
 
@@ -90,7 +90,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 
 ## 라이선스
 
-- 이 프로젝트에서 새로 작성한 생성기·토큰 도구·편집기 등 프로젝트 자체 소스는 [LICENSE-MIT-PROJECT.txt](LICENSE-MIT-PROJECT.txt)에 따라 MIT 라이선스로 배포한다.
+- 이 프로젝트에서 새로 작성한 생성기·토큰 도구 등 프로젝트 자체 소스는 [LICENSE-MIT-PROJECT.txt](LICENSE-MIT-PROJECT.txt)에 따라 MIT 라이선스로 배포한다.
 - Composite_16x16에 포함된 원본 폰트와 그 파생 글리프는 해당 폴더의 [LICENSE-OFL.txt](Composite_16x16/LICENSE-OFL.txt)에 따른다.
 - Composite_16x16에 보관된 원본 생성·변환 소스의 upstream MIT 고지는 [LICENSE-MIT.txt](Composite_16x16/LICENSE-MIT.txt)에 보관한다.
 
