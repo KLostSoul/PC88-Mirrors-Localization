@@ -249,7 +249,6 @@ korean_mirrors_tools/output/Mirrors_Korean_Mirrors_Tools_Full_Build.sub
 - [문자열 바이트 용량 재계산](string-byte-capacity-analysis.md): 원문·영문 문자열의 용량 비교
 - [원본 CD 이미지 분석](original-cd-image-analysis.md): 원본 Track 2·플로피 물리 구조
 - [영문 패치 출처](english-patch-source.md): 영문 패치의 출처와 재배포 조건
-- [한글 번역 검수 예외](korean-proofreading-confirmed-exceptions.md): 사용자가 정상으로 확정한 예외 행 기록
 - [`Composite_16x16/README.md`](../Composite_16x16/README.md): 조합 글리프 원본·생성기·편집기
 
 세부 영문 분석 문서의 `vFontNumber`, 3종 폰트, 영문 8×16 슬롯 설명은 영문 패치의 과거 기준선을 설명하는 자료다. 현재 한글 정식 빌드의 구현 규칙으로 읽지 않는다.

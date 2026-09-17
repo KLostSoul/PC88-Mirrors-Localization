@@ -6,7 +6,6 @@
 
 - [한글 조합 글리프 빌드 설계](korean-localization-design.md) — 현재 정식 빌드의 입력, 토큰, bank 0 배치, VWF, BASIC/CD 검증 기준
 - [`Composite_16x16/README.md`](../Composite_16x16/README.md) — 16×16 조합 글리프 원본, 생성기, 편집기, 참고 출처
-- [한글 번역 검수 예외](korean-proofreading-confirmed-exceptions.md) — 사용자가 정상으로 확정한 번역·표기 예외
 
 ## 영문 패치와 원본 구조 분석
 
