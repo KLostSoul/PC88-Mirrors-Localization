@@ -1,5 +1,7 @@
 # PC88 Mirrors Localization
 
+![Mirrors](images/mirrors.PNG)
+
 PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Nebulous Group 영문 패치 소스와 검증된 영문 패치 구조를 기반으로, 원본 게임의 CD Track 2·2HD 배치와 기존 VWF 출력 경로를 최대한 유지하면서 한글 글리프와 한글 문자 토큰을 적용하는 것을 목표로 한다.
 
 영문 패치 출처:
@@ -13,9 +15,6 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - 초성·중성·종성 조합 글리프와 토큰표를 확정하고 전체 번역문에 적용
 - 원본 이미지와 생성 이미지의 저작권·용량 문제를 분리하고, 재현 가능한 소스와 분석 결과를 Git에 기록
 
-## 스크린샷
-
-![Mirrors](images/mirrors.PNG)
 
 ## 현재 진행사항
 
