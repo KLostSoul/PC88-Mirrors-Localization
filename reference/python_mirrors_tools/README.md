@@ -24,7 +24,7 @@ ImgDecoder.rb                       → imgdecode.py
 Util.rb                             → util.py
 ```
 
-Python 포트는 Ruby 소스의 파일 순서, 분기 순서, 바이트 순서, Shift-JIS 처리, 출력 배치를 대응 대상으로 삼는다. 따라서 이 폴더의 README는 정식 한글 빌드 설명이 아니라 영문 패치 Ruby 포트의 구조 설명이다.
+Python 포트는 Ruby 소스의 파일 순서, 분기 순서, 바이트 순서, Shift-JIS 처리, 출력 배치를 대응 대상으로 삼는다.
 
 ## 실행
 
