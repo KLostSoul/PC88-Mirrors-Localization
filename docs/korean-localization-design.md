@@ -2,7 +2,7 @@
 
 이 문서는 현재 저장소의 정식 한글 빌드가 무엇을 입력으로 사용하고, 어떤 토큰·글리프·메모리·CD 배치·출력 경로로 동작하는지 기록하는 기준 문서다. 현재 구현과 충돌하는 초기 시험 설계는 마지막의 역사 기록으로 분리했다.
 
-문서의 적용 범위는 `korean_mirrors_tools` 정식 빌드다. 영문 패치의 원래 구조와 Ruby 기준 구현은 [영문 소스 구조 맵](english-source-structure-map.md)과 [영문 VWF·문자열·스크립트 실측 분석](english-vwf-script-capacity-analysis.md)을 참조한다.
+문서의 적용 범위는 `korean_mirrors_tools` 정식 빌드다. 영문 패치의 원래 구조와 Ruby 기준 구현은 [영문 소스 구조 맵](english-source-structure-map.md)을 참조한다.
 
 ## 1. 현재 상태와 기준
 
@@ -29,7 +29,7 @@
 | 메인 패치 | `korean_mirrors_tools/Import/ASM_Source/asmmain.asm` | 패치 명령과 런타임 연결 |
 | CD 배치표 | `korean_mirrors_tools/Data/i_cddata.csv` | ASM·RAW의 Track 2 위치와 크기 |
 
-`stringsImportK.csv`가 번역 입력의 단일 기준이다. 영문 패치에서 줄 번호·문자열 위치가 달라진 메뉴·인트로는 현재 `Import/BASIC/*.bas`에 실제로 존재하는 영문 리터럴과 BASIC 행·문자열 위치를 함께 사용해 연결한다. 별도의 `stringsJapaneseEnglish.csv`를 빌드 입력으로 사용하지 않으며, BASIC 행 번호만으로 문자열을 선택하지 않는다.
+`stringsImportK.csv`가 번역 입력의 단일 기준이다. 영문 패치에서 줄 번호·문자열 위치가 달라진 메뉴·인트로는 현재 `Import/BASIC/*.bas`에 실제로 존재하는 영문 리터럴과 BASIC 행·문자열 위치를 함께 사용해 연결한다. BASIC 행 번호만으로 문자열을 선택하지 않는다.
 
 CSV 번역표를 거치지 않고 직접 삽입되는 오프닝·저장·CD 전환·출력 마커 7개와 ASM이 VWF에 직접 보내는 저장 슬롯 안내문 1개, 메뉴 BASIC의 직접 출력 문구 14개를 `hardcoded_strings.csv`로 관리한다. 빌더와 로컬 스크립트 편집기가 이 파일을 함께 사용하므로 문구 수정이 실제 컴파일 용량 검사와 정식 빌드에 동일하게 반영된다. ASM 안내문은 기존 29바이트 고정 슬롯 안에서만 변경할 수 있으며, 초과하거나 토큰표에 없는 문자를 사용하면 빌드를 중단한다.
 
@@ -246,7 +246,6 @@ korean_mirrors_tools/output/Mirrors_Korean_Mirrors_Tools_Full_Build.sub
 - [문서 목차](README.md): 현재 기준 문서와 분석 문서의 관계
 - [영문 패치 소스 구조 맵](english-source-structure-map.md): 영문 Ruby 기준선과 CD·BASIC·ASM 구조
 - [영문 VWF·문자열·스크립트 실측 분석](english-vwf-script-capacity-analysis.md): 영문판 용량·VWF·스크립트 실측
-- [문자열 바이트 용량 재계산](string-byte-capacity-analysis.md): 원문·영문 문자열의 용량 비교
 - [원본 CD 이미지 분석](original-cd-image-analysis.md): 원본 Track 2·플로피 물리 구조
 - [영문 패치 출처](english-patch-source.md): 영문 패치의 출처와 재배포 조건
 - [`Composite_16x16/README.md`](../Composite_16x16/README.md): 조합 글리프 원본·생성기·편집기

@@ -32,24 +32,9 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - Ruby 2.7.4 기준 영문 빌드 결과를 Python 결과와 파일·바이트 단위로 대조했다.
 - 영문 소스에 포함된 BASIC·ASM·CSV·GFX·Tools·Ghidra 자료는 참조와 재현을 위해 저장소에 보관한다.
 
-### 문자열 대조
-
-전체 원문·영문 패치 대조표는 [`stringsJapaneseEnglish.csv`](korean_mirrors_tools/Export/Strings/stringsJapaneseEnglish.csv)에 기록되어 있다.
-
-- 원문 추출표: 9,720행
-- 영문 패치 입력표: 5,282행
-- 정상 대응: 5,278행
-- 번역 포함 대응: 4,979행
-- 번역 공란 대응: 299행
-- 패치 쪽 중복: 4행
-- 원문에만 존재하는 비패치 문자열: 4,442행
-- 대응되지 않은 패치 행: 0행
-
-대조 시 `i_disks.csv` 매핑, 스크립트 순서, 줄 번호·문자열 번호 이동, `−`·`－` 차이와 원문 추출 과정의 `:GOSUB 5100` 꼬리를 함께 처리한다. 기존의 모호한 `english_only` 표기는 사용하지 않고 패치 중복 행은 `patch_duplicate`로 기록한다.
-
 ### 현재 정식 빌드 구성
 
-16×16 한글 조합 글리프 정식 빌드가 완료됐다. 시험판의 출력 기준과 조합 글리프 구성을 정식 전체 빌드에 반영했으며, 메뉴·NO0·NO1 시험과 ISO·CloneCD 정적 검증까지 완료했다.
+16×16 한글 조합 글리프 정식 전체 빌드와 ISO·CloneCD 정적 검증을 완료했다.
 
 최근 `END`를 포함한 정식 전체 재빌드도 성공했다. 생성된 `02 MIRR.iso`는 40,550,400바이트이며, 컴파일 산출물에 구형 선택 UI 패턴(`&HF0D2`, `&H20`, `*13`)이 남아 있지 않다. 정식 빌드에서 사용하지 않는 구형 보조 코드 `fontgen.py`와 `imgdecode.py`도 제거했다.
 
@@ -61,7 +46,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - 토큰: `korean_mirrors_tools/Data/korean_token_table.csv`의 실제 빌드 입력 음절 전체
 - 조합 원본: [`Composite_16x16`](Composite_16x16/README.md)의 `han_dkby.fnt`와 ASCII 8×16 템플릿
 - 출력 코드: `korean_mirrors_tools/Import/ASM_Source/vwf.asm`, `asmbasic.asm`, `asmmain.asm`
-- GFX 입력: `Data/i_gfx.csv`에 등록된 교체 그래픽만 유지하며, 구형 8×16 폰트·`Composite_8x16` 시험 자료는 제거했다.
+- GFX 입력: `Data/i_gfx.csv`
 
 #### 토큰과 조합 방식
 
@@ -89,7 +74,7 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 2. 영문 패치 BASIC에 `stringsImportK.csv`를 문자열 위치 기준으로 연결한다.
 3. 반복 대사 19개 행의 출력 폭을 40셀로 적용한다.
 4. 전체 BASIC·ASM·디스크 데이터를 컴파일해 ISO를 생성한다.
-5. 시험판과 `Import/Files`·`Import/Floppy`를 해시 대조하고, CloneCD Track 2 19,800개 섹터의 EDC/ECC와 페이로드를 검증한다.
+5. Track 2와 CloneCD 데이터를 검증한다.
 
 세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기·편집기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 
@@ -100,7 +85,6 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - [영문 소스 구조 분석](docs/english-source-structure-map.md)
 - [영문 VWF·문자열·스크립트 실측 분석](docs/english-vwf-script-capacity-analysis.md)
 - [한글화 설계 및 진행 기록](docs/korean-localization-design.md)
-- [문자열 바이트 용량 재계산](docs/string-byte-capacity-analysis.md)
 - [원본 CD 이미지 분석](docs/original-cd-image-analysis.md)
 - [영문 패치 출처](docs/english-patch-source.md)
 
@@ -109,7 +93,6 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 - 이 프로젝트에서 새로 작성한 생성기·토큰 도구·편집기 등 프로젝트 자체 소스는 [LICENSE-MIT-PROJECT.txt](LICENSE-MIT-PROJECT.txt)에 따라 MIT 라이선스로 배포한다.
 - Composite_16x16에 포함된 원본 폰트와 그 파생 글리프는 해당 폴더의 [LICENSE-OFL.txt](Composite_16x16/LICENSE-OFL.txt)에 따른다.
 - Composite_16x16에 보관된 원본 생성·변환 소스의 upstream MIT 고지는 [LICENSE-MIT.txt](Composite_16x16/LICENSE-MIT.txt)에 보관한다.
-- Nebulous Group 영문 패치, 원본 게임·이미지·추출물 및 기타 외부 자료는 이 프로젝트의 MIT 라이선스 범위에 포함하지 않는다.
 
 ## 데이터 및 Git 정책
 

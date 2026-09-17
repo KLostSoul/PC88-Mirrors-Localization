@@ -12,7 +12,6 @@
 
 - [영문 패치 소스 구조 맵](english-source-structure-map.md) — 영문 Ruby 기준 구현, BASIC·ASM·CD 구조
 - [영문 VWF·문자열·스크립트 실측 분석](english-vwf-script-capacity-analysis.md) — 영문 VWF와 스크립트 용량의 정적 측정
-- [문자열 바이트 용량 재계산](string-byte-capacity-analysis.md) — 원문·영문 문자열의 바이트 증감
 - [원본 CD 이미지 분석](original-cd-image-analysis.md) — 원본 Track 2와 내장 플로피 구조
 - [영문 패치 출처](english-patch-source.md) — 영문 패치 출처와 재배포 조건
 
