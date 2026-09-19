@@ -5,6 +5,7 @@ from .basic_decompiler import BasicDecompiler
 from .data_exporter import DataExporter
 from .data_importer import DataImporter
 from .defines import Const, Paths
+from .d88 import write_blank_2hd
 from .file_streamer import FileStreamer
 from .floppy import FloppyMan
 from .generate_korean_token_table import main as generate_korean_token_table
@@ -202,6 +203,11 @@ def _apply_repeated_wake_dialog_width(importer: DataImporter) -> None:
             patch["patchedLine"] = patched_line.split(" ", 1)[1]
 
 
+def _create_blank_game_disks() -> None:
+    write_blank_2hd(Paths.Main_Disk_D88)
+    write_blank_2hd(Paths.Game_Disk_D88)
+
+
 def main():
     opMode = "import"
     if opMode == "export":
@@ -217,6 +223,7 @@ def main():
         _map_basic_strings_to_current_sources(dataImporter)
         _apply_repeated_wake_dialog_width(dataImporter)
         dataImporter.importData()
+        _create_blank_game_disks()
     elif opMode == "custom":
         pass
 

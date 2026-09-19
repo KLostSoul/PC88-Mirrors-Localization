@@ -41,6 +41,9 @@ class Paths:
 
     Original_ISO_DataTrack = EFolder_ISO / "02 MIRR.iso"
     Patched_ISO_DataTrack = IFolder_ISO / "02 MIRR.iso"
+    BUILD_OUTPUT = MAIN_PATH / "output"
+    Main_Disk_D88 = BUILD_OUTPUT / "disk1main.d88"
+    Game_Disk_D88 = BUILD_OUTPUT / "disk2game.d88"
 
     ASM_Exe = TOOLS_PATH / "vasmz80_std.exe"
     DASM_Exe = TOOLS_PATH / "yazd.exe"

@@ -74,7 +74,8 @@ PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Neb
 2. 영문 패치 BASIC에 `stringsImportK.csv`를 문자열 위치 기준으로 연결한다.
 3. 반복 대사 19개 행의 출력 폭을 40셀로 적용한다.
 4. 전체 BASIC·ASM·디스크 데이터를 컴파일해 ISO를 생성한다.
-5. Track 2와 CloneCD 데이터를 검증한다.
+5. FDD용 2HD 공디스크 `disk1main.d88`·`disk2game.d88`를 생성한다.
+6. Track 2와 CloneCD 데이터를 검증한다.
 
 세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
 

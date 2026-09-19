@@ -26,6 +26,7 @@ python -m korean_mirrors_tools.python_tools
 5. `intro`, `menu`, 전체 NO 스크립트를 번역·컴파일한다.
 6. 플로피 파일과 2HD 디스크 데이터를 갱신한다.
 7. 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
+8. 에뮬레이터 FDD용 2HD 공디스크 `disk1main.d88`과 `disk2game.d88`를 `output/`에 생성한다.
 
 CloneCD의 `.ccd/.img/.sub` 패키징은 이 Python 모듈의 역할이 아니며, 생성된 ISO를
 별도의 CloneCD 패키징 단계에서 사용한다.
@@ -59,6 +60,8 @@ CloneCD의 `.ccd/.img/.sub` 패키징은 이 Python 모듈의 역할이 아니�
 | `Import/Files/` | 디스크에 삽입할 BASIC·그래픽 파일 |
 | `Import/ASM/` | 컴파일된 ASM RAW와 목록 파일 |
 | `Import/ISO/02 MIRR.iso` | 최종 패치 CD 데이터 트랙 |
+| `output/disk1main.d88` | FDD1에 넣는 Main용 2HD 공디스크 |
+| `output/disk2game.d88` | FDD2에 넣는 Game용 2HD 공디스크 |
 
 ## 모듈 설명
 
@@ -97,6 +100,13 @@ PC-88 BASIC 바이너리를 BASIC 소스와 문자열 위치 정보로 역변환
 정식 패치의 핵심 처리 모듈이다. BASIC 번역, ASM 컴파일, 그래픽 교체, 플로피
 파일 갱신, 2HD 디스크 패킹, CD 데이터 트랙 반영을 수행한다. `main.py`가 만든
 토큰표·RAW 데이터와 `Data/`의 배치표를 사용한다.
+
+### `d88.py`
+
+PC-8801 2HD 형식의 빈 D88 컨테이너를 생성한다. 게임 첫 실행 시 `menu.bas`가
+두 디스크를 포맷하고 Main/Game 데이터를 기록하므로, 빌드 단계에서는 유효한
+2HD 구조와 공백 섹터만 만든다. 생성 결과는 영문 패치의 `disk1main.d88`·
+`disk2game.d88`와 바이트 단위로 대조한다.
 
 ### `data_exporter.py`
 
