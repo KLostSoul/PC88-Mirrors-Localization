@@ -9,6 +9,7 @@ class Paths:
     EXPORT_PATH = MAIN_PATH / "Export"
     IMPORT_PATH = MAIN_PATH / "Import"
     TOOLS_PATH = MAIN_PATH / "Tools"
+    CLONECD_IMG = MAIN_PATH / "img" / "Mirrors.img"
 
     EFolder_ASM = EXPORT_PATH / "ASM"
     EFolder_ISO = EXPORT_PATH / "ISO"

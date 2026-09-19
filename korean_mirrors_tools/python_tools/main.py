@@ -2,6 +2,8 @@ import re
 
 from .basic_compiler import BasicCompiler
 from .basic_decompiler import BasicDecompiler
+from .build_clonecd import build_clonecd
+from .clonecd import extract_original_track2
 from .data_exporter import DataExporter
 from .data_importer import DataImporter
 from .defines import Const, Paths
@@ -214,6 +216,7 @@ def main():
         dataExporter = DataExporter(Paths.Original_ISO_DataTrack)
         dataExporter.export()
     elif opMode == "import":
+        extract_original_track2()
         # Rebuild the token table from the current translation inputs before
         # any BASIC compiler instance loads it. This adds newly used Hangul
         # syllables automatically and keeps the table in 가나다순 order.
@@ -224,6 +227,7 @@ def main():
         _apply_repeated_wake_dialog_width(dataImporter)
         dataImporter.importData()
         _create_blank_game_disks()
+        build_clonecd()
     elif opMode == "custom":
         pass
 

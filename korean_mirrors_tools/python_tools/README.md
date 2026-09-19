@@ -19,17 +19,18 @@ python -m korean_mirrors_tools.python_tools
 
 `main.py`는 현재 `import` 모드로 실행되며 다음 작업을 순서대로 수행한다.
 
-1. 번역 입력에 포함된 한글 음절을 수집해 `Data/korean_token_table.csv`를 가나다순으로 재생성한다.
-2. `Composite_16x16/source/`의 ASCII 템플릿과 도깨비 조합 글리프 원본을 빌드 입력용 RAW 데이터로 분할한다.
-3. 그래픽을 PC-88 형식으로 변환한다.
-4. ASM을 컴파일하고 하드코딩 문구를 고정 슬롯에 반영한다.
-5. `intro`, `menu`, 전체 NO 스크립트를 번역·컴파일한다.
-6. 플로피 파일과 2HD 디스크 데이터를 갱신한다.
-7. 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
-8. 에뮬레이터 FDD용 2HD 공디스크 `disk1main.d88`과 `disk2game.d88`를 `output/`에 생성한다.
+1. `img/Mirrors.img`의 CloneCD raw Track 2를 `Export/ISO/02 MIRR.iso`로 추출한다.
+2. 번역 입력에 포함된 한글 음절을 수집해 `Data/korean_token_table.csv`를 가나다순으로 재생성한다.
+3. `Composite_16x16/source/`의 ASCII 템플릿과 도깨비 조합 글리프 원본을 빌드 입력용 RAW 데이터로 분할한다.
+4. 그래픽을 PC-88 형식으로 변환한다.
+5. ASM을 컴파일하고 하드코딩 문구를 고정 슬롯에 반영한다.
+6. `intro`, `menu`, 전체 NO 스크립트를 번역·컴파일한다.
+7. 플로피 파일과 2HD 디스크 데이터를 갱신한다.
+8. 추출한 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
+9. 에뮬레이터 FDD용 2HD 공디스크 `disk1main.d88`과 `disk2game.d88`를 `output/`에 생성한다.
+10. 원본 `img/Mirrors.img`에 패치된 Track 2를 삽입하고 EDC/ECC를 재생성해 `output/`에 CloneCD 세트와 호환용 CUE를 생성한다.
 
-CloneCD의 `.ccd/.img/.sub` 패키징은 이 Python 모듈의 역할이 아니며, 생성된 ISO를
-별도의 CloneCD 패키징 단계에서 사용한다.
+CloneCD 출력은 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.sub`를 기반으로 한다.
 
 ## 입력과 출력
 
@@ -38,6 +39,7 @@ CloneCD의 `.ccd/.img/.sub` 패키징은 이 Python 모듈의 역할이 아니�
 | 경로 | 용도 |
 | --- | --- |
 | `Import/Strings/stringsImportK.csv` | 일본어 원문과 한국어 번역 입력 |
+| `img/Mirrors.img` | 원본 CloneCD 이미지 입력 |
 | `Data/hardcoded_strings.csv` | BASIC 외부에 직접 저장되는 문구 |
 | `Data/patchBasic.csv` | BASIC 행별 패치 |
 | `Data/e_scripts.csv` | 스크립트·디스크·분할 정보 |
