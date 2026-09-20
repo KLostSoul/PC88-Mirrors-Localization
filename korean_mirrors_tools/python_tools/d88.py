@@ -16,11 +16,13 @@ class D88:
     TRACK_SIZE = SECTORS_PER_TRACK * SECTOR_RECORD_SIZE
     DISK_SIZE = HEADER_SIZE + TRACK_COUNT * TRACK_SIZE
 
-    # The English patch's blank 2HD images contain the same valid empty
-    # geometry plus the original IPLD marker bytes.  Keep these bytes so the
-    # generated Main/Game disks are byte-identical to that known-good blank.
-    IPLD_TRACK = 49
-    IPLD_SECTOR = 7
+    # The generated disks are treated as already initialized by the game.
+    # Keep the IPLD markers at both disk-check locations so neither CMD FOR
+    # path reformats the disk during startup.
+    IPLD_LOCATIONS = (
+        (0x4F, 4),  # Main: track 0x4F, sector 0x05
+        (0x31, 7),  # Game: track 0x31, sector 0x08
+    )
 
     @classmethod
     def blank_2hd(cls, name: bytes = b"BLANK") -> bytes:
@@ -65,15 +67,16 @@ class D88:
                     [0xFF]
                 ) * cls.SECTOR_SIZE
 
-        ipld_data = (
-            cls.HEADER_SIZE
-            + cls.IPLD_TRACK * cls.TRACK_SIZE
-            + cls.IPLD_SECTOR * cls.SECTOR_RECORD_SIZE
-            + 16
-        )
-        image[ipld_data:ipld_data + 4] = b"IPLD"
-        image[ipld_data + 0x200] = 0xFE
-        image[ipld_data + 0x38B] = 0xFE
+        for track_index, sector_index in cls.IPLD_LOCATIONS:
+            ipld_data = (
+                cls.HEADER_SIZE
+                + track_index * cls.TRACK_SIZE
+                + sector_index * cls.SECTOR_RECORD_SIZE
+                + 16
+            )
+            image[ipld_data:ipld_data + 4] = b"IPLD"
+            image[ipld_data + 0x200] = 0xFE
+            image[ipld_data + 0x38B] = 0xFE
 
         return bytes(image)
 
