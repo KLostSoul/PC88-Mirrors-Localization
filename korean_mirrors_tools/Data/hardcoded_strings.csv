@@ -20,4 +20,4 @@ menu_text_sound_label;Text Sound:;문자 효과음:;menu.bas 9060 first literal
 menu_text_sound_values;FM    BEEP   OFF;FM    BEEP   OFF;menu.bas 9060 second literal
 menu_drive1_status;The disk in Drive 1 is the Main Disk.;드라이브 1의 디스크가 메인 디스크입니다.;menu mapping 1600
 menu_drive2_status;The disk in Drive 2 is the Game Disk.;드라이브 2의 디스크가 게임 디스크입니다.;menu mapping 1600
-menu_write_names_hint;Don't forget to write their names on them.;이름을 적어주세요.;menu mapping 1700
+menu_write_names_hint;Don't forget to write their names on them.;디스크 라벨에 이름을 적어주세요.;menu mapping 1700

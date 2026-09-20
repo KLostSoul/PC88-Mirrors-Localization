@@ -192,18 +192,69 @@ class DataImporter:
             'BM$="%s":CMD WIDTH &HF9CD,&H10,7:CMD KANJI BM$' %
             self.hardcodedText("output_marker"),
         )
-        self.basic_addPatchLine(
-            _patch, _scdata["disk"], _scdata["script"], _line + 410,
-            "BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT",
-        )
-        self.basic_addPatchLine(
-            _patch, _scdata["disk"], _scdata["script"], _line + 420,
-            "LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN",
-        )
+        if _scdata["script"] in {"N3-1", "N4-2"}:
+            # These two scripts have four choices, but the fourth choice must
+            # remain on the screen after changing the choice row height to 16
+            # pixels. Keep the original linear CN order (1, 2, 3, 4) and place
+            # choice 4 beside choice 1 instead of creating a fourth row.
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 410,
+                "IF CM=4 THEN 5411:ELSE BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT:GOTO 5420",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 411,
+                "BN=&HEF42:CMD WIDTH BN,&H60,7:CMD KANJI CM$(1):BN=&HF442:CMD WIDTH BN,&H60,7:CMD KANJI CM$(2):BN=&HF942:CMD WIDTH BN,&H60,7:CMD KANJI CM$(3):BN=&HEF5E:CMD WIDTH BN,&H60,7:CMD KANJI CM$(4):CN=0",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 420,
+                "IF CM=4 THEN 5421:ELSE LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN:GOTO 5430",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 421,
+                "IF CN=3 THEN LINE(334,150)-(639,165),7,BF,XOR:CN2=CN:GOTO 5430",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 422,
+                "LINE(110,150+CN*16)-(330,165+CN*16),7,BF,XOR:CN2=CN",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 437,
+                "IF CM<>4 THEN 5440",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 438,
+                'IF I$="6" THEN IF CN=0 THEN CN=3:GOTO 5440:ELSE 5430',
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 439,
+                'IF I$="4" THEN IF CN=3 THEN CN=0:GOTO 5440:ELSE 5430',
+            )
+        else:
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 410,
+                "BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 420,
+                "LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN",
+            )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 440,
-            "LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR",
+            (
+                "IF CM=4 THEN 5441:ELSE LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR:GOTO 5450"
+                if _scdata["script"] in {"N3-1", "N4-2"}
+                else "LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR"
+            ),
         )
+        if _scdata["script"] in {"N3-1", "N4-2"}:
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 441,
+                "IF CN2=3 THEN LINE(334,150)-(639,165),7,BF,XOR:GOTO 5450",
+            )
+            self.basic_addPatchLine(
+                _patch, _scdata["disk"], _scdata["script"], _line + 442,
+                "LINE(110,150+CN2*16)-(330,165+CN2*16),7,BF,XOR",
+            )
 
     def basic_applySavePatch(self, _patch, _scdata, _diskData):
         self.basic_addPatchLine(
