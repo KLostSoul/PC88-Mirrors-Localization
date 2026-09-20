@@ -3597,6 +3597,15 @@ LB52F:
         ei
         ret
 
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+
         ; Referenced from B5DB, B66E, C168
 LB54F:  ld      a,0x26          ; '&'
         ld      (LB416),a
