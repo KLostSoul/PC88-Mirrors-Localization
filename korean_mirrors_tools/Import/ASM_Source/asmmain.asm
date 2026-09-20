@@ -3590,10 +3590,6 @@ LB52F:
         xor     a
         out     (0xe3),a
         call    0x0000            ; single composite VWF in bank 0
-        in      a,(0x32)
-        and     0xbf
-        out     (0x32),a
-        out     (0x5f),a
         xor     a
         out     (0xe2),a
         ld      a,0x79
