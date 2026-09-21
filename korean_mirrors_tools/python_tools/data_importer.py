@@ -199,23 +199,23 @@ class DataImporter:
             # choice 4 beside choice 1 instead of creating a fourth row.
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 410,
-                "IF CM=4 THEN 5411:ELSE BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT:GOTO 5420",
+                "IF CM=4 THEN 5411:ELSE BN=&HEFE2:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT:GOTO 5420",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 411,
-                "BN=&HEF42:CMD WIDTH BN,&H60,7:CMD KANJI CM$(1):BN=&HF442:CMD WIDTH BN,&H60,7:CMD KANJI CM$(2):BN=&HF942:CMD WIDTH BN,&H60,7:CMD KANJI CM$(3):BN=&HEF5E:CMD WIDTH BN,&H60,7:CMD KANJI CM$(4):CN=0",
+                "BN=&HEFE2:CMD WIDTH BN,&H60,7:CMD KANJI CM$(1):BN=&HF4E2:CMD WIDTH BN,&H60,7:CMD KANJI CM$(2):BN=&HF9E2:CMD WIDTH BN,&H60,7:CMD KANJI CM$(3):BN=&HEFFE:CMD WIDTH BN,&H60,7:CMD KANJI CM$(4):CN=0",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 420,
-                "IF CM=4 THEN 5421:ELSE LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN:GOTO 5430",
+                "IF CM=4 THEN 5421:ELSE LINE(110,152+CN*16)-(512,167+CN*16),7,BF,XOR:CN2=CN:GOTO 5430",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 421,
-                "IF CN=3 THEN LINE(334,150)-(639,165),7,BF,XOR:CN2=CN:GOTO 5430",
+                "IF CN=3 THEN LINE(354,152)-(610,167),7,BF,XOR:CN2=CN:GOTO 5430",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 422,
-                "LINE(110,150+CN*16)-(330,165+CN*16),7,BF,XOR:CN2=CN",
+                "LINE(130,152+CN*16)-(345,167+CN*16),7,BF,XOR:CN2=CN",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 437,
@@ -232,28 +232,28 @@ class DataImporter:
         else:
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 410,
-                "BN=&HEF42:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT",
+                "BN=&HEFE2:CN=0:FOR I=1 TO CM:CMD WIDTH BN,&H60,7:CMD KANJI CM$(I):BN=BN+&H50*16:NEXT",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 420,
-                "LINE(110,150+CN*16)-(512,165+CN*16),7,BF,XOR:CN2=CN",
+                "LINE(110,152+CN*16)-(512,167+CN*16),7,BF,XOR:CN2=CN",
             )
         self.basic_addPatchLine(
             _patch, _scdata["disk"], _scdata["script"], _line + 440,
             (
-                "IF CM=4 THEN 5441:ELSE LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR:GOTO 5450"
+                "IF CM=4 THEN 5441:ELSE LINE(110,152+CN2*16)-(512,167+CN2*16),7,BF,XOR:GOTO 5450"
                 if _scdata["script"] in {"N3-1", "N4-2"}
-                else "LINE(110,150+CN2*16)-(512,165+CN2*16),7,BF,XOR"
+                else "LINE(110,152+CN2*16)-(512,167+CN2*16),7,BF,XOR"
             ),
         )
         if _scdata["script"] in {"N3-1", "N4-2"}:
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 441,
-                "IF CN2=3 THEN LINE(334,150)-(639,165),7,BF,XOR:GOTO 5450",
+                "IF CN2=3 THEN LINE(354,152)-(610,167),7,BF,XOR:GOTO 5450",
             )
             self.basic_addPatchLine(
                 _patch, _scdata["disk"], _scdata["script"], _line + 442,
-                "LINE(110,150+CN2*16)-(330,165+CN2*16),7,BF,XOR",
+                "LINE(130,152+CN2*16)-(345,167+CN2*16),7,BF,XOR",
             )
 
     def basic_applySavePatch(self, _patch, _scdata, _diskData):
