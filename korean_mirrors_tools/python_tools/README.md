@@ -139,12 +139,12 @@ CD, BASIC, ASM, 플로피 처리 모듈에서 공유한다.
 
 한글 완성 음절 RAW를 개별적으로 확장 RAM에 적재하지 않는다. 빌드 시 생성된
 토큰표를 BASIC 문자열에 적용하고, 실행 시 조합 VWF가 토큰에서 초성·중성·종성
-조합값을 얻어 `Composite_16x16/source/han_dkby.fnt`의 컴포넌트를 조합한다.
+조합값을 얻어 `Composite_16x16/source/han_hanme.fnt`의 컴포넌트를 조합한다.
 
 - 한글 글리프: 16×16, 전진 폭 16픽셀
 - ASCII 글리프: 8×16, 전진 폭 8픽셀
 - ASCII 원본: `ascii_8x16_template.fnt`
-- 한글 원본: `han_dkby.fnt`
+- 한글 원본: `han_hanme.fnt`
 - 토큰표: `Data/korean_token_table.csv`
 - 물리 확장 RAM: bank 0 구성
 

@@ -17,7 +17,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = ROOT / "source"
-SOURCE_FNT = SOURCE_DIR / "han_dkby.fnt"
+SOURCE_FNT = SOURCE_DIR / "han_hanme.fnt"
 ASCII_SOURCE_FNT = SOURCE_DIR / "asc_serif.fnt"
 COMPONENT_DIR = ROOT / "components"
 TRIAL_DIR = ROOT / "trial_100"
@@ -246,9 +246,10 @@ def build_reference_assets() -> None:
     data = read_reference_font()
     ascii_data = read_ascii_font()
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
-    (SOURCE_DIR / "han_dkby.fnt").write_bytes(data)
-    (SOURCE_DIR / "han_dkby.fnt.sha256.txt").write_text(
-        __import__("hashlib").sha256(data).hexdigest() + "  han_dkby.fnt\n", encoding="ascii"
+    SOURCE_FNT.write_bytes(data)
+    (SOURCE_DIR / f"{SOURCE_FNT.name}.sha256.txt").write_text(
+        __import__("hashlib").sha256(data).hexdigest()
+        + f"  {SOURCE_FNT.name}\n", encoding="ascii"
     )
     (SOURCE_DIR / "ascii_8x16_template.fnt").write_bytes(ascii_data)
     (SOURCE_DIR / "ascii_8x16_template.fnt.sha256.txt").write_text(
@@ -267,7 +268,7 @@ def build_reference_assets() -> None:
     for index in range(360):
         image = image_from_glyph(glyph_at(data, index))
         combined.paste(image, ((index % SHEET_COLUMNS) * CELL_WIDTH, (index // SHEET_COLUMNS) * CELL_HEIGHT))
-    combined.save(COMPONENT_DIR / "han_dkby_8x4x4_360_16x16.png")
+    combined.save(COMPONENT_DIR / f"{SOURCE_FNT.stem}_8x4x4_360_16x16.png")
 
 
 def build_ascii_glyph_table() -> None:

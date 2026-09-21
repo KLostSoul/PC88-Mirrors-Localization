@@ -35,7 +35,7 @@ def _install_composite_resources() -> None:
     data_dir.mkdir(parents=True, exist_ok=True)
 
     ascii_data = (source_dir / "ascii_8x16_template.fnt").read_bytes()
-    components = (source_dir / "han_dkby.fnt").read_bytes()
+    components = (source_dir / "han_hanme.fnt").read_bytes()
     if len(ascii_data) != 0x1000:
         raise RuntimeError(
             f"ASCII template must be 0x1000 bytes, got {len(ascii_data):#x}"
