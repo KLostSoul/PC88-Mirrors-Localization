@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
 import shutil
+import subprocess
+import tempfile
 from pathlib import Path
 import re
 
@@ -11,6 +14,21 @@ from .defines import Const, Paths
 
 
 OUTPUT_BASE = "Mirrors_Korean_Mirrors_Tools_Full_Build"
+PROJECT_ROOT = Paths.MAIN_PATH.parent
+XDELTA_EXE = (
+    PROJECT_ROOT
+    / "reference"
+    / "Mirrors_ENG_translation_v1.0"
+    / "patcher"
+    / "xdelta.exe"
+)
+ENGLISH_BASE_IMG = (
+    PROJECT_ROOT
+    / "reference"
+    / "Mirrors PC-8801 MC English translation v1.0 (updated emu)"
+    / "Mirrors eng v1.0.img"
+)
+PATCH_COMPONENTS = ("ccd", "img", "sub")
 
 
 def _edc_table() -> list[int]:
@@ -114,7 +132,78 @@ def _source_paths() -> tuple[Path, Path, Path, Path]:
     )
 
 
-def build_clonecd() -> tuple[Path, Path, Path]:
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        while chunk := file.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _build_xdelta_patches(
+    target_paths: dict[str, Path],
+    japanese_base_img: Path,
+) -> list[Path]:
+    bases = (
+        ("Japanese", japanese_base_img),
+        ("English", ENGLISH_BASE_IMG),
+    )
+    required = [XDELTA_EXE]
+    for _, base_img in bases:
+        required.extend(
+            base_img.with_suffix(f".{ext}") for ext in PATCH_COMPONENTS
+        )
+    missing = [path for path in required if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(
+            "Missing xdelta build input(s):\n"
+            + "\n".join(str(path) for path in missing)
+        )
+
+    Paths.TEMP_PATH.mkdir(parents=True, exist_ok=True)
+    patches = []
+    target_hashes = {
+        ext: _sha256(target_paths[ext]) for ext in PATCH_COMPONENTS
+    }
+    with tempfile.TemporaryDirectory(
+        prefix="xdelta-verify-", dir=Paths.TEMP_PATH
+    ) as verify_dir:
+        verify_dir = Path(verify_dir)
+        for label, base_img in bases:
+            for ext in PATCH_COMPONENTS:
+                base = base_img.with_suffix(f".{ext}")
+                target = target_paths[ext]
+                patch = Paths.BUILD_OUTPUT / (
+                    f"{OUTPUT_BASE}_from_{label}_{ext.upper()}.xdelta"
+                )
+                restored = verify_dir / f"{label}.{ext}"
+
+                subprocess.run(
+                    [
+                        str(XDELTA_EXE), "-f", "-e", "-s",
+                        str(base), str(target), str(patch),
+                    ],
+                    check=True,
+                )
+                subprocess.run(
+                    [
+                        str(XDELTA_EXE), "-f", "-d", "-s",
+                        str(base), str(patch), str(restored),
+                    ],
+                    check=True,
+                )
+                if _sha256(restored) != target_hashes[ext]:
+                    raise RuntimeError(
+                        f"xdelta restoration does not match build output: "
+                        f"{label} {ext.upper()}"
+                    )
+                patches.append(patch)
+                print(f"Created and verified: {patch}")
+
+    return patches
+
+
+def build_clonecd() -> tuple[Path, Path, Path, Path]:
     source_img, source_ccd, source_cue, source_sub = _source_paths()
     patched_track = Paths.Patched_ISO_DataTrack
 
@@ -186,6 +275,15 @@ def build_clonecd() -> tuple[Path, Path, Path]:
             "Original Track 2 contains invalid MODE1 sectors: "
             f"{CloneCD.TRACK2_SECTORS - valid_source_sectors}"
         )
+
+    _build_xdelta_patches(
+        {
+            "ccd": output_ccd,
+            "img": output_img,
+            "sub": output_sub,
+        },
+        source_img,
+    )
 
     return output_img, output_ccd, output_cue, output_sub
 
