@@ -1,8 +1,6 @@
 # Python 빌드 도구
 
-이 디렉터리는 `korean_mirrors_tools`의 정식 한글 조합 글리프 빌드를 수행하는
-Python 모듈을 담고 있다. 별도의 임시 빌더가 아니라 현재 정식 빌드에서 사용하는
-실제 처리 코드다.
+이 디렉터리에는 완성된 정식 한글 조합 글리프 패치를 생성하는 Python 빌드 도구가 있다.
 
 이 디렉터리에서 프로젝트가 새로 작성한 한글 토큰·조합 글리프 연동 코드는
 저장소 루트의 [LICENSE-MIT-PROJECT.txt](../../LICENSE-MIT-PROJECT.txt)에 따라
@@ -21,7 +19,7 @@ python -m korean_mirrors_tools.python_tools
 
 1. `img/Mirrors.img`의 CloneCD raw Track 2를 `Export/ISO/02 MIRR.iso`로 추출한다.
 2. 번역 입력에 포함된 한글 음절을 수집해 `Data/korean_token_table.csv`를 가나다순으로 재생성한다.
-3. `Composite_16x16/source/`의 ASCII 템플릿과 도깨비 조합 글리프 원본을 빌드 입력용 RAW 데이터로 분할한다.
+3. `Composite_16x16/source/`의 ASCII 템플릿과 `han_hanme.fnt`를 빌드 입력용 RAW 데이터로 분할한다.
 4. 그래픽을 PC-88 형식으로 변환한다.
 5. ASM을 컴파일하고 하드코딩 문구를 고정 슬롯에 반영한다.
 6. `intro`, `menu`, 전체 NO 스크립트를 번역·컴파일한다.
@@ -29,8 +27,17 @@ python -m korean_mirrors_tools.python_tools
 8. 추출한 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
 9. 에뮬레이터 FDD용 2HD 공디스크 `disk1main.d88`과 `disk2game.d88`를 `output/`에 생성한다.
 10. 원본 `img/Mirrors.img`에 패치된 Track 2를 삽입하고 EDC/ECC를 재생성해 `output/`에 CloneCD 세트와 호환용 CUE를 생성한다.
+11. 일본판·영문판 각각의 `.ccd`, `.img`, `.sub`를 기준으로 xdelta 패치 6개를 생성한다. 각 패치를 다시 적용해 복원한 파일의 SHA-256이 완성 빌드 파일과 일치하는지 검사한다.
 
 CloneCD 출력은 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.sub`를 기반으로 한다.
+
+### 전체 빌드에 필요한 이미지
+
+| 경로 | 파일 |
+| --- | --- |
+| `korean_mirrors_tools/img/` | 일본판 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.sub` |
+| `reference/Mirrors PC-8801 MC English translation v1.0 (updated emu)/` | 영문 기준 `Mirrors eng v1.0.img`, `.ccd`, `.sub` |
+| `reference/Mirrors_ENG_translation_v1.0/patcher/` | `xdelta.exe` |
 
 ## 입력과 출력
 
@@ -39,7 +46,7 @@ CloneCD 출력은 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.s
 | 경로 | 용도 |
 | --- | --- |
 | `Import/Strings/stringsImportK.csv` | 일본어 원문과 한국어 번역 입력 |
-| `img/Mirrors.img` | 원본 CloneCD 이미지 입력 |
+| `img/Mirrors.img` | 일본판 원본 CloneCD 이미지 |
 | `Data/hardcoded_strings.csv` | BASIC 외부에 직접 저장되는 문구 |
 | `Data/patchBasic.csv` | BASIC 행별 패치 |
 | `Data/e_scripts.csv` | 스크립트·디스크·분할 정보 |
@@ -64,6 +71,9 @@ CloneCD 출력은 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.s
 | `Import/ISO/02 MIRR.iso` | 최종 패치 CD 데이터 트랙 |
 | `output/disk1main.d88` | FDD1에 넣는 Main용 2HD 공디스크 |
 | `output/disk2game.d88` | FDD2에 넣는 Game용 2HD 공디스크 |
+| `output/Mirrors_Korean_Mirrors_Tools_Full_Build.cue` | 완성 CloneCD `.img`를 지정하는 호환용 CUE |
+| `output/Mirrors_Korean_Mirrors_Tools_Full_Build_from_Japanese_*.xdelta` | 일본판용 `.ccd`, `.img`, `.sub` 패치 |
+| `output/Mirrors_Korean_Mirrors_Tools_Full_Build_from_English_*.xdelta` | 영문판용 `.ccd`, `.img`, `.sub` 패치 |
 
 ## 모듈 설명
 
@@ -105,9 +115,9 @@ PC-88 BASIC 바이너리를 BASIC 소스와 문자열 위치 정보로 역변환
 
 ### `d88.py`
 
-PC-8801 2HD 형식의 빈 D88 컨테이너를 생성한다. 게임 첫 실행 시 `menu.bas`가
-두 디스크를 포맷하고 Main/Game 데이터를 기록하므로, 빌드 단계에서는 유효한
-2HD 구조와 공백 섹터만 만든다.
+PC-8801 2HD 형식의 D88 공디스크를 생성하고, Main·Game 디스크 확인 루틴이 검사하는
+각 위치에 `IPLD` 표식을 기록한다. 게임 첫 실행 시 `menu.bas`가 두 디스크를
+포맷하고 데이터를 기록한다.
 
 ### `data_exporter.py`
 
@@ -124,6 +134,12 @@ PC-88 플로피 RAW/D88 구조를 읽고 파일을 교체·추가한다. 수정�
 
 PNG 그래픽을 PC-88의 압축된 그래픽 데이터로 변환한다. 단색 1-plane과 일반
 3-plane 그래픽을 모두 지원하며 `Data/i_gfx.csv`의 주소와 디스크 정보를 사용한다.
+
+### `build_clonecd.py`
+
+패치된 Track 2를 원본 CloneCD 이미지에 반영하고 섹터 EDC/ECC를 재생성한다.
+일본판·영문판 각각을 기준으로 `.ccd`, `.img`, `.sub` xdelta를 만들고, 복원 파일의
+SHA-256이 정식 빌드 파일과 일치하는지 검사한다.
 
 ### `file_streamer.py`
 
@@ -147,9 +163,6 @@ CD, BASIC, ASM, 플로피 처리 모듈에서 공유한다.
 - 한글 원본: `han_hanme.fnt`
 - 토큰표: `Data/korean_token_table.csv`
 - 물리 확장 RAM: bank 0 구성
-
-## 관련 도구
-
 
 Python 의존성은 다음으로 설치한다.
 

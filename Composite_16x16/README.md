@@ -1,6 +1,6 @@
-# 16×16 한글 조합 글리프
+# 16×16 한글 조합 글리프 자료
 
-이 작업판은 임의로 그린 글리프가 아니라 다음 기존 완성 자료를 입력으로 사용한다.
+정식 빌드는 한글 자모 컴포넌트에 `source/han_hanme.fnt`, ASCII에 `source/ascii_8x16_template.fnt`를 사용한다. 한글 음절은 실행 중 8×4×4 프로필 규칙으로 조합한다.
 
 원본 GitHub 저장소:
 
@@ -12,10 +12,9 @@
 - [LICENSE-MIT.txt](LICENSE-MIT.txt): 원본 저장소의 생성·변환 소스 고지
 - [../LICENSE-MIT-PROJECT.txt](../LICENSE-MIT-PROJECT.txt): 이 저장소에서 새로 작성한 생성·검증 코드
 
-이 라이선스 고지는 PC-8801 게임 원본, 영문 패치 소스, 한국어 번역문,
-게임 이미지 또는 이 저장소의 다른 외부 자료에 적용되지 않는다.
+## 정식 입력
 
-`source/han_hanme.fnt`
+한글 조합 입력: `source/han_hanme.fnt`
 
 이 FNT는 16×16 셀 360개로 구성된다.
 
@@ -23,7 +22,7 @@
 - 중성 4벌 × (중성 21개 + 채움 셀)
 - 종성 4벌 × 종성 28개
 
-같은 `source` 폴더에 조합형 한글 원본 전체를 보관한다.
+같은 `source` 폴더에는 아래 한글 조합 글리프 원본을 보관한다. 이 중 정식 빌드 입력은 `han_hanme.fnt`다.
 
 - `han_dkby.fnt`
 - `han_hanme.fnt`
@@ -42,6 +41,6 @@ ASCII 원본도 함께 보관한다.
 - `asc_thin.fnt`
 - `asc_u4k.fnt`
 
-`generate_korean_composite_16x16.py`는 이 원본 셀을 PNG 편집 시트와 RAW로 변환하고, 동일한 8×4×4 규칙으로 시험용 완성 음절을 조합한다. 글리프를 선분으로 새로 그리지 않는다.
+`generate_korean_composite_16x16.py`는 선택한 원본 셀을 PNG 시트와 조합 컴포넌트 자료로 변환한다. 정식 전체 빌더는 이 생성 단계를 거치지 않고 `han_hanme.fnt`와 ASCII 템플릿을 직접 읽는다.
 
-`source/asc_serif.fnt`는 ASCII 템플릿 생성에 사용하는 원본이고, 생성된 `source/ascii_8x16_template.fnt`에는 위 한글 글꼴과 짝을 이루는 참조 8×16 ASCII 템플릿(256자, 4,096바이트)을 보관한다. 한글 조합 글리프 소스와 ASCII 소스를 별도 데이터로 유지하며, ASCII 템플릿을 16×16 한글 조합 데이터에 섞지 않는다.
+`source/ascii_8x16_template.fnt`는 256자, 4,096바이트의 8×16 ASCII 템플릿이다. 생성기의 기본 ASCII 원본은 `source/asc_serif.fnt`다.

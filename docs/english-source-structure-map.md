@@ -31,7 +31,7 @@
 
 ### 2.1 Python 포팅 정적 검증 상태
 
-`reference/python_mirrors_tools/python_tools/`는 과거 Ruby 결과와 바이트 단위로 대조했던 Python 포트다. 현재 정식 조합 글리프 한글 패치 빌드에서는 이 트리를 사용하지 않고 `korean_mirrors_tools/python_tools/`만 사용한다. 영문 패치 자체의 기준 소스는 계속 `reference/mirrors_tools/Ruby/`다.
+`reference/python_mirrors_tools/python_tools/`는 Ruby 결과와 바이트 단위로 대조했던 Python 포트다. 영문 패치 자체의 기준 소스는 `reference/mirrors_tools/Ruby/`다.
 
 - Ruby 핵심 구현 11개(`BasicCompiler`, `DataImporter`, `FloppyMan`, `FontGen` 등)에 Python 대응 구현이 있다.
 - 두 트리의 공통 소스·데이터 파일 190개는 SHA-256이 모두 일치한다. 차이는 Ruby 구현 파일, Python 구현 파일과 로컬 생성물뿐이다.
@@ -229,7 +229,7 @@ glyph_address = font_base + index * 0x10
 
 현재 선택된 확장 RAM 뱅크에서 VWF 코드가 `0x0000~0x0FFF`를 사용하고, 세 폰트 영역은 `0x1000~0x3FFF`의 `0x3000`바이트를 사용한다. 여기서 `0x3000`은 세 폰트 영역을 합친 주소 공간의 크기이며, `copyFnt` 한 번의 복사량이 아니다. 기존 `copyFnt`의 한 번당 복사량은 `0x2000`바이트다. 하드웨어 창 전체는 `0x0000~0x7FFF`의 32KB이므로, 현재 영문 배치 뒤의 `0x4000~0x7FFF` 16KB는 영문 VWF·폰트가 사용하지 않는다.
 
-다른 문자 체계의 용량 계산과 시험 로더 변경 기록은 `docs/korean-localization-design.md`로 분리했다.
+한글 정식 빌드에서 변경된 토큰·VWF·스크립트 용량 구조는 `docs/korean-localization-design.md`에 기록했다.
 
 ## 7. BASIC·문자열 처리
 
@@ -266,7 +266,7 @@ Python 포팅을 사용할 때는 이 Ruby 동작을 기준으로 컴파일 결�
 
 따라서 원문 저장 안내문 299행은 `stringsImport.csv`의 번역문으로 직접 컴파일되는 것이 아니다. 저장 패치 코드가 해당 BASIC 행을 대체하므로 최종 영문 이미지에는 하드코딩된 영문 저장 안내문과 새 저장 루틴이 들어간다. `disk30/NO62/9565`의 1행은 실제 `Export/BASIC/NO62`의 9565행에 문자열이 없어 컴파일 대상이 아닌 대조표 잔여 항목이다.
 
-한글화할 때는 이 299행에 개별 번역을 추가하는 대신, 활성 빌드 도구의 `basic_applySavePatch()`에 있는 저장 안내문을 한글 토큰 문자열로 교체해야 한다. 이 안내문도 `GOSUB 5000` 또는 `GOSUB 5100`을 통해 VWF 출력 경로를 사용한다.
+완성 한글 빌드에서는 이 저장 루틴을 `basic_applySavePatch()`로 교체하고, 안내문을 `hardcoded_strings.csv`의 한글 문자열로 출력한다. 저장 안내문도 `GOSUB 5000` 또는 `GOSUB 5100`을 통해 VWF 경로를 사용한다.
 
 ### 7.2 VWF 호출 연결
 
@@ -410,4 +410,4 @@ menu BASIC의 그룹 선택
 - 과거 재추출 결과는 `reference/python_mirrors_tools/Export/Floppy`의 44개 RAW이며, 각 파일은 409,600바이트였다. 현재 정식 빌드의 플로피 입력·출력 경로는 `korean_mirrors_tools`로 통일한다.
 - Ruby 2.7.4 기준 재빌드와 Python 재빌드의 비교 결과는 ASM 12개, `Import/Data` 8개, BASIC·이미지 생성 파일 130개, 플로피 RAW 44개, `02 MIRR.iso` 1개 모두 동일했다. 전체 비교에서 차이·누락은 0개다.
 - 최종 `02 MIRR.iso`의 SHA-256은 양쪽 모두 `447d3f23d81897e040919b89b949814977effefe8ac89252dcf4f51553f411c2`이며, 공개 영문 이미지에서 추출한 Track 2 기준 파일과도 일치한다.
-- 한글 토큰, 폰트 용량 계산, VWF 변경, 시험 이미지와 구현 계획은 `docs/korean-localization-design.md`에서 관리한다.
+- 한글 완성 빌드의 토큰·조합 글리프 VWF·스크립트 크기·출력 검증은 `docs/korean-localization-design.md`와 `docs/korean-composite-vwf-analysis.md`에 기록한다.

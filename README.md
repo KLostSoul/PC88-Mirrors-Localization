@@ -2,99 +2,48 @@
 
 ![Mirrors](images/mirrors.PNG)
 
-PC-8801 CD 게임 **Mirrors**의 한국어 패치 프로젝트다. 공개된 Nebulous Group 영문 패치 소스와 검증된 영문 패치 구조를 기반으로, 원본 게임의 CD Track 2·2HD 배치와 기존 VWF 출력 경로를 최대한 유지하면서 한글 글리프와 한글 문자 토큰을 적용하는 것을 목표로 한다.
+Mirrors PC-8801 CD 게임의 완성된 한국어 조합 글리프 패치와 전체 빌드 소스다. 전체 게임을 한국어로 패치하며, 빌드 과정에서 CloneCD 이미지와 일본판·영문판용 xdelta 패치를 생성한다.
 
-영문 패치 출처:
+## 완성 빌드
 
-- [Nebulous Group Translations – Mirrors](https://nebulous.group/index.php/projects/translations/mirrors/)
+- 한글 16×16 조합 글리프와 ASCII 8×16 글리프를 사용한다.
+- 한글 음절은 2바이트 토큰으로 저장하고, 실행 중 초성·중성·종성 컴포넌트를 조합한다.
+- 전체 게임 플레이가 엔딩까지 진행되는 것을 확인했다.
+- ISO·CloneCD Track 2의 섹터 데이터와 EDC/ECC를 검사하고, 일본판·영문판 xdelta 복원 결과가 빌드 이미지와 일치하는 것을 확인한다.
 
-## 프로젝트 목적
+## 빌드
 
-- 영문 패치의 BASIC·ASM·CD 데이터 구성과 빌드 절차를 기준선으로 유지
-- 기존 VWF 출력 엔진을 한글 2바이트 토큰, 16×16 조합 한글, 8×16 ASCII에 맞춰 확장
-- 초성·중성·종성 조합 글리프와 토큰표를 확정하고 전체 번역문에 적용
-- 원본 이미지와 생성 이미지의 저작권·용량 문제를 분리하고, 재현 가능한 소스와 분석 결과를 Git에 기록
+저장소 루트에서 실행한다.
 
+```powershell
+python -m korean_mirrors_tools.python_tools
+```
 
-## 현재 진행사항
+번역 입력은 `korean_mirrors_tools/Import/Strings/stringsImportK.csv`, 하드코딩 문구는 `korean_mirrors_tools/Data/hardcoded_strings.csv`다. 글리프 입력은 `Composite_16x16/source/han_hanme.fnt`와 `ascii_8x16_template.fnt`다. 원본 CloneCD 이미지 세트는 `korean_mirrors_tools/img/`에 둔다. 일본판·영문판 xdelta 생성에 필요한 기준 이미지와 `xdelta.exe` 경로는 [Python 빌드 도구 안내](korean_mirrors_tools/python_tools/README.md)에 적혀 있다.
 
-### 확정된 구조
+주요 산출물은 `korean_mirrors_tools/output/`에 생성된다.
 
-- 영문 패치는 원본 CD Track 2의 2D 디스크를 44개 입력과 16개 2HD 그룹으로 재배치한다.
-- `Data/i_disks.csv`가 스크립트·논리 디스크·서브 디스크·Track 2 위치를 연결한다.
-- 게임은 모든 시나리오를 동시에 RAM에 올리지 않고 현재 실행할 BASIC 스크립트를 교체 로드한다.
-- 글리프는 CD에 저장하고 필요한 폰트 데이터를 RAM으로 로드하는 기존 경로를 사용한다.
-- 500자 글리프는 생산판 글자 수가 아니라 VWF·토큰·글리프 상주 여부를 확인하기 위한 시험 규격이다.
+- 완성 CloneCD 세트: `.img`, `.ccd`, `.cue`, `.sub`
+- 일본판·영문판용 xdelta: 각각 `.ccd`, `.img`, `.sub` 패치
+- 에뮬레이터 FDD용 `disk1main.d88`, `disk2game.d88`
 
-### 영문 소스와 도구
-
-- Ruby 영문 빌드 도구를 Python 작업 폴더로 1:1 대응시켜 유지하고 있다.
-- Ruby 2.7.4 기준 영문 빌드 결과를 Python 결과와 파일·바이트 단위로 대조했다.
-- 영문 소스에 포함된 BASIC·ASM·CSV·GFX·Tools·Ghidra 자료는 참조와 재현을 위해 저장소에 보관한다.
-
-### 현재 정식 빌드 구성
-
-16×16 한글 조합 글리프 정식 전체 빌드와 ISO·CloneCD 정적 검증을 완료했다.
-
-최근 `END`를 포함한 정식 전체 재빌드도 성공했다. 생성된 `02 MIRR.iso`는 40,550,400바이트이며, 컴파일 산출물에 구형 선택 UI 패턴(`&HF0D2`, `&H20`, `*13`)이 남아 있지 않다. 정식 빌드에서 사용하지 않는 구형 보조 코드 `fontgen.py`와 `imgdecode.py`도 제거했다.
-
-#### 입력 자료
-
-- 빌더: [`korean_mirrors_tools/python_tools/main.py`](korean_mirrors_tools/python_tools/main.py)
-- 번역: `korean_mirrors_tools/Import/Strings/stringsImportK.csv`
-- 하드코딩 출력 문구: `korean_mirrors_tools/Data/hardcoded_strings.csv`
-- 토큰: `korean_mirrors_tools/Data/korean_token_table.csv`의 실제 빌드 입력 음절 전체
-- 조합 원본: [`Composite_16x16`](Composite_16x16/README.md)의 `han_dkby.fnt`와 ASCII 8×16 템플릿
-- 출력 코드: `korean_mirrors_tools/Import/ASM_Source/vwf.asm`, `asmbasic.asm`, `asmmain.asm`
-- GFX 입력: `Data/i_gfx.csv`
-
-#### 토큰과 조합 방식
-
-- 한글은 2바이트 안전 토큰으로 저장하며, CSV의 실제 토큰 쌍을 단일 기준으로 사용한다.
-- 런타임은 안전한 선두 바이트 75개와 후행 바이트 165개를 역변환해 유니코드 한글 음절 인덱스를 계산한다.
-- 계산한 음절 인덱스를 초성 19·중성 21·종성 28로 분해하고, 8×4×4 벌 선택 규칙으로 컴포넌트 세 개를 16×16 버퍼에 OR 조합한다.
-- 완성 음절 RAW를 적재하지 않는다. 빌드 입력에 실제로 쓰이는 음절만 가나다순 토큰표에 기록하고, 글리프는 런타임 조합으로 생성된다. 번역문에 새 음절이 추가되면 저장·빌드 시 토큰표가 자동 재생성된다.
-
-#### 확장 RAM과 CD 배치
-
-- 물리 확장 RAM bank 0 하나만 사용한다. `vFontNumber`, 기존 영문 3종 폰트 선택, bank 1 전환은 정식 조합 글리프 경로에서 사용하지 않는다.
-- RAM `0x0000`부터 VWF 코드, `0x1000`부터 ASCII 8×16 슬롯 표, `0x2000~0x4CFF`에 8×4×4 한글 컴포넌트를 둔다.
-- ASCII 원본은 0x1000바이트, 한글 컴포넌트 원본은 0x2D00바이트이며 0x6000바이트로 0 패딩한 뒤 0x2000바이트씩 세 청크로 나눈다.
-- CD Track 2 배치는 VWF `0x10000`, ASCII `0x11000`, 컴포넌트 청크 `0x12000`, `0x14000`, `0x16000`이다.
-
-#### 출력 경로
-
-- ASCII는 8×16 셀·8픽셀 전진으로 출력한다.
-- 한글은 컴포넌트 세 개를 32바이트 버퍼에 조합하고 16×16으로 출력하며 16픽셀 전진한다.
-- 두 문자 경로 모두 기존 VWF의 16행 화면 출력 루틴을 사용한다. 줄바꿈과 BASIC 제어 바이트는 한글 토큰 소비와 분리한다.
-
-#### 정식 빌드 순서와 검증
-
-1. 조합 ASCII·컴포넌트 RAW를 생성하고 크기를 검사한다.
-2. 영문 패치 BASIC에 `stringsImportK.csv`를 문자열 위치 기준으로 연결한다.
-3. 반복 대사 19개 행의 출력 폭을 40셀로 적용한다.
-4. 전체 BASIC·ASM·디스크 데이터를 컴파일해 ISO를 생성한다.
-5. FDD용 2HD 공디스크 `disk1main.d88`·`disk2game.d88`를 생성한다.
-6. Track 2와 CloneCD 데이터를 검증한다.
-
-세부 설계와 전체 검수 기록은 [한글화 설계 및 진행 기록](docs/korean-localization-design.md), 조합 글리프 원본·생성기는 [`Composite_16x16`](Composite_16x16/README.md)에서 확인할 수 있다.
+패치 빌드는 [korean_mirrors_tools](korean_mirrors_tools/README.md)에, 조합 글리프 입력과 VWF 구조는 아래 문서에 설명한다.
 
 ## 문서
 
 - [문서 목차](docs/README.md)
-
-- [영문 소스 구조 분석](docs/english-source-structure-map.md)
-- [영문 VWF·문자열·스크립트 실측 분석](docs/english-vwf-script-capacity-analysis.md)
-- [한글화 설계 및 진행 기록](docs/korean-localization-design.md)
+- [정식 한글 빌드 구조](docs/korean-localization-design.md)
+- [한글 조합 글리프 VWF](docs/korean-composite-vwf-analysis.md)
+- [영문 패치 소스 구조](docs/english-source-structure-map.md)
+- [영문 VWF·문자열·스크립트 실측](docs/english-vwf-script-capacity-analysis.md)
 - [원본 CD 이미지 분석](docs/original-cd-image-analysis.md)
 - [영문 패치 출처](docs/english-patch-source.md)
+- [조합 글리프 자료](Composite_16x16/README.md)
 
 ## 라이선스
 
-- 이 프로젝트에서 새로 작성한 생성기·토큰 도구 등 프로젝트 자체 소스는 [LICENSE-MIT-PROJECT.txt](LICENSE-MIT-PROJECT.txt)에 따라 MIT 라이선스로 배포한다.
-- Composite_16x16에 포함된 원본 폰트와 그 파생 글리프는 해당 폴더의 [LICENSE-OFL.txt](Composite_16x16/LICENSE-OFL.txt)에 따른다.
-- Composite_16x16에 보관된 원본 생성·변환 소스의 upstream MIT 고지는 [LICENSE-MIT.txt](Composite_16x16/LICENSE-MIT.txt)에 보관한다.
+- 프로젝트에서 새로 작성한 도구: [MIT](LICENSE-MIT-PROJECT.txt)
+- 조합 글리프 원본 및 파생 자료: [OFL](Composite_16x16/LICENSE-OFL.txt)
+- 조합 글리프 생성·변환 소스의 upstream 고지: [MIT](Composite_16x16/LICENSE-MIT.txt)
 
-## 데이터 및 Git 정책
-
-원본 게임 이미지와 원본에서 추출한 Track 2·플로피 RAW는 저장소에 포함하지 않는다. 영문 패치 공개 소스, 한국어 작업 소스, 토큰표, 글리프 원본, 분석문서는 Git에 기록한다. 생성 이미지와 임시 산출물은 `.gitignore` 정책에 따라 제외한다.
+원본 게임 이미지와 생성 산출물은 Git에 포함하지 않는다.

@@ -1,10 +1,10 @@
 # 문서 목차
 
-문서는 현재 정식 한글 빌드의 기준 문서와, 영문 패치·원본 이미지의 분석 문서로 나뉜다.
+문서는 완성된 한글 빌드의 구조 문서와 영문 패치·원본 이미지 분석 문서로 나뉜다.
 
-## 현재 구현의 기준
+## 완성된 한글 빌드
 
-- [한글 조합 글리프 빌드 설계](korean-localization-design.md) — 현재 정식 빌드의 입력, 토큰, bank 0 배치, VWF, BASIC/CD 검증 기준
+- [정식 한글 빌드 구조](korean-localization-design.md) — 완성 빌드의 입력, 토큰, bank 0 배치, VWF, BASIC/CD·패치 검증 결과
 - [한글 조합 글리프 VWF 분석](korean-composite-vwf-analysis.md) — 현재 VWF의 토큰 해석, 8×4×4 조합, bank 0/CD 배치, 출력·호출 경계와 Python 바이트 계약
 - [`Composite_16x16/README.md`](../Composite_16x16/README.md) — 16×16 조합 글리프 원본과 생성기, 참고 출처
 
@@ -17,8 +17,8 @@
 
 ## 문서 읽는 순서
 
-1. 현재 구현을 확인하려면 `korean-localization-design.md`를 먼저 읽는다.
+1. 완성된 한글 빌드 구조는 `korean-localization-design.md`에서 확인한다.
 2. 영문 패치의 기준 구조가 필요하면 `english-source-structure-map.md`를 읽는다.
 3. 원본 이미지와 용량 근거가 필요하면 나머지 분석 문서를 확인한다.
 
-영문 분석 문서에 남아 있는 `vFontNumber`, 3종 영문 폰트, 기존 슬롯 구조는 영문 패치 기준선을 설명하는 내용이다. 현재 한글 정식 빌드의 구현 규칙은 한글 설계 문서의 현재 섹션을 우선한다.
+영문 분석 문서의 `vFontNumber`, 3종 영문 폰트, 기존 슬롯 구조는 영문판 분석 대상이다. 한글 빌드의 실제 구현은 한글 빌드·VWF 문서를 기준으로 한다.

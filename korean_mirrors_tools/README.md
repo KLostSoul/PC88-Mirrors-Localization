@@ -1,6 +1,6 @@
 # Korean Mirrors build tools
 
-정식 한글 조합 글리프 빌드의 활성 소스다.
+완성된 한글 조합 글리프 패치의 전체 빌드 소스다.
 
 ASM·BASIC·데이터 스냅샷과 조합 글리프 입력 데이터는 저장소에 포함하고, 원본
 디스크에서 추출한 로컬 파일과 재생성되는 플로피·ISO·컴파일 임시물은 포함하지
@@ -16,5 +16,6 @@ ASM·BASIC·데이터 스냅샷과 조합 글리프 입력 데이터는 저장�
 - 공개 BASIC 스냅샷: `Export/BASIC/`
 - 공개 추출 데이터: `Export/Data/`
 - 조합 글리프 RAW 입력: `Import/Data/`
+- 생성 결과: `output/`의 CloneCD 세트, 일본판·영문판 xdelta 패치 6개, FDD용 2HD 공디스크 2개
 
-전체 구조와 검증 기준은 [`../../docs/korean-localization-design.md`](../../docs/korean-localization-design.md)를 참조한다.
+전체 구조와 검증 기준은 [`../docs/korean-localization-design.md`](../docs/korean-localization-design.md)를 참조한다.
