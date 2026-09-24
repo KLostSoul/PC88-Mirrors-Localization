@@ -31,13 +31,13 @@ python -m korean_mirrors_tools.python_tools
 
 CloneCD 출력은 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.sub`를 기반으로 한다.
 
-### 전체 빌드에 필요한 이미지
+### 전체 빌드에 필요한 입력
 
 | 경로 | 파일 |
 | --- | --- |
 | `korean_mirrors_tools/img/` | 일본판 원본 `Mirrors.img`, `Mirrors.ccd`, `Mirrors.cue`, `Mirrors.sub` |
-| `reference/Mirrors PC-8801 MC English translation v1.0 (updated emu)/` | 영문 기준 `Mirrors eng v1.0.img`, `.ccd`, `.sub` |
-| `reference/Mirrors_ENG_translation_v1.0/patcher/` | `xdelta.exe` |
+| `reference/Mirrors PC-8801 MC English translation v1.0 (updated emu)/` | 영문판 xdelta 기준 `Mirrors eng v1.0.img`, `.ccd`, `.sub` |
+| `korean_mirrors_tools/Tools/` | xdelta 생성·검증 도구 `xdelta.exe` |
 
 ## 입력과 출력
 

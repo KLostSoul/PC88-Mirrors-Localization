@@ -15,13 +15,7 @@ from .defines import Const, Paths
 
 OUTPUT_BASE = "Mirrors_Korean_Mirrors_Tools_Full_Build"
 PROJECT_ROOT = Paths.MAIN_PATH.parent
-XDELTA_EXE = (
-    PROJECT_ROOT
-    / "reference"
-    / "Mirrors_ENG_translation_v1.0"
-    / "patcher"
-    / "xdelta.exe"
-)
+XDELTA_EXE = Paths.TOOLS_PATH / "xdelta.exe"
 ENGLISH_BASE_IMG = (
     PROJECT_ROOT
     / "reference"
