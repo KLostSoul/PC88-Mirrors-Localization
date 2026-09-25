@@ -3,7 +3,11 @@ import re
 from .basic_compiler import BasicCompiler
 from .basic_decompiler import BasicDecompiler
 from .build_clonecd import build_clonecd
-from .clonecd import extract_original_track2
+from .clonecd import (
+    available_clonecd_sources,
+    extract_original_track2,
+    resolve_clonecd_source,
+)
 from .data_exporter import DataExporter
 from .data_importer import DataImporter
 from .defines import Const, Paths
@@ -210,13 +214,19 @@ def _create_blank_game_disks() -> None:
     write_blank_2hd(Paths.Game_Disk_D88)
 
 
-def main():
+def main(source_language: str | None = None):
     opMode = "import"
     if opMode == "export":
         dataExporter = DataExporter(Paths.Original_ISO_DataTrack)
         dataExporter.export()
     elif opMode == "import":
-        extract_original_track2()
+        available_sources = available_clonecd_sources()
+        source = resolve_clonecd_source(source_language, available_sources)
+        print(
+            f"한글화 기준 CD: {source.label} "
+            f"(SHA-256 {source.sha256}, {source.img.name})"
+        )
+        extract_original_track2(source.img)
         # Rebuild the token table from the current translation inputs before
         # any BASIC compiler instance loads it. This adds newly used Hangul
         # syllables automatically and keeps the table in 가나다순 order.
@@ -227,7 +237,7 @@ def main():
         _apply_repeated_wake_dialog_width(dataImporter)
         dataImporter.importData()
         _create_blank_game_disks()
-        build_clonecd()
+        build_clonecd(source, tuple(available_sources.values()))
     elif opMode == "custom":
         pass
 

@@ -2,26 +2,25 @@
 
 from __future__ import annotations
 
+import configparser
 import hashlib
+import re
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-import re
 
-from .clonecd import CloneCD
+from .clonecd import (
+    CloneCD,
+    CloneCDSource,
+    available_clonecd_sources,
+    resolve_clonecd_source,
+)
 from .defines import Const, Paths
 
 
 OUTPUT_BASE = "Mirrors_Korean_Mirrors_Tools_Full_Build"
-PROJECT_ROOT = Paths.MAIN_PATH.parent
 XDELTA_EXE = Paths.TOOLS_PATH / "xdelta.exe"
-ENGLISH_BASE_IMG = (
-    PROJECT_ROOT
-    / "reference"
-    / "Mirrors PC-8801 MC English translation v1.0 (updated emu)"
-    / "Mirrors eng v1.0.img"
-)
 PATCH_COMPONENTS = ("ccd", "img", "sub")
 
 
@@ -116,14 +115,35 @@ def _verify_mode1_sector(raw_sector: bytes) -> bool:
     return _rebuild_mode1_sector(raw_sector, payload) == raw_sector
 
 
-def _source_paths() -> tuple[Path, Path, Path, Path]:
-    source_img = Paths.CLONECD_IMG
-    return (
-        source_img,
-        source_img.with_suffix(".ccd"),
-        source_img.with_suffix(".cue"),
-        source_img.with_suffix(".sub"),
-    )
+def _cue_from_ccd(ccd_path: Path, image_name: str) -> str:
+    ccd = configparser.ConfigParser(interpolation=None)
+    ccd.optionxform = str
+    with ccd_path.open("r", encoding="ascii") as file:
+        ccd.read_file(file)
+
+    tracks = []
+    for section in ccd.sections():
+        if not section.startswith("Entry "):
+            continue
+        entry = ccd[section]
+        point = int(entry["Point"], 0)
+        if not 1 <= point <= 99:
+            continue
+        control = int(entry["Control"], 0)
+        lba = int(entry["PLBA"], 0)
+        minute, remainder = divmod(lba, 75 * 60)
+        second, frame = divmod(remainder, 75)
+        mode = "MODE1/2352" if control & 0x04 else "AUDIO"
+        tracks.append((point, mode, f"{minute:02d}:{second:02d}:{frame:02d}"))
+
+    tracks.sort()
+    if not tracks or tracks[0][0] != 1:
+        raise ValueError(f"Cannot derive a CUE track list from {ccd_path}")
+
+    lines = [f'FILE "{image_name}" BINARY']
+    for number, mode, index in tracks:
+        lines.extend((f"   TRACK {number} {mode}", f"   INDEX 1 {index}"))
+    return "\n".join(lines) + "\n"
 
 
 def _sha256(path: Path) -> str:
@@ -136,16 +156,12 @@ def _sha256(path: Path) -> str:
 
 def _build_xdelta_patches(
     target_paths: dict[str, Path],
-    japanese_base_img: Path,
+    sources: tuple[CloneCDSource, ...],
 ) -> list[Path]:
-    bases = (
-        ("Japanese", japanese_base_img),
-        ("English", ENGLISH_BASE_IMG),
-    )
     required = [XDELTA_EXE]
-    for _, base_img in bases:
+    for source in sources:
         required.extend(
-            base_img.with_suffix(f".{ext}") for ext in PATCH_COMPONENTS
+            source.img.with_suffix(f".{ext}") for ext in PATCH_COMPONENTS
         )
     missing = [path for path in required if not path.is_file()]
     if missing:
@@ -163,14 +179,14 @@ def _build_xdelta_patches(
         prefix="xdelta-verify-", dir=Paths.TEMP_PATH
     ) as verify_dir:
         verify_dir = Path(verify_dir)
-        for label, base_img in bases:
+        for source in sources:
             for ext in PATCH_COMPONENTS:
-                base = base_img.with_suffix(f".{ext}")
+                base = source.img.with_suffix(f".{ext}")
                 target = target_paths[ext]
                 patch = Paths.BUILD_OUTPUT / (
-                    f"{OUTPUT_BASE}_from_{label}_{ext.upper()}.xdelta"
+                    f"{OUTPUT_BASE}_from_{source.label}_{ext.upper()}.xdelta"
                 )
-                restored = verify_dir / f"{label}.{ext}"
+                restored = verify_dir / f"{source.language}.{ext}"
 
                 subprocess.run(
                     [
@@ -189,7 +205,7 @@ def _build_xdelta_patches(
                 if _sha256(restored) != target_hashes[ext]:
                     raise RuntimeError(
                         f"xdelta restoration does not match build output: "
-                        f"{label} {ext.upper()}"
+                        f"{source.label} {ext.upper()}"
                     )
                 patches.append(patch)
                 print(f"Created and verified: {patch}")
@@ -197,11 +213,25 @@ def _build_xdelta_patches(
     return patches
 
 
-def build_clonecd() -> tuple[Path, Path, Path, Path]:
-    source_img, source_ccd, source_cue, source_sub = _source_paths()
+def build_clonecd(
+    source: CloneCDSource | None = None,
+    patch_sources: tuple[CloneCDSource, ...] | None = None,
+) -> tuple[Path, Path, Path, Path]:
+    available_sources = None
+    if source is None:
+        available_sources = available_clonecd_sources()
+        source = resolve_clonecd_source(sources=available_sources)
+    if patch_sources is None:
+        if available_sources is None:
+            available_sources = available_clonecd_sources()
+        patch_sources = tuple(available_sources.values())
+    source_img = source.img
+    source_ccd = source.ccd
+    source_cue = source.cue
+    source_sub = source.sub
     patched_track = Paths.Patched_ISO_DataTrack
 
-    for path in (source_img, source_ccd, source_cue, source_sub, patched_track):
+    for path in (source_img, source_ccd, source_sub, patched_track):
         if not path.is_file():
             raise FileNotFoundError(f"Missing CloneCD build input: {path}")
 
@@ -225,15 +255,20 @@ def build_clonecd() -> tuple[Path, Path, Path, Path]:
     output_sub = Paths.BUILD_OUTPUT / f"{OUTPUT_BASE}.sub"
     shutil.copyfile(source_img, output_img)
     shutil.copyfile(source_ccd, output_ccd)
-    cue_text = source_cue.read_text(encoding="ascii")
-    cue_text, replacements = re.subn(
-        r'(?im)^FILE\s+"[^"]+"\s+BINARY\s*$',
-        f'FILE "{output_img.name}" BINARY',
-        cue_text,
-        count=1,
-    )
-    if replacements != 1:
-        raise ValueError("Original CUE has no single FILE ... BINARY header")
+    if source_cue is not None:
+        cue_text = source_cue.read_text(encoding="ascii")
+        cue_text, replacements = re.subn(
+            r'(?im)^FILE\s+"[^"]+"\s+BINARY\s*$',
+            f'FILE "{output_img.name}" BINARY',
+            cue_text,
+            count=1,
+        )
+        if replacements != 1:
+            raise ValueError(
+                f"Source CUE has no single FILE ... BINARY header: {source_cue}"
+            )
+    else:
+        cue_text = _cue_from_ccd(source_ccd, output_img.name)
     output_cue.write_text(cue_text, encoding="ascii", newline="")
     shutil.copyfile(source_sub, output_sub)
 
@@ -276,7 +311,7 @@ def build_clonecd() -> tuple[Path, Path, Path, Path]:
             "img": output_img,
             "sub": output_sub,
         },
-        source_img,
+        patch_sources,
     )
 
     return output_img, output_ccd, output_cue, output_sub
