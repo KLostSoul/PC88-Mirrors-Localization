@@ -45,5 +45,3 @@ python -m korean_mirrors_tools.python_tools
 - 프로젝트에서 새로 작성한 도구: [MIT](LICENSE-MIT-PROJECT.txt)
 - 조합 글리프 원본 및 파생 자료: [OFL](Composite_16x16/LICENSE-OFL.txt)
 - 조합 글리프 생성·변환 소스의 upstream 고지: [MIT](Composite_16x16/LICENSE-MIT.txt)
-
-원본 게임 이미지와 생성 산출물은 Git에 포함하지 않는다.
