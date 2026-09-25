@@ -85,3 +85,4 @@ Temp/korean_500_test/logs/
 # Reference copy: local extracted inputs only
 reference/mirrors_tools/Export/ISO/
 reference/mirrors_tools/Export/Floppy/
+korean_mirrors_tools/temp/

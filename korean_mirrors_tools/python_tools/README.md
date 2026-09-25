@@ -87,6 +87,17 @@ python -m korean_mirrors_tools.python_tools --source english
 | `output/Mirrors_Korean_Mirrors_Tools_Full_Build.cue` | 완성 CloneCD `.img`를 지정하는 호환용 CUE |
 | `output/Mirrors_Korean_Mirrors_Tools_Full_Build_from_<Japanese|English>_*.xdelta` | `img/`에서 인식된 판본별 `.ccd`, `.img`, `.sub` 패치 |
 
+### 임시 빌드 파일
+
+빌드 중간 파일과 진단 자료는 `korean_mirrors_tools/temp/`에 생성된다.
+
+- `temp/basic/`: 컴파일된 BASIC의 진단용 디컴파일 덤프
+- `temp/editable_asm/`: `asmmain.asm`과 하드코딩 문구 입력을 반영해 생성한 ASM 중간 파일
+- `temp/xdelta-verify-*`: xdelta 복원 검증용 임시 디렉터리. 검증이 끝나면 자동 삭제된다.
+- `temp/script_editor_build.log`: 에디터에서 빌드를 실행했을 때의 로그
+
+이 파일들은 빌드 과정에서 재생성되며, 원본 입력은 `Import/ASM_Source/`와 `Data/hardcoded_strings.csv`에 있다.
+
 ## 모듈 설명
 
 ### `main.py` / `__main__.py`
