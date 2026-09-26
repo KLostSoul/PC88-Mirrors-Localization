@@ -141,7 +141,7 @@ ASCII와 한글은 같은 16행 래스터 출력 루틴을 사용한다. 한글�
 
 ```text
 1. `img/`의 `.img` SHA-256으로 일본판·영문판 판별
-2. 기준 이미지 하나면 자동 선택하고, 둘 다 있으면 사용자가 선택
+2. 판본이 하나면 그 이미지를 입력으로 사용하고, 둘 다 있으면 이번 한글판 빌드에 사용할 이미지 하나를 사용자가 선택
 3. 선택한 Track 2를 추출하고 Composite_16x16/source에서 ASCII·컴포넌트 RAW 설치
 4. 조합 컴포넌트 크기와 ASCII 0x1000바이트 크기 확인
 5. DataImporter 초기화
@@ -150,7 +150,7 @@ ASCII와 한글은 같은 16행 래스터 출력 루틴을 사용한다. 한글�
 8. 전체 BASIC·ASM·그래픽·플로피·ISO 생성
 9. FDD용 2HD 공디스크 2개 생성
 10. 선택한 이미지에 CloneCD Track 2 반영 및 EDC/ECC 검사
-11. `img/`에서 인식된 각 기준판용 xdelta 생성 후 원본 복원 결과와 빌드 출력 해시 대조
+11. `img/`에서 인식된 모든 판본용 xdelta 생성 후 원본 복원 결과와 빌드 출력 해시 대조
 ```
 
 빌드 입력 검사는 다음 크기·문자 조건을 확인한다.
@@ -183,7 +183,7 @@ ASCII와 한글은 같은 16행 래스터 출력 루틴을 사용한다. 한글�
 - BASIC 로더가 CD에 배치한 VWF·ASCII·컴포넌트 청크를 모두 읽는지 확인
 - ISO Track 2에 삽입된 페이로드와 생성 파일 대조
 - CloneCD Track 2 전체 19,800개 섹터의 EDC/ECC와 페이로드 일치 확인
-- `img/`에서 인식된 각 기준판의 xdelta를 적용해 복원한 `.ccd`, `.img`, `.sub`의 SHA-256이 완성 빌드 출력과 같은지 확인
+- `img/`에서 인식된 각 원본 판본의 xdelta를 적용해 복원한 `.ccd`, `.img`, `.sub`의 SHA-256이 완성 빌드 출력과 같은지 확인
 
 ## 8. 실행 확인 및 산출물
 
@@ -230,4 +230,4 @@ Git에서 제외하는 것:
 - ISO·IMG·CCD·SUB 등 빌드 산출물
 - 에뮬레이터 로그와 임시 시험 결과
 
-원본 CloneCD 입력과 빌드 기준 이미지는 로컬에 별도로 준비한다. 전체 빌드 입력과 명령은 [`korean_mirrors_tools/python_tools/README.md`](../korean_mirrors_tools/python_tools/README.md)에 기록한다.
+빌드에 사용할 원본 CloneCD 이미지는 로컬에 별도로 준비한다. 전체 빌드 입력과 명령은 [`korean_mirrors_tools/python_tools/README.md`](../korean_mirrors_tools/python_tools/README.md)에 기록한다.

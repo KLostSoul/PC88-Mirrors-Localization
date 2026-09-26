@@ -27,7 +27,7 @@ python -m korean_mirrors_tools.python_tools
 8. 추출한 원본 CD 데이터 트랙에 변경 데이터를 반영해 `Import/ISO/02 MIRR.iso`를 생성한다.
 9. 에뮬레이터 FDD용 2HD 공디스크 `disk1main.d88`과 `disk2game.d88`를 `output/`에 생성한다.
 10. 선택한 원본 이미지에 패치 Track 2를 삽입하고 EDC/ECC를 재생성해 `output/`에 CloneCD 세트와 호환용 CUE를 생성한다.
-11. `img/`에서 인식된 각 기준판의 `.ccd`, `.img`, `.sub` xdelta를 만들고, 각 복원 결과의 SHA-256이 완성 빌드 파일과 일치하는지 검사한다.
+11. `img/`에서 인식된 각 원본 판본의 `.ccd`, `.img`, `.sub` xdelta를 만들고, 각 복원 결과의 SHA-256이 완성 빌드 파일과 일치하는지 검사한다.
 
 이미지 파일은 `img/`에 둔다. 판본은 파일명이 아니라 `.img` 전체의 SHA-256으로 구분한다.
 
@@ -59,7 +59,7 @@ python -m korean_mirrors_tools.python_tools --source english
 | 경로 | 용도 |
 | --- | --- |
 | `Import/Strings/stringsImportK.csv` | 일본어 원문과 한국어 번역 입력 |
-| `img/`의 선택 기준 이미지 | 일본판 또는 영문판 원본 CloneCD 이미지 |
+| `img/`의 선택 입력 이미지 | 일본판 또는 영문판 원본 CloneCD 이미지 |
 | `Data/hardcoded_strings.csv` | BASIC 외부에 직접 저장되는 문구 |
 | `Data/patchBasic.csv` | BASIC 행별 패치 |
 | `Data/e_scripts.csv` | 스크립트·디스크·분할 정보 |
@@ -160,7 +160,7 @@ PNG 그래픽을 PC-88의 압축된 그래픽 데이터로 변환한다. 단색 
 
 ### `clonecd.py` / `build_clonecd.py`
 
-`clonecd.py`가 `img/`의 기준판을 자동 선택하거나 사용자에게 선택받는다.
+`clonecd.py`가 `img/`에 이미지가 하나뿐이면 자동으로 입력에 사용하고, 두 판본이 모두 있으면 이번 빌드에 사용할 입력 이미지 하나를 사용자에게 선택받는다.
 `build_clonecd.py`는 선택한 이미지에 패치 Track 2를 반영하고 섹터 EDC/ECC를
 재생성한다. `img/`에서 인식된 각 판본에 대해 `.ccd`, `.img`, `.sub` xdelta를
 만들고, 복원 파일의 SHA-256이 정식 빌드 파일과 일치하는지 검사한다.
