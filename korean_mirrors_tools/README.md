@@ -19,6 +19,6 @@ ASM·BASIC·데이터 스냅샷과 조합 글리프 입력 데이터는 저장�
 - 생성 결과: `output/`의 CloneCD 세트, `img/`에서 인식된 기준판별 xdelta 패치(각 3개), FDD용 2HD 공디스크 2개
 - 빌드 임시 파일: `temp/`의 BASIC 진단 덤프, 생성 ASM, xdelta 검증용 임시 파일
 
-기준 이미지가 하나면 자동 선택하고, 일본판과 영문판이 모두 있으면 완성 CloneCD의 기준판을 빌드 때 선택한다. xdelta는 `img/`에서 인식된 모든 기준판에 대해 생성한다. 판본은 파일명이 아닌 `.img`의 SHA-256으로 식별한다. 자세한 해시와 명령행 옵션은 [`python_tools/README.md`](python_tools/README.md)를 참조한다.
+이미지가 하나면 자동으로 입력에 사용한다. 일본판과 영문판 이미지가 모두 있으면 빌드 전에 이번 한글판 생성에 사용할 이미지 하나를 선택한다. xdelta는 `img/`에서 인식된 모든 판본용으로 생성한다. 판본은 파일명이 아닌 `.img`의 SHA-256으로 식별한다. 자세한 해시와 명령행 옵션은 [`python_tools/README.md`](python_tools/README.md)를 참조한다.
 
 전체 구조와 검증 기준은 [`../docs/korean-localization-design.md`](../docs/korean-localization-design.md)를 참조한다.

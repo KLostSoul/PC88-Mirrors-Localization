@@ -108,7 +108,7 @@ def resolve_clonecd_source(
             "Select one with --source japanese or --source english."
         )
 
-    print("한글화 빌드 기준 CD를 선택하세요:")
+    print("이번 한글판 빌드에 사용할 입력 이미지를 선택하세요:")
     print(f"  1) 일본판 — SHA-256 {sources['japanese'].sha256}")
     print(f"  2) 영문판 — SHA-256 {sources['english'].sha256}")
     while True:

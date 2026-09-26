@@ -36,7 +36,7 @@ python -m korean_mirrors_tools.python_tools
 | 일본판 | `258533b4ac5fd8b16170ddf9509dcf2d6c4a0959bac61e999b3d14c9c0b48d65` |
 | 영문판 | `294ee461a2bea8745394c71ca7eec64960a865673d72f8b60557c0a29a9ca7aa` |
 
-각 `.img`와 같은 기본 파일명의 `.ccd`·`.sub`가 필요하다. `.cue`는 선택 사항이며, 없으면 `.ccd`의 트랙 메타데이터에서 호환용 CUE를 생성한다. 한 판본만 있으면 자동 사용하고, 둘 다 있으면 완성 CloneCD의 기준판을 선택한다. 두 판본이 모두 있으면 xdelta는 두 판본용 모두 생성한다. 등록되지 않은 이미지 해시는 빌드를 중단한다.
+각 `.img`와 같은 기본 파일명의 `.ccd`·`.sub`가 필요하다. `.cue`는 선택 사항이며, 없으면 `.ccd`의 트랙 메타데이터에서 호환용 CUE를 생성한다. 한 판본만 있으면 자동 사용하고, 일본판과 영문판이 모두 있으면 이번 한글판 빌드의 입력으로 사용할 이미지 하나를 선택한다. 두 판본이 모두 있으면 xdelta는 두 판본용 모두 생성한다. 등록되지 않은 이미지 해시는 빌드를 중단한다.
 
 ```powershell
 python -m korean_mirrors_tools.python_tools --source japanese
